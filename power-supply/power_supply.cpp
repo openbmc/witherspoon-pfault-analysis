@@ -22,6 +22,19 @@ namespace power
 namespace psu
 {
 
+void PowerSupply::analyze()
+{
+    //TODO analyze() needs to be implemented in this class.
+    return;
+}
+
+void PowerSupply::clearFaults()
+{
+    //TODO
+    return;
+}
+
 }
 }
 }
+// vim: tabstop=8 expandtab shiftwidth=4 softtabstop=4
