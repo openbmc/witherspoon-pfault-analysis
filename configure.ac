@@ -51,5 +51,5 @@ AS_IF([test "x$enable_turn_off_ucd90160_access" != "xyes"],
 )
 
 # Create configured output
-AC_CONFIG_FILES([Makefile power-sequencer/Makefile])
+AC_CONFIG_FILES([Makefile power-sequencer/Makefile power-supply/Makefile])
 AC_OUTPUT
