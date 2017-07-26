@@ -25,4 +25,5 @@ ltmain.sh
 missing
 stamp-h1
 witherspoon-pseq-monitor
+witherspoon-psu-monitor
 xyz/openbmc_project/Power/Fault/
