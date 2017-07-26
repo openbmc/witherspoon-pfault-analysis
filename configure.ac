@@ -26,5 +26,5 @@ PKG_CHECK_MODULES([PHOSPHOR_LOGGING], [phosphor-logging],,\
 LT_INIT # Required for systemd linking
 
 # Create configured output
-AC_CONFIG_FILES([Makefile])
+AC_CONFIG_FILES([Makefile psu/Makefile])
 AC_OUTPUT

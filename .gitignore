@@ -24,3 +24,4 @@ i586-openbmc-linux-libtool
 ltmain.sh
 missing
 stamp-h1
+phosphor-power-psu
