@@ -28,5 +28,5 @@ PKG_CHECK_MODULES([PHOSPHOR_DBUS_INTERFACES], [phosphor-dbus-interfaces],,\
 LT_INIT # Required for systemd linking
 
 # Create configured output
-AC_CONFIG_FILES([Makefile])
+AC_CONFIG_FILES([Makefile power-supply/Makefile])
 AC_OUTPUT

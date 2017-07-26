@@ -11,4 +11,5 @@ libpower_la_CXXFLAGS = \
 
 libpower_la_SOURCES = pmbus.cpp timer.cpp
 
-SUBDIRS = .
+SUBDIRS = . power-supply
+# vim: tabstop=8 noexpandtab
