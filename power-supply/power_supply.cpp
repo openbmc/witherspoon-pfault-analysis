@@ -15,6 +15,8 @@
  */
 #include "power_supply.hpp"
 
+using namespace phosphor::logging;
+
 namespace phosphor
 {
 namespace power
@@ -22,6 +24,19 @@ namespace power
 namespace psu
 {
 
+void PowerSupply::analyze()
+{
+    //FIXME analyze() needs to be implemented in this class.
+    return;
+}
+
+void PowerSupply::clearFaults()
+{
+    //FIXME
+    return;
+}
+
 }
 }
 }
+// vim: tabstop=8 expandtab shiftwidth=4 softtabstop=4
