@@ -1,12 +1,18 @@
 #pragma once
+#include <sdbusplus/bus/match.hpp>
 #include "device.hpp"
+#include "pmbus.hpp"
 
-namespace phosphor
+using namespace phosphor::power; //TODO - Spinler update?
+
+namespace witherspoon
 {
 namespace power
 {
 namespace psu
 {
+
+namespace sdbusRule = sdbusplus::bus::match::rules;
 
 /**
  * @class PowerSupply
@@ -31,11 +37,18 @@ class PowerSupply : public Device
          * @param[in] invpath - the inventory path to use
          */
         PowerSupply(const std::string& name, size_t inst,
-                    const std::string& objpath, const std::string& invpath)
-            : Device(name, inst), monitorPath(objpath), inventoryPath(invpath)
-        {
-        }
-
+                    const std::string& objpath, const std::string& invpath,
+                    sdbusplus::bus::bus& bus);
+                    
+        /**
+         * Updates the presence status by querying D-Bus
+         *
+         * The D-Bus inventory properties for this power supply will be read to
+         * determine if the power supply is present or not and update this
+         * objects present member variable to reflect current status.
+         */
+        void updatePresence();
+        
         /**
          * Power supply specific function to analyze for faults/errors.
          *
@@ -65,6 +78,56 @@ class PowerSupply : public Device
          * The D-Bus path to use for this power supplies inventory status.
          */
         std::string inventoryPath;
+        
+        /** @brief Connection for sdbusplus bus */
+        sdbusplus::bus::bus& bus;        
+      
+        /**
+         * @brief Pointer to the PMBus interface
+         *
+         * Used to read out of or write to the /sysfs tree(s) containing files 
+         * that a device driver monitors the PMBus interface to the power 
+         * supplies.
+         */
+        std::unique_ptr<phosphor::pmbus::PMBus> pmbusIntf;
+        
+        /**
+         * True if the power supply is present.
+         */
+        bool present = false;
+        
+        /** @brief Used to subscribe to dbus pcap propety changes **/
+        sdbusplus::bus::match_t presentMatch;
+
+        /**
+         * @brief Has a PMBus read failure already been logged?
+         */
+        bool readFailLogged = false;
+
+        /** 
+         * @brief Set to true when a VIN UV fault has been detected
+         * 
+         * This is the VIN_UV_FAULT bit in the low byte from the STATUS_WORD
+         * command response.
+         */
+        bool vinUVFault = false;
+        
+        /**
+         * @brief Set to true when an input fault or warning is detected
+         *
+         * This is the "INPUT FAULT OR WARNING" bit in the high byte from the 
+         * STATUS_WORD command response. 
+         */
+        bool inputFault = false;
+
+        /** @brief Callback for Present property changes
+         *
+         * Process change of Present property for power supply.
+         *
+         * @param[in]  msg - Data associated with Present change signal
+         *
+         */
+        void presentChanged(sdbusplus::message::message& msg);
 };
 
 }
