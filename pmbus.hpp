@@ -9,6 +9,10 @@ namespace witherspoon
 namespace pmbus
 {
 
+// The file name Linux uses to capture the VIN_UV_FAULT bit from the STATUS_WORD
+constexpr auto VIN_UV_FAULT = "in1_alarm";
+constexpr auto STATUS_WORD = "status_word";
+
 /**
  * If the access should be done in the base
  * device directory or the hwmon directory.
@@ -78,6 +82,17 @@ class PMBus
         bool readBitInPage(const std::string& name,
                            size_t page,
                            Type type);
+        /**
+         * Read byte(s) from file in sysfs.
+         *
+         * @param[in] name   - path concatenated to basePath to read
+         * @param[in] type   - either Base or Hwmon
+         * @param[in] length - number of bytes to read
+         * @return    data   - vector array of data bytes read
+         */
+         std::vector<uint8_t> read(const std::string& name,
+                                   Type type,
+                                   size_t length);
 
         /**
          * Writes an integer value to the file, therefore doing

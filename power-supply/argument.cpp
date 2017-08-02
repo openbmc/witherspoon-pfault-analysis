@@ -19,7 +19,7 @@
 #include <cassert>
 #include "argument.hpp"
 
-namespace phosphor
+namespace witherspoon
 {
 namespace power
 {
