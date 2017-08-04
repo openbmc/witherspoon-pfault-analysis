@@ -70,6 +70,12 @@ void getProperty(const std::string& interface,
     value = sdbusplus::message::variant_ns::get<T>(property);
 }
 
+/**
+ * Powers off the system and logs an error
+ * saying it was due to a power fault.
+ */
+void powerOff(sdbusplus::bus::bus& bus);
+
 }
 }
 }
