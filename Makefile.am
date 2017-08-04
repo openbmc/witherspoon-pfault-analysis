@@ -9,6 +9,6 @@ libpower_la_CXXFLAGS = \
 	$(PHOSPHOR_LOGGING_CFLAGS) \
 	$(SDBUSPLUS_CFLAGS)
 
-libpower_la_SOURCES = pmbus.cpp timer.cpp
+libpower_la_SOURCES = pmbus.cpp timer.cpp utility.cpp
 
 SUBDIRS = .
