@@ -22,7 +22,7 @@
 #include <xyz/openbmc_project/Sensor/Device/error.hpp>
 #include "pmbus.hpp"
 
-namespace phosphor
+namespace witherspoon
 {
 namespace pmbus
 {

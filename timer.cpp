@@ -21,7 +21,7 @@
 #include <type_traits>
 #include "timer.hpp"
 
-namespace phosphor
+namespace witherspoon
 {
 namespace power
 {
@@ -30,7 +30,7 @@ using namespace phosphor::logging;
 using InternalFailure = sdbusplus::xyz::openbmc_project::Common::
                             Error::InternalFailure;
 
-Timer::Timer(phosphor::power::event::Event& events,
+Timer::Timer(witherspoon::power::event::Event& events,
              std::function<void()> callbackFunc) :
     timeEvent(events),
     callback(callbackFunc),

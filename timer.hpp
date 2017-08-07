@@ -5,7 +5,7 @@
 #include <memory>
 #include "event.hpp"
 
-namespace phosphor
+namespace witherspoon
 {
 namespace power
 {
@@ -47,7 +47,7 @@ class Timer
          * @param[in] events - sd_event pointer, previously created
          * @param[in] callbackFunc - The function to call on timer expiration
          */
-        Timer(phosphor::power::event::Event& events,
+        Timer(witherspoon::power::event::Event& events,
               std::function<void()> callbackFunc);
 
         /**
@@ -132,12 +132,12 @@ class Timer
         /**
          * @brief The sd_event structure
          */
-        phosphor::power::event::Event& timeEvent;
+        witherspoon::power::event::Event& timeEvent;
 
         /**
          * @brief Source of events
          */
-        phosphor::power::event::EventSource eventSource;
+        witherspoon::power::event::EventSource eventSource;
 
         /**
          * @brief Either 'repeating' or 'oneshot'

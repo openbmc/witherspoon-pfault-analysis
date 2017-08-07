@@ -4,7 +4,7 @@
 #include <string>
 #include <vector>
 
-namespace phosphor
+namespace witherspoon
 {
 namespace pmbus
 {

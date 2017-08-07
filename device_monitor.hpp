@@ -6,12 +6,10 @@
 #include "event.hpp"
 #include "timer.hpp"
 
-namespace phosphor
+namespace witherspoon
 {
 namespace power
 {
-
-using namespace phosphor::logging;
 
 /**
  * @class DeviceMonitor
@@ -39,7 +37,7 @@ class DeviceMonitor
          * @param[in] i - polling interval in ms
          */
         DeviceMonitor(std::unique_ptr<Device>&& d,
-                      phosphor::power::event::Event& e,
+                      witherspoon::power::event::Event& e,
                       std::chrono::milliseconds i) :
             device(std::move(d)),
             event(e),
@@ -61,6 +59,7 @@ class DeviceMonitor
             auto r = sd_event_loop(event.get());
             if (r < 0)
             {
+                using namespace phosphor::logging;
                 log<level::ERR>("sd_event_loop() failed",
                                 entry("ERROR=%s", strerror(-r)));
             }
@@ -90,7 +89,7 @@ class DeviceMonitor
         /**
          * The sd_event structure used by the timer
          */
-        phosphor::power::event::Event& event;
+        witherspoon::power::event::Event& event;
 
         /**
          * The polling interval in milliseconds
@@ -100,7 +99,7 @@ class DeviceMonitor
         /**
          * The timer that runs fault check polls.
          */
-        phosphor::power::Timer timer;
+        witherspoon::power::Timer timer;
 };
 
 }

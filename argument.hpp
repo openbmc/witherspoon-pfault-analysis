@@ -4,7 +4,7 @@
 #include <map>
 #include <string>
 
-namespace phosphor
+namespace witherspoon
 {
 namespace power
 {

@@ -17,7 +17,7 @@
 #include "elog-errors.hpp"
 #include "utility.hpp"
 
-namespace phosphor
+namespace witherspoon
 {
 namespace power
 {

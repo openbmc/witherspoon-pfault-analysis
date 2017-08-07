@@ -3,7 +3,7 @@
 #include <memory>
 #include <systemd/sd-event.h>
 
-namespace phosphor
+namespace witherspoon
 {
 namespace power
 {
