@@ -61,7 +61,7 @@ class PMBus
          *
          * @param[in] name - path concatenated to
          *                   basePath to read
-         * @param[in] type - one of Base, Hwmon, or Debug
+         * @param[in] type - one of Base, Hwmon, or Debug (path type)
          *
          * @return bool - false if result was 0, else true
          */
@@ -75,13 +75,23 @@ class PMBus
          * @param[in] name - path concatenated to
          *                   basePath to read
          * @param[in] page - page number
-         * @param[in] type - one of Base, Hwmon, or Debug
+         * @param[in] type - one of Base, Hwmon, or Debug (path type)
          *
          * @return bool - false if result was 0, else true
          */
         bool readBitInPage(const std::string& name,
                            size_t page,
                            Type type);
+        /**
+         * Read byte(s) from file in sysfs.
+         *
+         * @param[in] name   - path concatenated to basePath to read
+         * @param[in] type   - one of Base, Hwmon, or Debug (path type)
+         * @param[out] data  - pointer to data to return
+         * @param[in] length - number of bytes to read
+         */
+         void read(const std::string& name, Type type, std::uint8_t* data,
+                   size_t length);
 
         /**
          * Writes an integer value to the file, therefore doing
@@ -90,7 +100,7 @@ class PMBus
          * @param[in] name - path concatenated to
          *                   basePath to write
          * @param[in] value - the value to write
-         * @param[in] type - one of Base, Hwmon, or Debug
+         * @param[in] type - one of Base, Hwmon, or Debug (path type)
          */
         void write(const std::string& name, int value, Type type);
 
@@ -127,7 +137,7 @@ class PMBus
         /**
          * Returns the path to use for the passed in type.
          *
-         * @param[in] type - one of Base, Hwmon, or Debug
+         * @param[in] type - one of Base, Hwmon, or Debug (path type)
          *
          * @return fs::path - the full path to Base, Hwmon, or Debug path
          */
