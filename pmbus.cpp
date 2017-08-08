@@ -110,6 +110,70 @@ bool PMBus::readBit(const std::string& name, Type type)
     return value != 0;
 }
 
+void PMBus::read(const std::string& name, Type type, std::uint8_t* data, size_t length)
+{
+    std::ifstream file;
+    fs::path path{basePath};
+
+    if (type == Type::Hwmon)
+    {
+        path /= hwmonRelPath;
+    }
+
+    path /= name;
+
+    file.exceptions(std::ifstream::failbit |
+                    std::ifstream::badbit |
+                    std::ifstream::eofbit);
+
+    try
+    {
+        char* err = NULL;
+        unsigned long value = 0;
+        std::string val{1, '\0'};
+
+        file.open(path);
+
+        while((length > 0) && (!*err))
+        {
+            // The files will be in ASCII format, so each byte will be two
+            // characters. Read in 2 bytes of ASCII for each 1 byte of data.
+            file.read(&val[0], 2);
+            length--;
+            value = strtoul(val.c_str(), &err, 16);
+
+            if (*err)
+            {
+                log<level::ERR>("Invalid character in sysfs file",
+                                entry("FILE=%s", path.c_str()),
+                                entry("CONTENTS=%s", val.c_str()));
+
+                //Catch below and handle as a read failure
+                elog<InternalFailure>();
+            }
+
+            *data = value;
+             data++;
+        }
+
+    }
+    catch (std::exception& e)
+    {
+        auto rc = errno;
+
+        log<level::ERR>("Failed to read sysfs file",
+                entry("FILENAME=%s", path.c_str()));
+
+        elog<ReadFailure>(xyz::openbmc_project::Sensor::Device::
+                          ReadFailure::CALLOUT_ERRNO(rc),
+                          xyz::openbmc_project::Sensor::Device::
+                          ReadFailure::CALLOUT_DEVICE_PATH(
+                              fs::canonical(basePath).c_str()));
+    }
+
+    return;
+}
+
 void PMBus::write(const std::string& name, int value, Type type)
 {
     std::ofstream file;
