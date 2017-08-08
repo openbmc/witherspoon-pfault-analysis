@@ -15,6 +15,7 @@ witherspoon_psu_monitor_CXXFLAGS = \
 	${PHOSPHOR_DBUS_INTERFACES_CFLAGS}
 
 witherspoon_psu_monitor_LDADD = \
+	-lstdc++fs \
 	${top_builddir}/libpower.la \
 	$(SDBUSPLUS_LIBS) \
 	$(PHOSPHOR_LOGGING_LIBS) \
