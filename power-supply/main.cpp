@@ -56,11 +56,14 @@ int main(int argc, char* argv[])
         return -4;
     }
 
+    auto bus = sdbusplus::bus::new_default();
+
     auto objname = "psu" + instnum;
     auto instance = std::stoul(instnum);
     auto psuDevice = std::make_unique<psu::PowerSupply>(objname, instance,
-                                                        objpath, invpath);
-    auto bus = sdbusplus::bus::new_default();
+                                                        objpath, invpath,
+                                                        bus);
+
     sd_event* events = nullptr;
 
     auto r = sd_event_default(&events);
@@ -79,6 +82,14 @@ int main(int argc, char* argv[])
 
     // TODO: Use inventory path to subscribe to signal change for power supply presence.
 
+    //Attach the event object to the bus object so we can
+    //handle both sd_events (for the timers) and dbus signals.
+    bus.attach_event(eventPtr.get(), SD_EVENT_PRIORITY_NORMAL);
+
+    // TODO: Get power state on startup.
+    // TODO: Get presence state on startup and subscribe to presence changes.
+    // TODO - set to vinUVFault to false on presence change & start of poweron
+    // TODO - set readFailLogged to false on presence change and start of poweron
     auto pollInterval = std::chrono::milliseconds(1000);
     DeviceMonitor mainloop(std::move(psuDevice), eventPtr, pollInterval);
     mainloop.run();
