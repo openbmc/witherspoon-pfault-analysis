@@ -81,6 +81,16 @@ class PMBus
         bool readBitInPage(const std::string& name,
                            size_t page,
                            Type type);
+        /**
+         * Read byte(s) from file in sysfs.
+         *
+         * @param[in] name   - path concatenated to basePath to read
+         * @param[in] type   - either Base or Hwmon
+         * @param[out] data  - pointer to data to return
+         * @param[in] length - number of bytes to read
+         */
+         void read(const std::string& name, Type type, std::uint8_t* data,
+                   size_t length);
 
         /**
          * Writes an integer value to the file, therefore doing
