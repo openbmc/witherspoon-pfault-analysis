@@ -9,6 +9,8 @@ namespace witherspoon
 namespace pmbus
 {
 
+// The file name Linux uses to capture the VIN_UV_FAULT bit from the STATUS_WORD
+constexpr auto VIN_UV_FAULT = "in1_alarm";
 /**
  * If the access should be done in the base
  * device directory or the hwmon directory.
