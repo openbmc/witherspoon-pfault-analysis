@@ -53,7 +53,7 @@ fs::path PMBus::getPath(Type type)
     switch (type)
     {
         default:
-            /* fall through */
+        /* fall through */
         case Type::Base:
             return basePath;
             break;
@@ -111,7 +111,7 @@ bool PMBus::readBit(const std::string& name, Type type)
         auto rc = errno;
 
         log<level::ERR>("Failed to read sysfs file",
-                entry("FILENAME=%s", path.c_str()));
+                        entry("FILENAME=%s", path.c_str()));
 
         elog<ReadFailure>(xyz::openbmc_project::Sensor::Device::
                           ReadFailure::CALLOUT_ERRNO(rc),
@@ -121,6 +121,134 @@ bool PMBus::readBit(const std::string& name, Type type)
     }
 
     return value != 0;
+}
+
+void PMBus::read(const std::string& name, Type type, std::uint8_t* data,
+                 size_t length)
+{
+    std::ifstream file;
+    fs::path path = getPath(type);
+
+    path /= name;
+
+    file.exceptions(std::ifstream::failbit |
+                    std::ifstream::badbit |
+                    std::ifstream::eofbit);
+
+    try
+    {
+        char* err = NULL;
+        unsigned long value = 0;
+        std::string val{2, '\0'};
+
+        file.open(path);
+
+        // Used to access data pointer as an array, starting at the end.
+        auto dataidx = length - 1;
+        while (length > 0)
+        {
+            // The files will be in ASCII format, so each byte will be two
+            // characters. Read in 2 bytes of ASCII for each 1 byte of data.
+            file.read(&val[0], 2);
+
+            if (val == "0x")
+            {
+                // skip over the 0x prefix
+                continue;
+            }
+
+            length--;
+            value = strtoul(val.c_str(), &err, 16);
+
+            if (*err)
+            {
+                log<level::ERR>("Invalid character in sysfs file",
+                                entry("FILE=%s", path.c_str()),
+                                entry("CONTENTS=%s", val.c_str()));
+
+                //Catch below and handle as a read failure
+                elog<InternalFailure>();
+            }
+
+            // Stuff bytes in from end to beginning.
+            data[dataidx] = value;
+            dataidx--;
+        }
+
+    }
+    catch (std::exception& e)
+    {
+        auto rc = errno;
+
+        log<level::ERR>("Failed to read sysfs file",
+                        entry("FILENAME=%s", path.c_str()));
+
+        elog<ReadFailure>(xyz::openbmc_project::Sensor::Device::
+                          ReadFailure::CALLOUT_ERRNO(rc),
+                          xyz::openbmc_project::Sensor::Device::
+                          ReadFailure::CALLOUT_DEVICE_PATH(
+                              fs::canonical(basePath).c_str()));
+    }
+
+    return;
+}
+
+uint64_t PMBus::read(const std::string& name, Type type, size_t length)
+{
+    uint64_t data = 0;
+    std::ifstream file;
+    fs::path path = getPath(type);
+    path /= name;
+
+    file.exceptions(std::ifstream::failbit |
+                    std::ifstream::badbit |
+                    std::ifstream::eofbit);
+
+    // TODO - Do I need some assertion that length is not greater than size of
+    // the uint64_t data we plan on returning?
+
+    try
+    {
+        char* err = NULL;
+        unsigned long value = 0;
+        std::string val;
+
+        file.open(path);
+
+        // The files will be in ASCII format, so each byte will be two
+        // characters. Read in 2 bytes of ASCII for each 1 byte of data.
+        file >> val;
+
+        value = strtoul(val.c_str(), &err, 16);
+
+        if (*err)
+        {
+            log<level::ERR>("Invalid character in sysfs file",
+                            entry("FILE=%s", path.c_str()),
+                            entry("CONTENTS=%s", val.c_str()));
+
+            //Catch below and handle as a read failure
+            elog<InternalFailure>();
+        }
+
+        // TODO - How to handle if big endian? 
+        data = value;
+
+    }
+    catch (std::exception& e)
+    {
+        auto rc = errno;
+        log<level::ERR>("Failed to read sysfs file",
+                        entry("FILENAME=%s", path.c_str()));
+
+        elog<ReadFailure>(xyz::openbmc_project::Sensor::Device::
+                          ReadFailure::CALLOUT_ERRNO(rc),
+                          xyz::openbmc_project::Sensor::Device::
+                          ReadFailure::CALLOUT_DEVICE_PATH(
+                              fs::canonical(basePath).c_str()));
+    }
+
+    return data;
 }
 
 void PMBus::write(const std::string& name, int value, Type type)
@@ -144,7 +272,7 @@ void PMBus::write(const std::string& name, int value, Type type)
         auto rc = errno;
 
         log<level::ERR>("Failed to write sysfs file",
-                entry("FILENAME=%s", path.c_str()));
+                        entry("FILENAME=%s", path.c_str()));
 
         elog<WriteFailure>(xyz::openbmc_project::Control::Device::
                            WriteFailure::CALLOUT_ERRNO(rc),
@@ -163,7 +291,7 @@ void PMBus::findHwmonDir()
     for (auto& f : fs::directory_iterator(path))
     {
         if ((f.path().filename().string().find("hwmon") !=
-            std::string::npos) &&
+             std::string::npos) &&
             (fs::is_directory(f.path())))
         {
             hwmonDir = f.path().filename();
