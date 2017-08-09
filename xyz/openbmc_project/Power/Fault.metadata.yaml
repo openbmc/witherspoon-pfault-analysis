@@ -1,4 +1,7 @@
 - name: PowerSupplyUnderVoltageFault
   level: ERR
+  meta:
+    - str: "STATUS_WORD=0x%04X"
+      type: uint16
 - name: Shutdown
   level: ERR
