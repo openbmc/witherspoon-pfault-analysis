@@ -65,6 +65,10 @@ int main(int argc, char* argv[])
                                                         objpath, invpath,
                                                         bus);
 
+    // Get presence state on startup.
+    psuDevice->updatePresence();
+
+
     sd_event* events = nullptr;
 
     auto r = sd_event_default(&events);
