@@ -125,8 +125,6 @@ bool PMBus::readBit(const std::string& name, Type type)
 
 void PMBus::read(const std::string& name, Type type, std::uint8_t* data, size_t length)
 {
-    log<level::INFO>("PMBus::read()");
-
     std::ifstream file;
     fs::path path = getPath(type);
 
