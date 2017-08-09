@@ -444,13 +444,22 @@ namespace Fault
 namespace _PowerSupplyUnderVoltageFault
 {
 
+struct STATUS_WORD
+{
+    static constexpr auto str = "STATUS_WORD=0x%04X";
+    static constexpr auto str_short = "STATUS_WORD";
+    using type = std::tuple<std::decay_t<decltype(str)>,uint16_t>;
+    explicit constexpr STATUS_WORD(uint16_t a) : _entry(entry(str, a)) {};
+    type _entry;
+};
 
 }  // namespace _PowerSupplyUnderVoltageFault
 
 struct PowerSupplyUnderVoltageFault
 {
     static constexpr auto L = level::ERR;
-    using metadata_types = std::tuple<>;
+    using STATUS_WORD = _PowerSupplyUnderVoltageFault::STATUS_WORD;
+    using metadata_types = std::tuple<STATUS_WORD>;
 
 };
 
