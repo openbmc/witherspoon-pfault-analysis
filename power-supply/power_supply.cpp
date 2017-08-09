@@ -29,6 +29,9 @@ using namespace sdbusplus::xyz::openbmc_project::Control::Device::Error;
 using namespace sdbusplus::xyz::openbmc_project::Sensor::Device::Error;
 using namespace sdbusplus::xyz::openbmc_project::Power::Fault::Error;
 
+using PowerSupplyUnderVoltageFaultStatusWord = xyz::openbmc_project::Power::
+    Fault::PowerSupplyUnderVoltageFault::STATUS_WORD;
+
 namespace witherspoon
 {
 namespace power
@@ -65,8 +68,13 @@ void PowerSupply::analyze()
         {
             if(curUVFault)
             {
-                //FIXME - metadata
-                report<PowerSupplyUnderVoltageFault>();
+                std::uint16_t status_word = 0;
+                pmbusIntf->read(STATUS_WORD, Type::Base,
+                                reinterpret_cast<std::uint8_t*>(&status_word),
+                                sizeof(status_word));
+
+                report<PowerSupplyUnderVoltageFault>(
+                      PowerSupplyUnderVoltageFaultStatusWord(status_word));
                 vinUVFault = true;
             }
             else

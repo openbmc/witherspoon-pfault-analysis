@@ -39,52 +39,6 @@ namespace Power
 {
 namespace Fault
 {
-namespace Fault
-{
-namespace Error
-{
-    struct Shutdown;
-} // namespace Error
-} // namespace Fault
-} // namespace Fault
-} // namespace Power
-} // namespace openbmc_project
-} // namespace xyz
-} // namespace sdbusplus
-
-namespace sdbusplus
-{
-namespace xyz
-{
-namespace openbmc_project
-{
-namespace Power
-{
-namespace Fault
-{
-namespace Fault
-{
-namespace Error
-{
-    struct PowerSupplyUnderVoltageFault;
-} // namespace Error
-} // namespace Fault
-} // namespace Fault
-} // namespace Power
-} // namespace openbmc_project
-} // namespace xyz
-} // namespace sdbusplus
-
-namespace sdbusplus
-{
-namespace xyz
-{
-namespace openbmc_project
-{
-namespace Power
-{
-namespace Fault
-{
 namespace Error
 {
     struct PowerSupplyUnderVoltageFault;
@@ -110,8 +64,6 @@ namespace Power
 {
 namespace Fault
 {
-namespace Fault
-{
 namespace _PowerSupplyUnderVoltageFault
 {
 
@@ -131,86 +83,6 @@ struct PowerSupplyUnderVoltageFault
     static constexpr auto L = level::ERR;
     using STATUS_WORD = _PowerSupplyUnderVoltageFault::STATUS_WORD;
     using metadata_types = std::tuple<STATUS_WORD>;
-
-};
-
-} // namespace Fault
-} // namespace Fault
-} // namespace Power
-} // namespace openbmc_project
-} // namespace xyz
-
-
-namespace details
-{
-
-template <>
-struct map_exception_type<sdbusplus::xyz::openbmc_project::Power::Fault::Fault::Error::PowerSupplyUnderVoltageFault>
-{
-    using type = xyz::openbmc_project::Power::Fault::Fault::PowerSupplyUnderVoltageFault;
-};
-
-}
-
-namespace xyz
-{
-namespace openbmc_project
-{
-namespace Power
-{
-namespace Fault
-{
-namespace Fault
-{
-namespace _Shutdown
-{
-
-
-}  // namespace _Shutdown
-
-struct Shutdown
-{
-    static constexpr auto L = level::ERR;
-    using metadata_types = std::tuple<>;
-
-};
-
-} // namespace Fault
-} // namespace Fault
-} // namespace Power
-} // namespace openbmc_project
-} // namespace xyz
-
-
-namespace details
-{
-
-template <>
-struct map_exception_type<sdbusplus::xyz::openbmc_project::Power::Fault::Fault::Error::Shutdown>
-{
-    using type = xyz::openbmc_project::Power::Fault::Fault::Shutdown;
-};
-
-}
-
-namespace xyz
-{
-namespace openbmc_project
-{
-namespace Power
-{
-namespace Fault
-{
-namespace _PowerSupplyUnderVoltageFault
-{
-
-
-}  // namespace _PowerSupplyUnderVoltageFault
-
-struct PowerSupplyUnderVoltageFault
-{
-    static constexpr auto L = level::ERR;
-    using metadata_types = std::tuple<>;
 
 };
 
