@@ -9,6 +9,8 @@ namespace witherspoon
 namespace pmbus
 {
 
+namespace fs = std::experimental::filesystem;
+
 /**
  * If the access should be done in the base
  * device directory or the hwmon directory.
@@ -16,7 +18,8 @@ namespace pmbus
 enum class Type
 {
     Base,
-    Hwmon
+    Hwmon,
+    Debug
 };
 
 /**
@@ -48,7 +51,7 @@ class PMBus
         PMBus(const std::string& path) :
             basePath(path)
         {
-            findHwmonRelativePath();
+            findHwmonDir();
         }
 
         /**
@@ -118,19 +121,29 @@ class PMBus
          * Finds the path relative to basePath to the hwmon directory
          * for the device and stores it in hwmonRelPath.
          */
-         void findHwmonRelativePath();
+         void findHwmonDir();
+
+        /**
+         * Returns the path to use for the passed in type.
+         */
+         std::string getPath(Type type);
 
     private:
 
         /**
          * The sysfs device path
          */
-        std::experimental::filesystem::path basePath;
+        fs::path basePath;
 
         /**
-         * The relative (to basePath) path to the hwmon directory
+         * The directory name under the basePath hwmon directory
          */
-        std::experimental::filesystem::path hwmonRelPath;
+        fs::path hwmonDir;
+
+        /**
+         * The pmbus debug path with status files
+         */
+        fs::path debugPath = "/sys/kernel/debug/pmbus/";
 
 };
 
