@@ -13,8 +13,13 @@ namespace fs = std::experimental::filesystem;
 
 // The file name Linux uses to capture the VIN_UV_FAULT bit from the STATUS_WORD
 constexpr auto VIN_UV_FAULT = "in1_alarm";
+// The file name Linux uses to capture the input fault or warning bit from the
+// STATUS_WORD
+constexpr auto INPUT_FAULT_WARN = "power1_alarm";
 // The file name Linux uses to capture the STATUS_WORD from pmbus.
 constexpr auto STATUS_WORD = "status0";
+// The file name Linux uses to capture the STATUS_INPUT from pmbus.
+constexpr auto STATUS_INPUT = "status0_input";
 
 /**
  * If the access should be done in the base
