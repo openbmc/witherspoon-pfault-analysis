@@ -41,6 +41,26 @@ namespace Fault
 {
 namespace Error
 {
+    struct PowerSupplyInputFault;
+} // namespace Error
+} // namespace Fault
+} // namespace Power
+} // namespace openbmc_project
+} // namespace xyz
+} // namespace sdbusplus
+
+namespace sdbusplus
+{
+namespace xyz
+{
+namespace openbmc_project
+{
+namespace Power
+{
+namespace Fault
+{
+namespace Error
+{
     struct PowerSupplyUnderVoltageFault;
 } // namespace Error
 } // namespace Fault
@@ -99,6 +119,62 @@ template <>
 struct map_exception_type<sdbusplus::xyz::openbmc_project::Power::Fault::Error::PowerSupplyUnderVoltageFault>
 {
     using type = xyz::openbmc_project::Power::Fault::PowerSupplyUnderVoltageFault;
+};
+
+}
+
+namespace xyz
+{
+namespace openbmc_project
+{
+namespace Power
+{
+namespace Fault
+{
+namespace _PowerSupplyInputFault
+{
+
+struct STATUS_WORD
+{
+    static constexpr auto str = "STATUS_WORD=%d";
+    static constexpr auto str_short = "STATUS_WORD";
+    using type = std::tuple<std::decay_t<decltype(str)>,uint16_t>;
+    explicit constexpr STATUS_WORD(uint16_t a) : _entry(entry(str, a)) {};
+    type _entry;
+};
+struct STATUS_INPUT
+{
+    static constexpr auto str = "STATUS_INPUT=%d";
+    static constexpr auto str_short = "STATUS_INPUT";
+    using type = std::tuple<std::decay_t<decltype(str)>,uint16_t>;
+    explicit constexpr STATUS_INPUT(uint16_t a) : _entry(entry(str, a)) {};
+    type _entry;
+};
+
+}  // namespace _PowerSupplyInputFault
+
+struct PowerSupplyInputFault
+{
+    static constexpr auto L = level::ERR;
+    using STATUS_WORD = _PowerSupplyInputFault::STATUS_WORD;
+    using STATUS_INPUT = _PowerSupplyInputFault::STATUS_INPUT;
+    using metadata_types = std::tuple<STATUS_WORD, STATUS_INPUT>;
+
+};
+
+} // namespace Fault
+} // namespace Power
+} // namespace openbmc_project
+} // namespace xyz
+
+
+namespace details
+{
+
+template <>
+struct map_exception_type<sdbusplus::xyz::openbmc_project::Power::Fault::Error::PowerSupplyInputFault>
+{
+    using type = xyz::openbmc_project::Power::Fault::PowerSupplyInputFault;
 };
 
 }
