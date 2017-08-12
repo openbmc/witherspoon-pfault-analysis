@@ -31,6 +31,11 @@ using namespace sdbusplus::xyz::openbmc_project::Power::Fault::Error;
 using PowerSupplyUnderVoltageFaultStatusWord = xyz::openbmc_project::Power::
     Fault::PowerSupplyUnderVoltageFault::STATUS_WORD;
 
+using PowerSupplyInputFaultStatusWord = xyz::openbmc_project::Power::
+    Fault::PowerSupplyInputFault::STATUS_WORD;
+using PowerSupplyInputFaultStatusInput = xyz::openbmc_project::Power::
+    Fault::PowerSupplyInputFault::STATUS_INPUT;
+
 namespace witherspoon
 {
 namespace power
@@ -74,10 +79,9 @@ void PowerSupply::analyze()
             // If count reaches 3, we have fault. If count reaches 0, fault is
             // cleared.
 
-            //TODO: INPUT FAULT or WARNING bit to check from STATUS_WORD
-            // pmbus-core update to read high byte of STATUS_WORD?
+            auto curInputFault = pmbusIntf->readBit(INPUT_FAULT_WARN, Type::Hwmon);
 
-            if ((curUVFault != vinUVFault) || inputFault)
+            if ((curUVFault != vinUVFault) || (curInputFault != inputFault))
             {
 
                 if(curUVFault)
@@ -95,6 +99,30 @@ void PowerSupply::analyze()
                 {
                     log<level::INFO>("VIN_UV_FAULT cleared");
                     vinUVFault = false;
+                }
+
+                if(curInputFault)
+                {
+                    std::uint16_t status_word = 0;
+                    std::uint8_t  status_input = 0;
+
+                    pmbusIntf->read(STATUS_WORD, Type::Debug,
+                                    reinterpret_cast<std::uint8_t*>(&status_word),
+                                    sizeof(status_word));
+
+                    pmbusIntf->read(STATUS_INPUT, Type::Debug,
+                                    reinterpret_cast<std::uint8_t*>(&status_input),
+                                    sizeof(status_input));
+
+                    report<PowerSupplyInputFault>(
+                           PowerSupplyInputFaultStatusWord(status_word),
+                           PowerSupplyInputFaultStatusInput(status_input));
+
+                    inputFault = true;
+                }
+                else
+                {
+                    inputFault = false;
                 }
             }
         }
