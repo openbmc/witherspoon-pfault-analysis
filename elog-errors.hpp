@@ -135,6 +135,26 @@ namespace xyz
 {
 namespace openbmc_project
 {
+namespace Power
+{
+namespace Fault
+{
+namespace Error
+{
+    struct PowerSupplyInputFault;
+} // namespace Error
+} // namespace Fault
+} // namespace Power
+} // namespace openbmc_project
+} // namespace xyz
+} // namespace sdbusplus
+
+namespace sdbusplus
+{
+namespace xyz
+{
+namespace openbmc_project
+{
 namespace Common
 {
 namespace Callout
@@ -579,6 +599,53 @@ namespace phosphor
 
 namespace logging
 {
+
+namespace xyz
+{
+namespace openbmc_project
+{
+namespace Power
+{
+namespace Fault
+{
+namespace _PowerSupplyInputFault
+{
+
+struct RAW_STATUS
+{
+    static constexpr auto str = "RAW_STATUS=%s";
+    static constexpr auto str_short = "RAW_STATUS";
+    using type = std::tuple<std::decay_t<decltype(str)>,const char*>;
+    explicit constexpr RAW_STATUS(const char* a) : _entry(entry(str, a)) {};
+    type _entry;
+};
+
+}  // namespace _PowerSupplyInputFault
+
+struct PowerSupplyInputFault
+{
+    static constexpr auto L = level::ERR;
+    using RAW_STATUS = _PowerSupplyInputFault::RAW_STATUS;
+    using metadata_types = std::tuple<RAW_STATUS>;
+
+};
+
+} // namespace Fault
+} // namespace Power
+} // namespace openbmc_project
+} // namespace xyz
+
+
+namespace details
+{
+
+template <>
+struct map_exception_type<sdbusplus::xyz::openbmc_project::Power::Fault::Error::PowerSupplyInputFault>
+{
+    using type = xyz::openbmc_project::Power::Fault::PowerSupplyInputFault;
+};
+
+}
 
 namespace xyz
 {
