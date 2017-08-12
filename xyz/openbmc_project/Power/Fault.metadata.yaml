@@ -3,5 +3,12 @@
   meta:
     - str: "STATUS_WORD=0x%04X"
       type: uint16
+- name: PowerSupplyInputFault
+  level: ERR
+  meta:
+    - str: "STATUS_WORD=0x%04X"
+      type: uint16
+    - str: "STATUS_INPUT=0x%02X"
+      type: uint16
 - name: Shutdown
   level: ERR
