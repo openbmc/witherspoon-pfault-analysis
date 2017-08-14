@@ -1,0 +1,3 @@
+- name: PowerOnFailure
+  description: System power failed to turn on
+

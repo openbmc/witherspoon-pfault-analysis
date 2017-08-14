@@ -11,6 +11,22 @@ libpower_la_CXXFLAGS = \
 
 libpower_la_SOURCES = \
 	timer.cpp \
-	utility.cpp
+	utility.cpp \
+	xyz/openbmc_project/Power/Fault/error.cpp
+
+nobase_nodist_include_HEADERS = \
+	xyz/openbmc_project/Power/Fault/error.hpp
+
+BUILT_SOURCES = \
+	xyz/openbmc_project/Power/Fault/error.cpp \
+	xyz/openbmc_project/Power/Fault/error.hpp
+
+xyz/openbmc_project/Power/Fault/error.hpp: ${srcdir}/xyz/openbmc_project/Power/Fault.errors.yaml
+	@mkdir -p `dirname $@`
+	$(SDBUSPLUSPLUS) -r $(srcdir) error exception-header xyz.openbmc_project.Power.Fault > $@
+
+xyz/openbmc_project/Power/Fault/error.cpp: ${srcdir}/xyz/openbmc_project/Power/Fault.errors.yaml
+	@mkdir -p `dirname $@`
+	$(SDBUSPLUSPLUS) -r $(srcdir) error exception-cpp xyz.openbmc_project.Power.Fault > $@
 
 SUBDIRS = .
