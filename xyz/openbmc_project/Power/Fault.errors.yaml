@@ -1,0 +1,2 @@
+- name: PGOODFailure
+  description: System PGOOD failed to turn on
