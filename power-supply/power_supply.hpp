@@ -100,6 +100,14 @@ class PowerSupply : public Device
         std::unique_ptr<sdbusplus::bus::match_t> presentMatch;
 
         /**
+         * True if the power is on.
+         */
+        bool powerOn = false;
+
+        /** @brief Used to subscribe to dbus power on state changes **/
+        std::unique_ptr<sdbusplus::bus::match_t> powerOnMatch;
+
+        /**
          * @brief Has a PMBus read failure already been logged?
          */
         bool readFailLogged = false;
@@ -128,6 +136,23 @@ class PowerSupply : public Device
          *
          */
         void inventoryChanged(sdbusplus::message::message& msg);
+
+        /**
+         * Updates the poweredOn status by querying D-Bus
+         *
+         * The D-Bus property for the sytem power stat will be read to
+         * determine if the system is powered on or not.
+         */
+        void updatePowerState();
+
+
+        /** @brief Callback for power state property changes
+         * Process changes to the powered on stat property for the system.
+         *
+         * @param[in] msg - Data associated with the power state signal
+         */
+        void powerStateChanged(sdbusplus::message::message& msg);
+
 };
 
 }
