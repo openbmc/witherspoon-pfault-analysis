@@ -56,16 +56,6 @@ int main(int argc, char* argv[])
         return -4;
     }
 
-    auto bus = sdbusplus::bus::new_default();
-
-    auto objname = "power_supply" + instnum;
-    auto instance = std::stoul(instnum);
-    auto psuDevice = std::make_unique<psu::PowerSupply>(objname,
-                                                        std::move(instance),
-                                                        std::move(objpath),
-                                                        std::move(invpath),
-                                                        bus);
-
     sd_event* events = nullptr;
 
     auto r = sd_event_default(&events);
@@ -76,17 +66,26 @@ int main(int argc, char* argv[])
         return -5;
     }
 
+    auto bus = sdbusplus::bus::new_default();
     witherspoon::power::event::Event eventPtr{events};
 
     //Attach the event object to the bus object so we can
     //handle both sd_events (for the timers) and dbus signals.
     bus.attach_event(eventPtr.get(), SD_EVENT_PRIORITY_NORMAL);
 
-    // TODO: Use inventory path to subscribe to signal change for power supply presence.
+    auto objname = "power_supply" + instnum;
+    auto instance = std::stoul(instnum);
+    // The Witherspoon power supply can delay DC_GOOD active for 1 second.
+    std::chrono::seconds powerOnDelay(1);
+    auto psuDevice = std::make_unique<psu::PowerSupply>(objname,
+                                                        std::move(instance),
+                                                        std::move(objpath),
+                                                        std::move(invpath),
+                                                        bus,
+                                                        eventPtr,
+                                                        powerOnDelay);
 
-    //Attach the event object to the bus object so we can
-    //handle both sd_events (for the timers) and dbus signals.
-    bus.attach_event(eventPtr.get(), SD_EVENT_PRIORITY_NORMAL);
+    // TODO: Use inventory path to subscribe to signal change for power supply presence.
 
     // TODO: Get power state on startup.
     // TODO: Get presence state on startup and subscribe to presence changes.
