@@ -45,6 +45,8 @@ namespace psu
 constexpr auto INVENTORY_OBJ_PATH = "/xyz/openbmc_project/inventory";
 constexpr auto INVENTORY_INTERFACE = "xyz.openbmc_project.Inventory.Item";
 constexpr auto PRESENT_PROP = "Present";
+constexpr auto POWER_OBJ_PATH = "/org/openbmc/control/power0";
+constexpr auto POWER_INTERFACE = "org.openbmc.control.Power";
 
 PowerSupply::PowerSupply(const std::string& name, size_t inst,
                          const std::string& objpath, const std::string& invpath,
@@ -64,7 +66,20 @@ PowerSupply::PowerSupply(const std::string& name, size_t inst,
     {
         this->inventoryChanged(msg);
     });
+
+    updatePowerState();
+
+    // Subscribe to power state changes
+    powerOnMatch = std::make_unique<match_t>(bus,
+                   match::rules::propertiesChanged(
+                       POWER_OBJ_PATH,
+                       POWER_INTERFACE),
+                   [this](auto& msg)
+    {
+        this->powerStateChanged(msg);
+    });
 }
+
 
 void PowerSupply::analyze()
 {
@@ -197,9 +212,60 @@ void PowerSupply::updatePresence()
 
 }
 
+void PowerSupply::powerStateChanged(sdbusplus::message::message& msg)
+{
+    std::string msgSensor;
+    std::map<std::string, sdbusplus::message::variant<uint32_t, bool>> msgData;
+    msg.read(msgSensor, msgData);
+
+    // Check if it was the Present property that changed.
+    auto valPropMap = msgData.find("state");
+    if (valPropMap != msgData.end())
+    {
+        updatePowerState();
+    }
+
+    return;
+}
+
+void PowerSupply::updatePowerState()
+{
+    // When state = 1, system is powered on
+    int32_t state = 0;
+
+    auto service = util::getService(POWER_OBJ_PATH,
+                                    POWER_INTERFACE,
+                                    bus);
+
+    // Use getProperty utility function to get power state.
+    try
+    {
+        util::getProperty<int32_t>(POWER_INTERFACE,
+                                   "state",
+                                   POWER_OBJ_PATH,
+                                   service,
+                                   bus,
+                                   state);
+        if (state)
+        {
+            powerOn = true;
+        }
+        else
+        {
+            powerOn = false;
+        }
+    }
+    catch (std::exception& e)
+    {
+        powerOn = false;
+    }
+
+}
+
 void PowerSupply::clearFaults()
 {
     //TODO - Clear faults at pre-poweron. openbmc/openbmc#1736
+    log<level::INFO>("PowerSupply::clearFaults");
     return;
 }
 
