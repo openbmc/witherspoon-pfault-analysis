@@ -91,13 +91,17 @@ class PowerSupply : public Device
          */
         witherspoon::pmbus::PMBus pmbusIntf;
 
-        /**
-         * True if the power supply is present.
-         */
+        /** @brief True if the power supply is present. */
         bool present = false;
 
         /** @brief Used to subscribe to dbus pcap propety changes **/
         std::unique_ptr<sdbusplus::bus::match_t> presentMatch;
+
+        /** @brief True if the power is on. */
+        bool powerOn = false;
+
+        /** @brief Used to subscribe to dbus power on state changes **/
+        std::unique_ptr<sdbusplus::bus::match_t> powerOnMatch;
 
         /**
          * @brief Has a PMBus read failure already been logged?
@@ -128,6 +132,23 @@ class PowerSupply : public Device
          *
          */
         void inventoryChanged(sdbusplus::message::message& msg);
+
+        /**
+         * @brief Updates the poweredOn status by querying D-Bus
+         *
+         * The D-Bus property for the sytem power state will be read to
+         * determine if the system is powered on or not.
+         */
+        void updatePowerState();
+
+
+        /** @brief Callback for power state property changes
+         * Process changes to the powered on stat property for the system.
+         *
+         * @param[in] msg - Data associated with the power state signal
+         */
+        void powerStateChanged(sdbusplus::message::message& msg);
+
 };
 
 }
