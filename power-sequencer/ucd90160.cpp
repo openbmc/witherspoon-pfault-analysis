@@ -31,9 +31,11 @@ namespace power
 using namespace std::string_literals;
 
 const auto CLEAR_LOGGED_FAULTS = "clear_logged_faults"s;
+const auto MFR_STATUS = "mfr_status"s;
 
 const auto DEVICE_NAME = "UCD90160"s;
 const auto DRIVER_NAME = "ucd9000"s;
+constexpr auto NUM_PAGES = 16;
 
 using namespace pmbus;
 using namespace phosphor::logging;
@@ -93,6 +95,30 @@ void UCD90160::analyze()
     }
 }
 
+uint16_t UCD90160::readStatusWord()
+{
+    uint16_t statusWord = 0;
+
+    interface.read(STATUS_WORD,
+            Type::Debug,
+            reinterpret_cast<uint8_t*>(&statusWord),
+            sizeof(statusWord));
+
+    return statusWord;
+}
+
+uint32_t UCD90160::readMFRStatus()
+{
+    uint32_t mfrStatus = 0;
+
+    interface.read(MFR_STATUS,
+            Type::DeviceDebug,
+            reinterpret_cast<uint8_t*>(&mfrStatus),
+            sizeof(mfrStatus));
+
+    return mfrStatus;
+}
+
 void UCD90160::clearFaults()
 {
     try
@@ -112,7 +138,57 @@ void UCD90160::clearFaults()
 
 bool UCD90160::checkVOUTFaults()
 {
-    return false;
+    bool errorCreated = false;
+    auto statusWord = readStatusWord();
+
+    //The status_word register has a summary bit to tell us
+    //if each page even needs to be checked
+    if (!(statusWord & status_word::VOUT_FAULT))
+    {
+        return errorCreated;
+    }
+
+    for (size_t page = 0; page < NUM_PAGES; page++)
+    {
+        if (isVoutFaultLogged(page))
+        {
+            continue;
+        }
+
+        uint8_t vout = 0;
+        auto statusVout = interface.insertPageNum(STATUS_VOUT, page);
+
+        interface.read(statusVout,
+                Type::Debug,
+                &vout,
+                sizeof(vout));
+
+        //Any bit on is an error
+        if (vout)
+        {
+            auto& railNames = std::get<ucd90160::railNamesField>
+                (deviceMap.find(getInstance())->second);
+            auto railName = railNames.at(page);
+            auto mfrStatus = readMFRStatus();
+
+            report<PowerSequencerVoltageFault>(
+                    xyz::openbmc_project::Power::Fault::
+                    PowerSequencerVoltageFault::RAIL(page),
+                    xyz::openbmc_project::Power::Fault::
+                    PowerSequencerVoltageFault::RAIL_NAME(railName.c_str()),
+                    xyz::openbmc_project::Power::Fault::
+                    PowerSequencerVoltageFault::STATUS_WORD(statusWord),
+                    xyz::openbmc_project::Power::Fault::
+                    PowerSequencerVoltageFault::STATUS_VOUT(vout),
+                    xyz::openbmc_project::Power::Fault::
+                    PowerSequencerVoltageFault::MFR_STATUS(mfrStatus));
+
+            setVoutFaultLogged(page);
+            errorCreated = true;
+        }
+    }
+
+    return errorCreated;
 }
 
 bool UCD90160::checkPGOODFaults(bool polling)
