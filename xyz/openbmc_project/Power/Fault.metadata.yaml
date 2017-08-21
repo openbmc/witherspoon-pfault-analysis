@@ -1,4 +1,41 @@
 - name: Shutdown
   level: ERR
+
 - name: PowerOnFailure
   level: ERR
+
+- name: PowerSequencerVoltageFault
+  level: ERR
+  meta:
+    - str: "RAIL=%d"
+      type: uint16
+    - str: "RAIL_NAME=%s"
+      type: string
+    - str: "STATUS_WORD=0x%04X"
+      type: uint16
+    - str: "STATUS_VOUT=0x%02X"
+      type: uint16
+    - str: "MFR_STATUS=0x%08X"
+      type: uint32
+
+- name: PowerSequencerPGOODFault
+  level: ERR
+  meta:
+    - str: "INPUT_NUM=%d"
+      type: uint16
+    - str: "INPUT_NAME=%s"
+      type: string
+    - str: "INPUT_STATUS=%d"
+      type: uint16
+    - str: "STATUS_WORD=0x%04X"
+      type: uint16
+    - str: "MFR_STATUS=0x%08X"
+      type: uint32
+
+- name: PowerSequencerFault
+  level: ERR
+  meta:
+    - str: "STATUS_WORD=0x%04X"
+      type: uint16
+    - str: "MFR_STATUS=0x%08X"
+      type: uint32
