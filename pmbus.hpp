@@ -13,14 +13,16 @@ namespace fs = std::experimental::filesystem;
 
 /**
  * If the access should be done in the base
- * device directory, the hwmon directory, or
- * the debug director.
+ * device directory, the hwmon directory, the
+ * pmbus debug directory, or the device debug
+ * directory.
  */
 enum class Type
 {
     Base,
     Hwmon,
-    Debug
+    Debug,
+    DeviceDebug
 };
 
 /**
@@ -56,12 +58,29 @@ class PMBus
         }
 
         /**
+         * Constructor
+         *
+         * This version is required when DeviceDebug
+         * access will be used.
+         *
+         * @param[in] path - path to the sysfs directory
+         * @param[in] driverName - the device driver name
+         */
+        PMBus(const std::string& path,
+              const std::string& driverName) :
+            basePath(path),
+            driverName(driverName)
+        {
+            findHwmonDir();
+        }
+
+        /**
          * Reads a file in sysfs that represents a single bit,
          * therefore doing a PMBus read.
          *
          * @param[in] name - path concatenated to
          *                   basePath to read
-         * @param[in] type - one of Base, Hwmon, or Debug (path type)
+         * @param[in] type - Path type
          *
          * @return bool - false if result was 0, else true
          */
@@ -75,7 +94,7 @@ class PMBus
          * @param[in] name - path concatenated to
          *                   basePath to read
          * @param[in] page - page number
-         * @param[in] type - one of Base, Hwmon, or Debug (path type)
+         * @param[in] type - Path type
          *
          * @return bool - false if result was 0, else true
          */
@@ -86,7 +105,7 @@ class PMBus
          * Read byte(s) from file in sysfs.
          *
          * @param[in] name   - path concatenated to basePath to read
-         * @param[in] type   - one of Base, Hwmon, or Debug (path type)
+         * @param[in] type - Path type
          * @param[out] data  - pointer to data to return
          * @param[in] length - number of bytes to read
          */
@@ -100,7 +119,7 @@ class PMBus
          * @param[in] name - path concatenated to
          *                   basePath to write
          * @param[in] value - the value to write
-         * @param[in] type - one of Base, Hwmon, or Debug (path type)
+         * @param[in] type - Path type
          */
         void write(const std::string& name, int value, Type type);
 
@@ -137,7 +156,7 @@ class PMBus
         /**
          * Returns the path to use for the passed in type.
          *
-         * @param[in] type - one of Base, Hwmon, or Debug (path type)
+         * @param[in] type - Path type
          *
          * @return fs::path - the full path to Base, Hwmon, or Debug path
          */
@@ -156,9 +175,16 @@ class PMBus
         fs::path hwmonDir;
 
         /**
+         * The device driver name.  Used for finding the device
+         * debug directory.  Not required if that directory
+         * isn't used.
+         */
+        std::string driverName;
+
+        /**
          * The pmbus debug path with status files
          */
-        const fs::path debugPath = "/sys/kernel/debug/pmbus/";
+        const fs::path debugPath = "/sys/kernel/debug/";
 
 };
 
