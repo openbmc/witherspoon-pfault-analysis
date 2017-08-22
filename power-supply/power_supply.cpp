@@ -88,7 +88,12 @@ void PowerSupply::analyze()
     {
         if (present)
         {
-            auto curUVFault = pmbusIntf.readBit(VIN_UV_FAULT, Type::Hwmon);
+            std::uint16_t statusWord = 0;
+            std::uint8_t  statusInput = 0;
+
+            // Read the 2 byte STATUS_WORD value to check for faults.
+            statusWord = pmbusIntf.read(STATUS_WORD, Type::Debug);
+
             //TODO: 3 consecutive reads should be performed.
             // If 3 consecutive reads are seen, log the fault.
             // Driver gives cached value, read once a second.
@@ -96,17 +101,12 @@ void PowerSupply::analyze()
             // If count reaches 3, we have fault. If count reaches 0, fault is
             // cleared.
 
-            auto curInputFault = pmbusIntf.readBit(INPUT_FAULT_WARN,
-                                                   Type::Hwmon);
-
-            if (curUVFault != vinUVFault)
+            if ((statusWord & status_word::VIN_UV_FAULT) && !vinUVFault)
             {
-                vinUVFault = curUVFault;
+                vinUVFault = true;
 
-                if (curUVFault)
-                {
-                    std::uint16_t statusWord = 0;
-                    statusWord = pmbusIntf.read(STATUS_WORD, Type::Debug);
+                using metadata = xyz::openbmc_project::Power::Fault::
+                    PowerSupplyUnderVoltageFault;
 
                     util::NamesValues nv;
                     nv.add("STATUS_WORD", statusWord);
@@ -121,38 +121,78 @@ void PowerSupply::analyze()
                 }
                 else
                 {
+                    vinUVFault = false;
                     log<level::INFO>("VIN_UV_FAULT cleared",
                                      entry("POWERSUPPLY=%s",
                                            inventoryPath.c_str()));
                 }
-
             }
 
-            if (curInputFault != inputFault)
+            if ((statusWord & status_word::INPUT_FAULT_WARN) && !inputFault)
             {
-                if (curInputFault)
-                {
-                    std::uint16_t statusWord = 0;
-                    std::uint8_t  statusInput = 0;
+                inputFault = true;
 
-                    statusWord = pmbusIntf.read(STATUS_WORD, Type::Debug);
+                statusInput = pmbusIntf.read(STATUS_INPUT, Type::Debug);
+
+                util::NamesValues nv;
+                nv.add("STATUS_WORD", statusWord);
+                nv.add("STATUS_INPUT", statusInput);
+
+                using metadata = xyz::openbmc_project::Power::Fault::
+                    PowerSupplyInputFault;
+
+                report<PowerSupplyInputFault>(
+                                              metadata::RAW_STATUS(nv.get()));
+            }
+            else
+            {
+                if ((inputFault) &&
+                    !(statusWord & status_word::INPUT_FAULT_WARN))
+                {
+                    inputFault = false;
                     statusInput = pmbusIntf.read(STATUS_INPUT, Type::Debug);
+
+                    log<level::INFO>("INPUT_FAULT_WARN cleared",
+                                     entry("POWERSUPPLY=%s",
+                                           inventoryPath.c_str()),
+                                     entry("STATUS_WORD=0x%04X", statusWord),
+                                     entry("STATUS_INPUT=0x%02X", statusInput));
+                }
+            }
+
+            if (powerOn)
+            {
+                // Check PG# and UNIT_IS_OFF
+                if (((statusWord & status_word::POWER_GOOD_NEGATED) ||
+                    (statusWord & status_word::UNIT_IS_OFF)) &&
+                    !powerOnFault)
+                {
+                    std::uint8_t  statusVout = 0;
+                    std::uint8_t  statusIout = 0;
+                    std::uint8_t  statusMFR  = 0;
+
+                    statusInput = pmbusIntf.read(STATUS_INPUT, Type::Debug);
+                    statusVout = pmbusIntf.read(STATUS_VOUT, Type::Debug);
+                    statusIout = pmbusIntf.read(STATUS_IOUT, Type::Debug);
+                    statusMFR = pmbusIntf.read(STATUS_MFR, Type::Debug);
 
                     util::NamesValues nv;
                     nv.add("STATUS_WORD", statusWord);
                     nv.add("STATUS_INPUT", statusInput);
+                    nv.add("STATUS_VOUT", statusVout);
+                    nv.add("STATUS_IOUT", statusIout);
+                    nv.add("MFR_SPECIFIC", statusMFR);
 
                     using metadata = xyz::openbmc_project::Power::Fault::
-                            PowerSupplyInputFault;
+                        PowerSupplyShouldBeOn;
 
-                    report<PowerSupplyInputFault>(
+                    // A power supply is OFF (or pgood low) but should be on.
+                    report<PowerSupplyShouldBeOn>(
                             metadata::RAW_STATUS(nv.get()));
+                            metadata::CALLOUT_INVENTORY_PATH(
+                                    inventoryPath.c_str()));
 
-                    inputFault = true;
-                }
-                else
-                {
-                    inputFault = false;
+                    powerOnFault = true;
                 }
 
             }
@@ -235,6 +275,7 @@ void PowerSupply::powerStateChanged(sdbusplus::message::message& msg)
             readFailLogged = false;
             vinUVFault = false;
             inputFault = false;
+            powerOnFault = false;
             powerOnTimer.start(powerOnInterval, Timer::TimerType::oneshot);
         }
         else
