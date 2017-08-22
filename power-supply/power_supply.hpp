@@ -90,11 +90,14 @@ class PowerSupply : public Device
         /** @brief True if the power supply is present. */
         bool present = false;
 
-        /** @brief Used to subscribe to dbus pcap propety changes **/
+        /** @brief Used to subscribe to dbus pcap propety changes */
         std::unique_ptr<sdbusplus::bus::match_t> presentMatch;
 
         /** @brief True if the power is on. */
         bool powerOn = false;
+
+        /** @brief True if power on fault has been detected/reported. */
+        bool powerOnFault = false;
 
         /** @brief The sd_event structure used by the power on timer. */
         event::Event& event;
@@ -116,12 +119,10 @@ class PowerSupply : public Device
          */
         Timer powerOnTimer;
 
-        /** @brief Used to subscribe to dbus power on state changes **/
+        /** @brief Used to subscribe to dbus power on state changes */
         std::unique_ptr<sdbusplus::bus::match_t> powerOnMatch;
 
-        /**
-         * @brief Has a PMBus read failure already been logged?
-         */
+        /** @brief Has a PMBus read failure already been logged? */
         bool readFailLogged = false;
 
         /**
@@ -140,7 +141,8 @@ class PowerSupply : public Device
          */
         bool inputFault = false;
 
-        /** @brief Callback for inventory property changes
+        /**
+         * @brief Callback for inventory property changes
          *
          * Process change of Present property for power supply.
          *
@@ -166,7 +168,9 @@ class PowerSupply : public Device
          */
         void updatePowerState();
 
-        /** @brief Callback for power state property changes
+        /**
+         * @brief Callback for power state property changes
+         *
          * Process changes to the powered on stat property for the system.
          *
          * @param[in] msg - Data associated with the power state signal
