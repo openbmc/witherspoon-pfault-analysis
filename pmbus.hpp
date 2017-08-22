@@ -20,6 +20,10 @@ constexpr auto INPUT_FAULT_WARN = "power1_alarm";
 constexpr auto STATUS_WORD = "status0";
 // The file name Linux uses to capture the STATUS_INPUT from pmbus.
 constexpr auto STATUS_INPUT = "status0_input";
+// The bit mask representing the POWER_GOOD Negated bit of the STATUS_WORD.
+constexpr auto POWER_GOOD_NEGATED = 0x0800;
+// The bit mask representing the UNITI_IS_OFF bit of the STATUS_WORD.
+constexpr auto UNIT_IS_OFF = 0x0040;
 
 /**
  * If the access should be done in the base

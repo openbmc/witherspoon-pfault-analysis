@@ -618,7 +618,8 @@ struct PowerSupplyRuntimeShouldBeOn
     using STATUS_VOUT = _PowerSupplyRuntimeShouldBeOn::STATUS_VOUT;
     using STATUS_IOUT = _PowerSupplyRuntimeShouldBeOn::STATUS_IOUT;
     using MFR_SPECIFIC = _PowerSupplyRuntimeShouldBeOn::MFR_SPECIFIC;
-    using metadata_types = std::tuple<STATUS_WORD, STATUS_INPUT, STATUS_VOUT, STATUS_IOUT, MFR_SPECIFIC>;
+    using CALLOUT_INVENTORY_PATH = xyz::openbmc_project::Common::Callout::Inventory::CALLOUT_INVENTORY_PATH;
+    using metadata_types = std::tuple<STATUS_WORD, STATUS_INPUT, STATUS_VOUT, STATUS_IOUT, MFR_SPECIFIC, CALLOUT_INVENTORY_PATH>;
 
 };
 
