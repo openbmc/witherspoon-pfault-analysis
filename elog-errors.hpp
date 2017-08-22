@@ -35,13 +35,93 @@ namespace xyz
 {
 namespace openbmc_project
 {
+namespace Common
+{
+namespace Callout
+{
+namespace Error
+{
+    struct GPIO;
+} // namespace Error
+} // namespace Callout
+} // namespace Common
+} // namespace openbmc_project
+} // namespace xyz
+} // namespace sdbusplus
+
+namespace sdbusplus
+{
+namespace xyz
+{
+namespace openbmc_project
+{
+namespace Common
+{
+namespace Callout
+{
+namespace Error
+{
+    struct Inventory;
+} // namespace Error
+} // namespace Callout
+} // namespace Common
+} // namespace openbmc_project
+} // namespace xyz
+} // namespace sdbusplus
+
+namespace sdbusplus
+{
+namespace xyz
+{
+namespace openbmc_project
+{
+namespace Common
+{
+namespace Callout
+{
+namespace Error
+{
+    struct IIC;
+} // namespace Error
+} // namespace Callout
+} // namespace Common
+} // namespace openbmc_project
+} // namespace xyz
+} // namespace sdbusplus
+
+namespace sdbusplus
+{
+namespace xyz
+{
+namespace openbmc_project
+{
+namespace Common
+{
+namespace Callout
+{
+namespace Error
+{
+    struct Device;
+} // namespace Error
+} // namespace Callout
+} // namespace Common
+} // namespace openbmc_project
+} // namespace xyz
+} // namespace sdbusplus
+
+namespace sdbusplus
+{
+namespace xyz
+{
+namespace openbmc_project
+{
 namespace Power
 {
 namespace Fault
 {
 namespace Error
 {
-    struct Shutdown;
+    struct PowerSupplyUnderVoltageFault;
 } // namespace Error
 } // namespace Fault
 } // namespace Power
@@ -81,7 +161,47 @@ namespace Fault
 {
 namespace Error
 {
-    struct PowerSupplyUnderVoltageFault;
+    struct PowerSupplyRuntimeShouldBeOn;
+} // namespace Error
+} // namespace Fault
+} // namespace Power
+} // namespace openbmc_project
+} // namespace xyz
+} // namespace sdbusplus
+
+namespace sdbusplus
+{
+namespace xyz
+{
+namespace openbmc_project
+{
+namespace Common
+{
+namespace Callout
+{
+namespace Error
+{
+    struct IPMISensor;
+} // namespace Error
+} // namespace Callout
+} // namespace Common
+} // namespace openbmc_project
+} // namespace xyz
+} // namespace sdbusplus
+
+namespace sdbusplus
+{
+namespace xyz
+{
+namespace openbmc_project
+{
+namespace Power
+{
+namespace Fault
+{
+namespace Error
+{
+    struct Shutdown;
 } // namespace Error
 } // namespace Fault
 } // namespace Power
@@ -95,6 +215,263 @@ namespace phosphor
 
 namespace logging
 {
+
+namespace xyz
+{
+namespace openbmc_project
+{
+namespace Common
+{
+namespace Callout
+{
+namespace _Device
+{
+
+struct CALLOUT_ERRNO
+{
+    static constexpr auto str = "CALLOUT_ERRNO=%d";
+    static constexpr auto str_short = "CALLOUT_ERRNO";
+    using type = std::tuple<std::decay_t<decltype(str)>,int32_t>;
+    explicit constexpr CALLOUT_ERRNO(int32_t a) : _entry(entry(str, a)) {};
+    type _entry;
+};
+struct CALLOUT_DEVICE_PATH
+{
+    static constexpr auto str = "CALLOUT_DEVICE_PATH=%s";
+    static constexpr auto str_short = "CALLOUT_DEVICE_PATH";
+    using type = std::tuple<std::decay_t<decltype(str)>,const char*>;
+    explicit constexpr CALLOUT_DEVICE_PATH(const char* a) : _entry(entry(str, a)) {};
+    type _entry;
+};
+
+}  // namespace _Device
+
+struct Device
+{
+    static constexpr auto L = level::ERR;
+    using CALLOUT_ERRNO = _Device::CALLOUT_ERRNO;
+    using CALLOUT_DEVICE_PATH = _Device::CALLOUT_DEVICE_PATH;
+    using metadata_types = std::tuple<CALLOUT_ERRNO, CALLOUT_DEVICE_PATH>;
+
+};
+
+} // namespace Callout
+} // namespace Common
+} // namespace openbmc_project
+} // namespace xyz
+
+
+namespace details
+{
+
+template <>
+struct map_exception_type<sdbusplus::xyz::openbmc_project::Common::Callout::Error::Device>
+{
+    using type = xyz::openbmc_project::Common::Callout::Device;
+};
+
+}
+
+namespace xyz
+{
+namespace openbmc_project
+{
+namespace Common
+{
+namespace Callout
+{
+namespace _GPIO
+{
+
+struct CALLOUT_GPIO_NUM
+{
+    static constexpr auto str = "CALLOUT_GPIO_NUM=%u";
+    static constexpr auto str_short = "CALLOUT_GPIO_NUM";
+    using type = std::tuple<std::decay_t<decltype(str)>,uint32_t>;
+    explicit constexpr CALLOUT_GPIO_NUM(uint32_t a) : _entry(entry(str, a)) {};
+    type _entry;
+};
+
+}  // namespace _GPIO
+
+struct GPIO
+{
+    static constexpr auto L = level::ERR;
+    using CALLOUT_GPIO_NUM = _GPIO::CALLOUT_GPIO_NUM;
+    using CALLOUT_ERRNO = xyz::openbmc_project::Common::Callout::Device::CALLOUT_ERRNO;
+    using CALLOUT_DEVICE_PATH = xyz::openbmc_project::Common::Callout::Device::CALLOUT_DEVICE_PATH;
+    using metadata_types = std::tuple<CALLOUT_GPIO_NUM, CALLOUT_ERRNO, CALLOUT_DEVICE_PATH>;
+
+};
+
+} // namespace Callout
+} // namespace Common
+} // namespace openbmc_project
+} // namespace xyz
+
+
+namespace details
+{
+
+template <>
+struct map_exception_type<sdbusplus::xyz::openbmc_project::Common::Callout::Error::GPIO>
+{
+    using type = xyz::openbmc_project::Common::Callout::GPIO;
+};
+
+}
+
+namespace xyz
+{
+namespace openbmc_project
+{
+namespace Common
+{
+namespace Callout
+{
+namespace _IIC
+{
+
+struct CALLOUT_IIC_BUS
+{
+    static constexpr auto str = "CALLOUT_IIC_BUS=%s";
+    static constexpr auto str_short = "CALLOUT_IIC_BUS";
+    using type = std::tuple<std::decay_t<decltype(str)>,const char*>;
+    explicit constexpr CALLOUT_IIC_BUS(const char* a) : _entry(entry(str, a)) {};
+    type _entry;
+};
+struct CALLOUT_IIC_ADDR
+{
+    static constexpr auto str = "CALLOUT_IIC_ADDR=0x%hx";
+    static constexpr auto str_short = "CALLOUT_IIC_ADDR";
+    using type = std::tuple<std::decay_t<decltype(str)>,uint16_t>;
+    explicit constexpr CALLOUT_IIC_ADDR(uint16_t a) : _entry(entry(str, a)) {};
+    type _entry;
+};
+
+}  // namespace _IIC
+
+struct IIC
+{
+    static constexpr auto L = level::ERR;
+    using CALLOUT_IIC_BUS = _IIC::CALLOUT_IIC_BUS;
+    using CALLOUT_IIC_ADDR = _IIC::CALLOUT_IIC_ADDR;
+    using CALLOUT_ERRNO = xyz::openbmc_project::Common::Callout::Device::CALLOUT_ERRNO;
+    using CALLOUT_DEVICE_PATH = xyz::openbmc_project::Common::Callout::Device::CALLOUT_DEVICE_PATH;
+    using metadata_types = std::tuple<CALLOUT_IIC_BUS, CALLOUT_IIC_ADDR, CALLOUT_ERRNO, CALLOUT_DEVICE_PATH>;
+
+};
+
+} // namespace Callout
+} // namespace Common
+} // namespace openbmc_project
+} // namespace xyz
+
+
+namespace details
+{
+
+template <>
+struct map_exception_type<sdbusplus::xyz::openbmc_project::Common::Callout::Error::IIC>
+{
+    using type = xyz::openbmc_project::Common::Callout::IIC;
+};
+
+}
+
+namespace xyz
+{
+namespace openbmc_project
+{
+namespace Common
+{
+namespace Callout
+{
+namespace _Inventory
+{
+
+struct CALLOUT_INVENTORY_PATH
+{
+    static constexpr auto str = "CALLOUT_INVENTORY_PATH=%s";
+    static constexpr auto str_short = "CALLOUT_INVENTORY_PATH";
+    using type = std::tuple<std::decay_t<decltype(str)>,const char*>;
+    explicit constexpr CALLOUT_INVENTORY_PATH(const char* a) : _entry(entry(str, a)) {};
+    type _entry;
+};
+
+}  // namespace _Inventory
+
+struct Inventory
+{
+    static constexpr auto L = level::ERR;
+    using CALLOUT_INVENTORY_PATH = _Inventory::CALLOUT_INVENTORY_PATH;
+    using metadata_types = std::tuple<CALLOUT_INVENTORY_PATH>;
+
+};
+
+} // namespace Callout
+} // namespace Common
+} // namespace openbmc_project
+} // namespace xyz
+
+
+namespace details
+{
+
+template <>
+struct map_exception_type<sdbusplus::xyz::openbmc_project::Common::Callout::Error::Inventory>
+{
+    using type = xyz::openbmc_project::Common::Callout::Inventory;
+};
+
+}
+
+namespace xyz
+{
+namespace openbmc_project
+{
+namespace Common
+{
+namespace Callout
+{
+namespace _IPMISensor
+{
+
+struct CALLOUT_IPMI_SENSOR_NUM
+{
+    static constexpr auto str = "CALLOUT_IPMI_SENSOR_NUM=%u";
+    static constexpr auto str_short = "CALLOUT_IPMI_SENSOR_NUM";
+    using type = std::tuple<std::decay_t<decltype(str)>,uint32_t>;
+    explicit constexpr CALLOUT_IPMI_SENSOR_NUM(uint32_t a) : _entry(entry(str, a)) {};
+    type _entry;
+};
+
+}  // namespace _IPMISensor
+
+struct IPMISensor
+{
+    static constexpr auto L = level::ERR;
+    using CALLOUT_IPMI_SENSOR_NUM = _IPMISensor::CALLOUT_IPMI_SENSOR_NUM;
+    using metadata_types = std::tuple<CALLOUT_IPMI_SENSOR_NUM>;
+
+};
+
+} // namespace Callout
+} // namespace Common
+} // namespace openbmc_project
+} // namespace xyz
+
+
+namespace details
+{
+
+template <>
+struct map_exception_type<sdbusplus::xyz::openbmc_project::Common::Callout::Error::IPMISensor>
+{
+    using type = xyz::openbmc_project::Common::Callout::IPMISensor;
+};
+
+}
 
 namespace xyz
 {
@@ -195,6 +572,90 @@ template <>
 struct map_exception_type<sdbusplus::xyz::openbmc_project::Power::Fault::Error::PowerSupplyInputFault>
 {
     using type = xyz::openbmc_project::Power::Fault::PowerSupplyInputFault;
+};
+
+}
+
+namespace xyz
+{
+namespace openbmc_project
+{
+namespace Power
+{
+namespace Fault
+{
+namespace _PowerSupplyRuntimeShouldBeOn
+{
+
+struct STATUS_WORD
+{
+    static constexpr auto str = "STATUS_WORD=0x%04X";
+    static constexpr auto str_short = "STATUS_WORD";
+    using type = std::tuple<std::decay_t<decltype(str)>,uint16_t>;
+    explicit constexpr STATUS_WORD(uint16_t a) : _entry(entry(str, a)) {};
+    type _entry;
+};
+struct STATUS_INPUT
+{
+    static constexpr auto str = "STATUS_INPUT=0x%02X";
+    static constexpr auto str_short = "STATUS_INPUT";
+    using type = std::tuple<std::decay_t<decltype(str)>,uint16_t>;
+    explicit constexpr STATUS_INPUT(uint16_t a) : _entry(entry(str, a)) {};
+    type _entry;
+};
+struct STATUS_VOUT
+{
+    static constexpr auto str = "STATUS_VOUT=0x%02X";
+    static constexpr auto str_short = "STATUS_VOUT";
+    using type = std::tuple<std::decay_t<decltype(str)>,uint16_t>;
+    explicit constexpr STATUS_VOUT(uint16_t a) : _entry(entry(str, a)) {};
+    type _entry;
+};
+struct STATUS_IOUT
+{
+    static constexpr auto str = "STATUS_IOUT=0x%02X";
+    static constexpr auto str_short = "STATUS_IOUT";
+    using type = std::tuple<std::decay_t<decltype(str)>,uint16_t>;
+    explicit constexpr STATUS_IOUT(uint16_t a) : _entry(entry(str, a)) {};
+    type _entry;
+};
+struct MFR_SPECIFIC
+{
+    static constexpr auto str = "MFR_SPECIFIC=0x%02X";
+    static constexpr auto str_short = "MFR_SPECIFIC";
+    using type = std::tuple<std::decay_t<decltype(str)>,uint16_t>;
+    explicit constexpr MFR_SPECIFIC(uint16_t a) : _entry(entry(str, a)) {};
+    type _entry;
+};
+
+}  // namespace _PowerSupplyRuntimeShouldBeOn
+
+struct PowerSupplyRuntimeShouldBeOn
+{
+    static constexpr auto L = level::ERR;
+    using STATUS_WORD = _PowerSupplyRuntimeShouldBeOn::STATUS_WORD;
+    using STATUS_INPUT = _PowerSupplyRuntimeShouldBeOn::STATUS_INPUT;
+    using STATUS_VOUT = _PowerSupplyRuntimeShouldBeOn::STATUS_VOUT;
+    using STATUS_IOUT = _PowerSupplyRuntimeShouldBeOn::STATUS_IOUT;
+    using MFR_SPECIFIC = _PowerSupplyRuntimeShouldBeOn::MFR_SPECIFIC;
+    using CALLOUT_INVENTORY_PATH = xyz::openbmc_project::Common::Callout::Inventory::CALLOUT_INVENTORY_PATH;
+    using metadata_types = std::tuple<STATUS_WORD, STATUS_INPUT, STATUS_VOUT, STATUS_IOUT, MFR_SPECIFIC, CALLOUT_INVENTORY_PATH>;
+
+};
+
+} // namespace Fault
+} // namespace Power
+} // namespace openbmc_project
+} // namespace xyz
+
+
+namespace details
+{
+
+template <>
+struct map_exception_type<sdbusplus::xyz::openbmc_project::Power::Fault::Error::PowerSupplyRuntimeShouldBeOn>
+{
+    using type = xyz::openbmc_project::Power::Fault::PowerSupplyRuntimeShouldBeOn;
 };
 
 }
