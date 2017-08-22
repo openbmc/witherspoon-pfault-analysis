@@ -36,6 +36,20 @@ using PowerSupplyInputFaultStatusWord = xyz::openbmc_project::Power::Fault::
 using PowerSupplyInputFaultStatusInput = xyz::openbmc_project::Power::
         Fault::PowerSupplyInputFault::STATUS_INPUT;
 
+using PowerSupplyRuntimeShouldBeOnStatusWord = xyz::openbmc_project::Power::
+        Fault::PowerSupplyRuntimeShouldBeOn::STATUS_WORD;
+using PowerSupplyRuntimeShouldBeOnStatusInput = xyz::openbmc_project::Power::
+        Fault::PowerSupplyRuntimeShouldBeOn::STATUS_INPUT;
+using PowerSupplyRuntimeShouldBeOnStatusVout = xyz::openbmc_project::Power::
+        Fault::PowerSupplyRuntimeShouldBeOn::STATUS_VOUT;
+using PowerSupplyRuntimeShouldBeOnStatusIout = xyz::openbmc_project::Power::
+        Fault::PowerSupplyRuntimeShouldBeOn::STATUS_IOUT;
+using PowerSupplyRuntimeShouldBeOnStatusMfr = xyz::openbmc_project::Power::
+        Fault::PowerSupplyRuntimeShouldBeOn::MFR_SPECIFIC;
+////using PowerSupplyRuntimeShouldBeOnCalloutInventoryPath = xyz::openbmc_project::
+////        Power::Fault::PowerSupplyRuntimeShouldBeOn::CALLOUT_INVENTORY_PATH;
+//using PowerSupplyRuntimeShouldBeOnCallout = xyz::openbmc_project::Power::
+//        Fault::PowerSupplyRuntimeShouldBeOn::CALLOUT_INVENTORY_PATH;
 namespace witherspoon
 {
 namespace power
@@ -89,6 +103,9 @@ void PowerSupply::analyze()
     {
         if (present)
         {
+            std::uint16_t status_word = 0;
+            std::uint8_t  status_input = 0;
+
             auto curUVFault = pmbusIntf.readBit(VIN_UV_FAULT, Type::Hwmon);
             //TODO: 3 consecutive reads should be performed.
             // If 3 consecutive reads are seen, log the fault.
@@ -106,7 +123,6 @@ void PowerSupply::analyze()
 
                 if (curUVFault)
                 {
-                    std::uint16_t status_word = 0;
                     pmbusIntf.read(STATUS_WORD, Type::Debug,
                                    reinterpret_cast<std::uint8_t*>
                                    (&status_word),
@@ -128,8 +144,6 @@ void PowerSupply::analyze()
             {
                 if (curInputFault)
                 {
-                    std::uint16_t status_word = 0;
-                    std::uint8_t  status_input = 0;
 
                     pmbusIntf.read(STATUS_WORD, Type::Debug,
                                    reinterpret_cast<std::uint8_t*>
@@ -152,6 +166,40 @@ void PowerSupply::analyze()
                     inputFault = false;
                 }
 
+            }
+
+            if (powerOn)
+            {
+                // Check PG# and UNIT_IS_OFF
+                pmbusIntf.read(STATUS_WORD, Type::Debug,
+                               reinterpret_cast<std::uint8_t*>
+                               (&status_word),
+                               sizeof(status_word));
+
+                if ((status_word & POWER_GOOD_NEGATED) ||
+                    (status_word & UNIT_IS_OFF))
+                {
+                    std::uint8_t  status_vout = 0;
+                    std::uint8_t  status_iout = 0;
+                    std::uint8_t  status_mfr  = 0;
+
+                    pmbusIntf.read(STATUS_INPUT, Type::Debug,
+                                   reinterpret_cast<std::uint8_t*>
+                                   (&status_input),
+                                   sizeof(status_input));
+
+                    // A power supply is OFF (or pgood low)but should be on.
+                    report<PowerSupplyRuntimeShouldBeOn>(
+                        PowerSupplyRuntimeShouldBeOnStatusWord(status_word),
+                        PowerSupplyRuntimeShouldBeOnStatusInput(status_input),
+                        PowerSupplyRuntimeShouldBeOnStatusVout(status_vout),
+                        PowerSupplyRuntimeShouldBeOnStatusIout(status_iout),
+                        PowerSupplyRuntimeShouldBeOnStatusMfr(status_mfr)//,
+//                        PowerSupplyRuntimeShouldBeOnCallout(
+//                            inventoryPath.c_str()
+//                            )
+                        );
+                }
             }
         }
     }
@@ -223,6 +271,11 @@ void PowerSupply::powerStateChanged(sdbusplus::message::message& msg)
     if (valPropMap != msgData.end())
     {
         updatePowerState();
+
+        if (powerOn)
+        {
+            readFailLogged = false;
+        }
     }
 
     return;
