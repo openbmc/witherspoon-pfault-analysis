@@ -104,6 +104,11 @@ class PowerSupply : public Device
          */
         bool powerOn = false;
 
+        /**
+         * True if power on fault has been detected/reported.
+         */
+        bool powerOnFault = false;
+
         /** @brief Used to subscribe to dbus power on state changes **/
         std::unique_ptr<sdbusplus::bus::match_t> powerOnMatch;
 
