@@ -107,10 +107,10 @@ void PowerSupply::analyze()
                 vinUVFault = true;
 
                 using metadata = xyz::openbmc_project::Power::Fault::
-                    PowerSupplyUnderVoltageFault;
+                        PowerSupplyUnderVoltageFault;
 
                 report<PowerSupplyUnderVoltageFault>(
-                    metadata::STATUS_WORD(statusWord));
+                        metadata::STATUS_WORD(statusWord));
             }
             else
             {
@@ -130,11 +130,11 @@ void PowerSupply::analyze()
                 statusInput = pmbusIntf.read(STATUS_INPUT, Type::Debug);
 
                 using metadata = xyz::openbmc_project::Power::Fault::
-                    PowerSupplyInputFault;
+                        PowerSupplyInputFault;
 
                 report<PowerSupplyInputFault>(
-                    metadata::STATUS_WORD(statusWord),
-                    metadata::STATUS_INPUT(statusInput));
+                        metadata::STATUS_WORD(statusWord),
+                        metadata::STATUS_INPUT(statusInput));
             }
             else
             {
@@ -154,6 +154,10 @@ void PowerSupply::analyze()
 
             if (powerOn)
             {
+                std::uint8_t statusVout = 0;
+                std::uint8_t statusIout = 0;
+                std::uint8_t statusMFR  = 0;
+
                 // Check PG# and UNIT_IS_OFF
                 if (((statusWord & status_word::POWER_GOOD_NEGATED) ||
                     (statusWord & status_word::UNIT_IS_OFF)) &&
@@ -181,10 +185,36 @@ void PowerSupply::analyze()
                         metadata::STATUS_VOUT(statusVout),
                         metadata::STATUS_IOUT(statusIout),
                         metadata::MFR_SPECIFIC(statusMFR),
-                        metadata::CALLOUT_INVENTORY_PATH(inventoryPath.c_str())
-                        );
+                        metadata::CALLOUT_INVENTORY_PATH(inventoryPath.c_str()));
 
                     powerOnFault = true;
+                }
+
+                // Check for an output overcurrent fault.
+                if ((statusWord & status_word::IOUT_OC_FAULT) &&
+                    !outputOCFault)
+                {
+                    statusInput = pmbusIntf.read(STATUS_INPUT, Type::Debug);
+
+                    statusVout = pmbusIntf.read(STATUS_VOUT, Type::Debug);
+
+                    statusIout = pmbusIntf.read(STATUS_IOUT, Type::Debug);
+
+                    statusMFR = pmbusIntf.read(STATUS_MFR, Type::Debug);
+
+                    using metadata = xyz::openbmc_project::Power::Fault::
+                            PowerSupplyOutputOvercurrent;
+
+                    report<PowerSupplyOutputOvercurrent>(
+                            metadata::STATUS_WORD(statusWord),
+                            metadata::STATUS_INPUT(statusInput),
+                            metadata::STATUS_VOUT(statusVout),
+                            metadata::STATUS_IOUT(statusIout),
+                            metadata::MFR_SPECIFIC(statusMFR),
+                            metadata::CALLOUT_INVENTORY_PATH(
+                                    inventoryPath.c_str()));
+
+                    outputOCFault = true;
                 }
 
             }
@@ -268,6 +298,7 @@ void PowerSupply::powerStateChanged(sdbusplus::message::message& msg)
             vinUVFault = false;
             inputFault = false;
             powerOnFault = false;
+            outputOCFault = false;
             powerOnTimer.start(powerOnInterval, Timer::TimerType::oneshot);
         }
         else
