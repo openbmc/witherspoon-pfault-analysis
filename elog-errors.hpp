@@ -175,6 +175,26 @@ namespace xyz
 {
 namespace openbmc_project
 {
+namespace Power
+{
+namespace Fault
+{
+namespace Error
+{
+    struct PowerSupplyOutputOvercurrent;
+} // namespace Error
+} // namespace Fault
+} // namespace Power
+} // namespace openbmc_project
+} // namespace xyz
+} // namespace sdbusplus
+
+namespace sdbusplus
+{
+namespace xyz
+{
+namespace openbmc_project
+{
 namespace Common
 {
 namespace Callout
@@ -656,6 +676,90 @@ template <>
 struct map_exception_type<sdbusplus::xyz::openbmc_project::Power::Fault::Error::PowerSupplyRuntimeShouldBeOn>
 {
     using type = xyz::openbmc_project::Power::Fault::PowerSupplyRuntimeShouldBeOn;
+};
+
+}
+
+namespace xyz
+{
+namespace openbmc_project
+{
+namespace Power
+{
+namespace Fault
+{
+namespace _PowerSupplyOutputOvercurrent
+{
+
+struct STATUS_WORD
+{
+    static constexpr auto str = "STATUS_WORD=0x%04X";
+    static constexpr auto str_short = "STATUS_WORD";
+    using type = std::tuple<std::decay_t<decltype(str)>,uint16_t>;
+    explicit constexpr STATUS_WORD(uint16_t a) : _entry(entry(str, a)) {};
+    type _entry;
+};
+struct STATUS_INPUT
+{
+    static constexpr auto str = "STATUS_INPUT=0x%02X";
+    static constexpr auto str_short = "STATUS_INPUT";
+    using type = std::tuple<std::decay_t<decltype(str)>,uint16_t>;
+    explicit constexpr STATUS_INPUT(uint16_t a) : _entry(entry(str, a)) {};
+    type _entry;
+};
+struct STATUS_VOUT
+{
+    static constexpr auto str = "STATUS_VOUT=0x%02X";
+    static constexpr auto str_short = "STATUS_VOUT";
+    using type = std::tuple<std::decay_t<decltype(str)>,uint16_t>;
+    explicit constexpr STATUS_VOUT(uint16_t a) : _entry(entry(str, a)) {};
+    type _entry;
+};
+struct STATUS_IOUT
+{
+    static constexpr auto str = "STATUS_IOUT=0x%02X";
+    static constexpr auto str_short = "STATUS_IOUT";
+    using type = std::tuple<std::decay_t<decltype(str)>,uint16_t>;
+    explicit constexpr STATUS_IOUT(uint16_t a) : _entry(entry(str, a)) {};
+    type _entry;
+};
+struct MFR_SPECIFIC
+{
+    static constexpr auto str = "MFR_SPECIFIC=0x%02X";
+    static constexpr auto str_short = "MFR_SPECIFIC";
+    using type = std::tuple<std::decay_t<decltype(str)>,uint16_t>;
+    explicit constexpr MFR_SPECIFIC(uint16_t a) : _entry(entry(str, a)) {};
+    type _entry;
+};
+
+}  // namespace _PowerSupplyOutputOvercurrent
+
+struct PowerSupplyOutputOvercurrent
+{
+    static constexpr auto L = level::ERR;
+    using STATUS_WORD = _PowerSupplyOutputOvercurrent::STATUS_WORD;
+    using STATUS_INPUT = _PowerSupplyOutputOvercurrent::STATUS_INPUT;
+    using STATUS_VOUT = _PowerSupplyOutputOvercurrent::STATUS_VOUT;
+    using STATUS_IOUT = _PowerSupplyOutputOvercurrent::STATUS_IOUT;
+    using MFR_SPECIFIC = _PowerSupplyOutputOvercurrent::MFR_SPECIFIC;
+    using CALLOUT_INVENTORY_PATH = xyz::openbmc_project::Common::Callout::Inventory::CALLOUT_INVENTORY_PATH;
+    using metadata_types = std::tuple<STATUS_WORD, STATUS_INPUT, STATUS_VOUT, STATUS_IOUT, MFR_SPECIFIC, CALLOUT_INVENTORY_PATH>;
+
+};
+
+} // namespace Fault
+} // namespace Power
+} // namespace openbmc_project
+} // namespace xyz
+
+
+namespace details
+{
+
+template <>
+struct map_exception_type<sdbusplus::xyz::openbmc_project::Power::Fault::Error::PowerSupplyOutputOvercurrent>
+{
+    using type = xyz::openbmc_project::Power::Fault::PowerSupplyOutputOvercurrent;
 };
 
 }
