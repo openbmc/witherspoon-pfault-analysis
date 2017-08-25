@@ -155,15 +155,15 @@ void PowerSupply::analyze()
 
             if (powerOn)
             {
+                std::uint8_t  status_vout = 0;
+                std::uint8_t  status_iout = 0;
+                std::uint8_t  status_mfr  = 0;
+
                 // Check PG# and UNIT_IS_OFF
                 if (((status_word & status_word::POWER_GOOD_NEGATED) ||
                     (status_word & status_word::UNIT_IS_OFF)) &&
                     !powerOnFault)
                 {
-                    std::uint8_t  status_vout = 0;
-                    std::uint8_t  status_iout = 0;
-                    std::uint8_t  status_mfr  = 0;
-
                     pmbusIntf.read(STATUS_INPUT, Type::Debug,
                                    reinterpret_cast<std::uint8_t*>
                                    (&status_input),
@@ -198,6 +198,46 @@ void PowerSupply::analyze()
                         );
 
                     powerOnFault = true;
+                }
+
+                // Check for an output overcurrent fault.
+                if ((status_word & status_word::IOUT_OC_FAULT) &&
+                    !outputOCFault)
+                {
+                    pmbusIntf.read(STATUS_INPUT, Type::Debug,
+                                   reinterpret_cast<std::uint8_t*>
+                                   (&status_input),
+                                   sizeof(status_input));
+
+                    pmbusIntf.read(STATUS_VOUT, Type::Debug,
+                                   reinterpret_cast<std::uint8_t*>
+                                   (&status_vout),
+                                   sizeof(status_vout));
+
+                    pmbusIntf.read(STATUS_IOUT, Type::Debug,
+                                   reinterpret_cast<std::uint8_t*>
+                                   (&status_iout),
+                                   sizeof(status_iout));
+
+                    pmbusIntf.read(STATUS_MFR, Type::Debug,
+                                   reinterpret_cast<std::uint8_t*>
+                                   (&status_mfr),
+                                   sizeof(status_mfr));
+
+                    using metadata = xyz::openbmc_project::Power::Fault::
+                        PowerSupplyRuntimeOutputOvercurrent;
+
+                    // A power supply is OFF (or pgood low)but should be on.
+                    report<PowerSupplyRuntimeOutputOvercurrent>(
+                        metadata::STATUS_WORD(status_word),
+                        metadata::STATUS_INPUT(status_input),
+                        metadata::STATUS_VOUT(status_vout),
+                        metadata::STATUS_IOUT(status_iout),
+                        metadata::MFR_SPECIFIC(status_mfr),
+                        metadata::CALLOUT_INVENTORY_PATH(inventoryPath.c_str())
+                        );
+
+                    outputOCFault = true;
                 }
 
             }
