@@ -25,5 +25,20 @@
       type: uint16
   inherits:
     - xyz.openbmc_project.Common.Callout.Inventory
+- name: PowerSupplyRuntimeOutputOvercurrent
+  level: ERR
+  meta:
+    - str: "STATUS_WORD=0x%04X"
+      type: uint16
+    - str: "STATUS_INPUT=0x%02X"
+      type: uint16
+    - str: "STATUS_VOUT=0x%02X"
+      type: uint16
+    - str: "STATUS_IOUT=0x%02X"
+      type: uint16
+    - str: "MFR_SPECIFIC=0x%02X"
+      type: uint16
+  inherits:
+    - xyz.openbmc_project.Common.Callout.Inventory
 - name: Shutdown
   level: ERR
