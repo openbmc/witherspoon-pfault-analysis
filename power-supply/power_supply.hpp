@@ -126,6 +126,14 @@ class PowerSupply : public Device
         bool inputFault = false;
 
         /**
+         * @brief Set to true when an output over current fault is detected
+         *
+         * This is the "IOUT_OC_FAULT" bit in the low byte from the STATUS_WORD
+         * command response.
+         */
+        bool outputOCFault = false;
+
+        /**
          * @brief Callback for inventory property changes
          *
          * Process change of Present property for power supply.
@@ -151,6 +159,26 @@ class PowerSupply : public Device
          * @param[in] msg - Data associated with the power state signal
          */
         void powerStateChanged(sdbusplus::message::message& msg);
+
+        /**
+         * @brief Checks for input voltage faults and logs error if needed.
+         * 
+         * Check for voltage input under voltage fault (VIN_UV_FAULT) and/or
+         * input fault or warning (INPUT_FAULT), and logs appropriate error(s).
+         */
+        void checkInputFault(const uint16_t stats_word);
+
+        /**
+         * @brief Checks for power good negated or unit is off in wrong state
+         */
+        void checkPGOrUnitOffFault(const uint16_t stats_word);
+
+        /**
+         * @brief Checks for output current over current fault.
+         *
+         * IOUT_OC_FAULT is checked, if on, appropriate error is logged.
+         */
+        void checkCurentOutOverCurrentFault(const uint16_t stats_word);
 
 };
 
