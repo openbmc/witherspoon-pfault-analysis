@@ -103,6 +103,7 @@ void PowerSupply::analyze()
             {
                 checkPGOrUnitOffFault(statusWord);
                 checkCurrentOutOverCurrentFault(statusWord);
+                checkOutputOvervoltageFault(statusWord);
             }
         }
     }
@@ -183,6 +184,7 @@ void PowerSupply::powerStateChanged(sdbusplus::message::message& msg)
             inputFault = false;
             powerOnFault = false;
             outputOCFault = false;
+            outputOVFault = false;
             powerOnTimer.start(powerOnInterval, Timer::TimerType::oneshot);
         }
         else
@@ -392,10 +394,57 @@ void PowerSupply::checkCurrentOutOverCurrentFault(const uint16_t statusWord)
                 metadata::STATUS_VOUT(statusVout),
                 metadata::STATUS_IOUT(statusIout),
                 metadata::MFR_SPECIFIC(statusMFR),
-                metadata::CALLOUT_INVENTORY_PATH(inventoryPath.c_str())
-                );
+                metadata::CALLOUT_INVENTORY_PATH(inventoryPath.c_str()));
 
         outputOCFault = true;
+    }
+}
+
+void PowerSupply::checkOutputOvervoltageFault(const uint16_t statusWord)
+{
+    using namespace witherspoon::pmbus;
+
+    std::uint8_t  statusInput = 0;
+    std::uint8_t  statusVout = 0;
+    std::uint8_t  statusIout = 0;
+    std::uint8_t  statusMFR  = 0;
+
+    // Check for an output overvoltage fault.
+    if ((statusWord & status_word::VOUT_OV_FAULT) &&
+        !outputOVFault)
+    {
+        pmbusIntf.read(STATUS_INPUT, Type::Debug,
+                       reinterpret_cast<std::uint8_t*>
+                       (&statusInput),
+                       sizeof(statusInput));
+
+        pmbusIntf.read(STATUS_VOUT, Type::Debug,
+                       reinterpret_cast<std::uint8_t*>
+                       (&statusVout),
+                       sizeof(statusVout));
+
+        pmbusIntf.read(STATUS_IOUT, Type::Debug,
+                       reinterpret_cast<std::uint8_t*>
+                       (&statusIout),
+                       sizeof(statusIout));
+
+        pmbusIntf.read(STATUS_MFR, Type::Debug,
+                       reinterpret_cast<std::uint8_t*>
+                       (&statusMFR),
+                       sizeof(statusMFR));
+
+        using metadata = xyz::openbmc_project::Power::Fault::
+                PowerSupplyOutputOvervoltage;
+
+        report<PowerSupplyOutputOvervoltage>(
+                metadata::STATUS_WORD(statusWord),
+                metadata::STATUS_INPUT(statusInput),
+                metadata::STATUS_VOUT(statusVout),
+                metadata::STATUS_IOUT(statusIout),
+                metadata::MFR_SPECIFIC(statusMFR),
+                metadata::CALLOUT_INVENTORY_PATH(inventoryPath.c_str()));
+
+        outputOVFault = true;
     }
 }
 
