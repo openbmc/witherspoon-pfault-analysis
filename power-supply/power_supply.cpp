@@ -96,6 +96,7 @@ void PowerSupply::analyze()
             {
                 checkPGOrUnitOffFault(statusWord);
                 checkCurentOutOverCurrentFault(statusWord);
+                checkOutputOvervoltageFault(statusWord);
             }
         }
     }
@@ -174,6 +175,7 @@ void PowerSupply::powerStateChanged(sdbusplus::message::message& msg)
             inputFault = false;
             powerOnFault = false;
             outputOCFault = false;
+            outputOVFault = false;
         }
     }
 
@@ -383,6 +385,56 @@ void PowerSupply::checkCurentOutOverCurrentFault(const uint16_t statusWord)
                 );
 
         outputOCFault = true;
+    }
+}
+
+void PowerSupply::checkOutputOvervoltageFault(const uint16_t statusWord)
+{
+    using namespace witherspoon::pmbus;
+
+    std::uint8_t  statusInput = 0;
+    std::uint8_t  statusVout = 0;
+    std::uint8_t  statusIout = 0;
+    std::uint8_t  statusMFR  = 0;
+
+    // Check for an output overcurrent fault.
+    if ((statusWord & status_word::VOUT_OV_FAULT) &&
+        !outputOVFault)
+    {
+        pmbusIntf.read(STATUS_INPUT, Type::Debug,
+                       reinterpret_cast<std::uint8_t*>
+                       (&statusInput),
+                       sizeof(statusInput));
+
+        pmbusIntf.read(STATUS_VOUT, Type::Debug,
+                       reinterpret_cast<std::uint8_t*>
+                       (&statusVout),
+                       sizeof(statusVout));
+
+        pmbusIntf.read(STATUS_IOUT, Type::Debug,
+                       reinterpret_cast<std::uint8_t*>
+                       (&statusIout),
+                       sizeof(statusIout));
+
+        pmbusIntf.read(STATUS_MFR, Type::Debug,
+                       reinterpret_cast<std::uint8_t*>
+                       (&statusMFR),
+                       sizeof(statusMFR));
+
+        using metadata = xyz::openbmc_project::Power::Fault::
+            PowerSupplyRuntimeOutputOvercurrent;
+
+        // A power supply is OFF (or pgood low)but should be on.
+        report<PowerSupplyRuntimeOutputOvercurrent>(
+                        metadata::STATUS_WORD(statusWord),
+                        metadata::STATUS_INPUT(statusInput),
+                        metadata::STATUS_VOUT(statusVout),
+                        metadata::STATUS_IOUT(statusIout),
+                        metadata::MFR_SPECIFIC(statusMFR),
+                        metadata::CALLOUT_INVENTORY_PATH(inventoryPath.c_str())
+                        );
+
+        outputOVFault = true;
     }
 }
 
