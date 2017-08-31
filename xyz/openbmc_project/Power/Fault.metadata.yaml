@@ -55,6 +55,19 @@
       type: uint16
   inherits:
     - xyz.openbmc_project.Common.Callout.Inventory
+- name: PowerSupplyFanFault
+  level: ERR
+  meta:
+    - str: "STATUS_WORD=0x%04X"
+      type: uint16
+    - str: "MFR_SPECIFIC=0x%02X"
+      type: uint16
+    - str: "STATUS_TEMPERATURE=0x%02X"
+      type: uint16
+    - str: "STATUS_FANS_1_2=0x%02X"
+      type: uint16
+  inherits:
+    - xyz.openbmc_project.Common.Callout.Inventory
 - name: Shutdown
   level: ERR
 - name: PowerOnFailure
