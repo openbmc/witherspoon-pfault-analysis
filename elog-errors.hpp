@@ -55,26 +55,6 @@ namespace xyz
 {
 namespace openbmc_project
 {
-namespace Power
-{
-namespace Fault
-{
-namespace Error
-{
-    struct PowerSupplyOutputOvervoltage;
-} // namespace Error
-} // namespace Fault
-} // namespace Power
-} // namespace openbmc_project
-} // namespace xyz
-} // namespace sdbusplus
-
-namespace sdbusplus
-{
-namespace xyz
-{
-namespace openbmc_project
-{
 namespace Common
 {
 namespace Callout
@@ -181,7 +161,47 @@ namespace Fault
 {
 namespace Error
 {
+    struct PowerSupplyFanFault;
+} // namespace Error
+} // namespace Fault
+} // namespace Power
+} // namespace openbmc_project
+} // namespace xyz
+} // namespace sdbusplus
+
+namespace sdbusplus
+{
+namespace xyz
+{
+namespace openbmc_project
+{
+namespace Power
+{
+namespace Fault
+{
+namespace Error
+{
     struct PowerSupplyInputFault;
+} // namespace Error
+} // namespace Fault
+} // namespace Power
+} // namespace openbmc_project
+} // namespace xyz
+} // namespace sdbusplus
+
+namespace sdbusplus
+{
+namespace xyz
+{
+namespace openbmc_project
+{
+namespace Power
+{
+namespace Fault
+{
+namespace Error
+{
+    struct PowerSupplyOutputOvervoltage;
 } // namespace Error
 } // namespace Fault
 } // namespace Power
@@ -864,6 +884,81 @@ template <>
 struct map_exception_type<sdbusplus::xyz::openbmc_project::Power::Fault::Error::PowerSupplyOutputOvervoltage>
 {
     using type = xyz::openbmc_project::Power::Fault::PowerSupplyOutputOvervoltage;
+};
+
+}
+
+namespace xyz
+{
+namespace openbmc_project
+{
+namespace Power
+{
+namespace Fault
+{
+namespace _PowerSupplyFanFault
+{
+
+struct STATUS_WORD
+{
+    static constexpr auto str = "STATUS_WORD=0x%04X";
+    static constexpr auto str_short = "STATUS_WORD";
+    using type = std::tuple<std::decay_t<decltype(str)>,uint16_t>;
+    explicit constexpr STATUS_WORD(uint16_t a) : _entry(entry(str, a)) {};
+    type _entry;
+};
+struct MFR_SPECIFIC
+{
+    static constexpr auto str = "MFR_SPECIFIC=0x%02X";
+    static constexpr auto str_short = "MFR_SPECIFIC";
+    using type = std::tuple<std::decay_t<decltype(str)>,uint16_t>;
+    explicit constexpr MFR_SPECIFIC(uint16_t a) : _entry(entry(str, a)) {};
+    type _entry;
+};
+struct STATUS_TEMPERATURE
+{
+    static constexpr auto str = "STATUS_TEMPERATURE=0x%02X";
+    static constexpr auto str_short = "STATUS_TEMPERATURE";
+    using type = std::tuple<std::decay_t<decltype(str)>,uint16_t>;
+    explicit constexpr STATUS_TEMPERATURE(uint16_t a) : _entry(entry(str, a)) {};
+    type _entry;
+};
+struct STATUS_FANS_1_2
+{
+    static constexpr auto str = "STATUS_FANS_1_2=0x%02X";
+    static constexpr auto str_short = "STATUS_FANS_1_2";
+    using type = std::tuple<std::decay_t<decltype(str)>,uint16_t>;
+    explicit constexpr STATUS_FANS_1_2(uint16_t a) : _entry(entry(str, a)) {};
+    type _entry;
+};
+
+}  // namespace _PowerSupplyFanFault
+
+struct PowerSupplyFanFault
+{
+    static constexpr auto L = level::ERR;
+    using STATUS_WORD = _PowerSupplyFanFault::STATUS_WORD;
+    using MFR_SPECIFIC = _PowerSupplyFanFault::MFR_SPECIFIC;
+    using STATUS_TEMPERATURE = _PowerSupplyFanFault::STATUS_TEMPERATURE;
+    using STATUS_FANS_1_2 = _PowerSupplyFanFault::STATUS_FANS_1_2;
+    using CALLOUT_INVENTORY_PATH = xyz::openbmc_project::Common::Callout::Inventory::CALLOUT_INVENTORY_PATH;
+    using metadata_types = std::tuple<STATUS_WORD, MFR_SPECIFIC, STATUS_TEMPERATURE, STATUS_FANS_1_2, CALLOUT_INVENTORY_PATH>;
+
+};
+
+} // namespace Fault
+} // namespace Power
+} // namespace openbmc_project
+} // namespace xyz
+
+
+namespace details
+{
+
+template <>
+struct map_exception_type<sdbusplus::xyz::openbmc_project::Power::Fault::Error::PowerSupplyFanFault>
+{
+    using type = xyz::openbmc_project::Power::Fault::PowerSupplyFanFault;
 };
 
 }
