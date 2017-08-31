@@ -104,6 +104,7 @@ void PowerSupply::analyze()
                 checkPGOrUnitOffFault(statusWord);
                 checkCurrentOutOverCurrentFault(statusWord);
                 checkOutputOvervoltageFault(statusWord);
+                checkFanFault(statusWord);
             }
         }
     }
@@ -185,6 +186,7 @@ void PowerSupply::powerStateChanged(sdbusplus::message::message& msg)
             powerOnFault = false;
             outputOCFault = false;
             outputOVFault = false;
+            fanFault = false;
             powerOnTimer.start(powerOnInterval, Timer::TimerType::oneshot);
         }
         else
@@ -386,7 +388,6 @@ void PowerSupply::checkCurrentOutOverCurrentFault(const uint16_t statusWord)
         using metadata = xyz::openbmc_project::Power::Fault::
                 PowerSupplyOutputOvercurrent;
 
-        // A power supply is OFF (or pgood low)but should be on.
         report<PowerSupplyOutputOvercurrent>(
                 metadata::STATUS_WORD(statusWord),
                 metadata::STATUS_INPUT(statusInput),
@@ -444,6 +445,47 @@ void PowerSupply::checkOutputOvervoltageFault(const uint16_t statusWord)
                 metadata::CALLOUT_INVENTORY_PATH(inventoryPath.c_str()));
 
         outputOVFault = true;
+    }
+}
+
+void PowerSupply::checkFanFault(const uint16_t statusWord)
+{
+    using namespace witherspoon::pmbus;
+
+    std::uint8_t statusMFR  = 0;
+    std::uint8_t statusTemperature = 0;
+    std::uint8_t statusFans12 = 0;
+
+    // Check for an output overcurrent fault.
+    if ((statusWord & status_word::FAN_FAULT) &&
+        !fanFault)
+    {
+        pmbusIntf.read(STATUS_MFR, Type::Debug,
+                       reinterpret_cast<std::uint8_t*>
+                       (&statusMFR),
+                       sizeof(statusMFR));
+
+        pmbusIntf.read(STATUS_TEMPERATURE, Type::Debug,
+                       reinterpret_cast<std::uint8_t*>
+                       (&statusTemperature),
+                       sizeof(statusTemperature));
+
+        pmbusIntf.read(STATUS_FANS_1_2, Type::Debug,
+                       reinterpret_cast<std::uint8_t*>
+                       (&statusFans12),
+                       sizeof(statusFans12));
+
+        using metadata = xyz::openbmc_project::Power::Fault::
+                PowerSupplyFanFault;
+
+        report<PowerSupplyFanFault>(
+                metadata::STATUS_WORD(statusWord),
+                metadata::MFR_SPECIFIC(statusMFR),
+                metadata::STATUS_TEMPERATURE(statusTemperature),
+                metadata::STATUS_FANS_1_2(statusFans12),
+                metadata::CALLOUT_INVENTORY_PATH(inventoryPath.c_str()));
+
+        fanFault = true;
     }
 }
 
