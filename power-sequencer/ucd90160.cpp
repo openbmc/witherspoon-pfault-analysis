@@ -31,7 +31,6 @@ namespace power
 
 using namespace std::string_literals;
 
-const auto CLEAR_LOGGED_FAULTS = "clear_logged_faults"s;
 const auto MFR_STATUS = "mfr_status"s;
 
 const auto DEVICE_NAME = "UCD90160"s;
@@ -122,23 +121,6 @@ uint32_t UCD90160::readMFRStatus()
                    sizeof(mfrStatus));
 
     return mfrStatus;
-}
-
-void UCD90160::clearFaults()
-{
-    try
-    {
-        interface.write(CLEAR_LOGGED_FAULTS, 1, Type::Base);
-    }
-    catch (WriteFailure& e)
-    {
-        if (!accessError)
-        {
-            log<level::ERR>("UCD90160 clear logged faults command failed");
-            commit<WriteFailure>();
-            accessError = true;
-        }
-    }
 }
 
 bool UCD90160::checkVOUTFaults()
