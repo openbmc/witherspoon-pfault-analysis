@@ -60,6 +60,10 @@ constexpr auto IOUT_OC_FAULT = 0x0010;
 // out if that fault is on.
 constexpr auto VIN_UV_FAULT = 0x0008;
 
+// The bit mask representing the TEMPERATURE FAULT or WARNING bit of the 
+// STATUS_WORD. Bit 2 of the low byte (STATUS_BYTE).
+constexpr auto TEMPERATURE_FAULT_WARN = 0x0004;
+
 }
 
 /**
