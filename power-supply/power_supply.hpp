@@ -160,6 +160,11 @@ class PowerSupply : public Device
         bool fanFault = false;
 
         /**
+         * @brief Set to true during a temperature fault or warn condition.
+         */
+        bool temperatureFault = false;
+
+        /**
          * @brief Callback for inventory property changes
          *
          * Process change of Present property for power supply.
@@ -181,7 +186,7 @@ class PowerSupply : public Device
         /**
          * @brief Updates the poweredOn status by querying D-Bus
          *
-         * The D-Bus property for the sytem power state will be read to
+         * The D-Bus property for the system power state will be read to
          * determine if the system is powered on or not.
          */
         void updatePowerState();
@@ -239,6 +244,17 @@ class PowerSupply : public Device
          * @param[in] statusWord - 2 byte STATUS_WORD value read from sysfs
          */
         void checkFanFault(const uint16_t statusWord);
+
+        /**
+         * @brief Checks for a temperature fault or warning condition.
+         *
+         * The low byte of STATUS_WORD is checked to see if the "TEMPERATURE
+         * FAULT OR WARNING" bit is turned on. If it is on, log an error,
+         * call out the power supply indicating the fault/warning condition.
+         *
+         * @parma[in] statusWord - 2 byte STATUS_WORD value read from sysfs
+         */
+        void checkTemperatureFault(const uint16_t statusWord);
 
 };
 
