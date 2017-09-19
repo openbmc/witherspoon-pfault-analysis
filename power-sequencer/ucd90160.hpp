@@ -61,6 +61,28 @@ class UCD90160 : public Device
     private:
 
         /**
+         * Reports an error for a GPU PGOOD failure
+         *
+         * @param[in] device - pointer to an instance of this
+         *                     class
+         *
+         * @param[in] callout - the GPU callout string
+         */
+        static void gpuPGOODError(
+                UCD90160& device, const std::string& callout);
+
+        /**
+         * Reports an error for a GPU OverTemp failure
+         *
+         * @param[in] device - pointer to an instance of this
+         *                     class
+         *
+         * @param[in] callout - the GPU callout string
+         */
+        static void gpuOverTempError(
+                UCD90160& device, const std::string& callout);
+
+        /**
          * Given the device path for a chip, find its gpiochip
          * path
          *
