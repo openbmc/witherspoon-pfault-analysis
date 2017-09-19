@@ -283,5 +283,33 @@ fs::path UCD90160::findGPIODevice(const fs::path& path)
     return gpioDevicePath;
 }
 
+void UCD90160::gpuPGOODError(
+        UCD90160& device, const std::string& callout)
+{
+    util::NamesValues nv;
+    nv.add("STATUS_WORD", device.readStatusWord());
+    nv.add("MFR_STATUS", device.readMFRStatus());
+
+    using metadata = xyz::openbmc_project::Power::Fault::GPUPowerFault;
+
+    report<GPUPowerFault>(
+            metadata::RAW_STATUS(nv.get().c_str()),
+            metadata::GPU(callout.c_str()));
+}
+
+void UCD90160::gpuOverTempError(
+        UCD90160& device, const std::string& callout)
+{
+    util::NamesValues nv;
+    nv.add("STATUS_WORD", device.readStatusWord());
+    nv.add("MFR_STATUS", device.readMFRStatus());
+
+    using metadata = xyz::openbmc_project::Power::Fault::GPUOverTemp;
+
+    report<GPUOverTemp>(
+            metadata::RAW_STATUS(nv.get().c_str()),
+            metadata::GPU(callout.c_str()));
+}
+
 }
 }
