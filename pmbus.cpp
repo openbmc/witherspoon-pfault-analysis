@@ -127,6 +127,20 @@ bool PMBus::readBit(const std::string& name, Type type)
     return value != 0;
 }
 
+bool PMBus::exists(const std::string& name, Type type)
+{
+    auto path = getPath(type);
+    path /= name;
+    if (fs::exists(path))
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
 uint64_t PMBus::read(const std::string& name, Type type)
 {
     uint64_t data = 0;
