@@ -122,11 +122,11 @@ void PowerSupply::analyze()
 
             if (powerOn)
             {
-                checkPGOrUnitOffFault(statusWord);
-                checkCurrentOutOverCurrentFault(statusWord);
-                checkOutputOvervoltageFault(statusWord);
                 checkFanFault(statusWord);
                 checkTemperatureFault(statusWord);
+                checkOutputOvervoltageFault(statusWord);
+                checkCurrentOutOverCurrentFault(statusWord);
+                checkPGOrUnitOffFault(statusWord);
             }
         }
     }
