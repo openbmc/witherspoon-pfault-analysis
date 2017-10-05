@@ -16,10 +16,11 @@
 #include <map>
 #include <memory>
 #include <phosphor-logging/elog.hpp>
+#include <phosphor-logging/elog-errors.hpp>
 #include <phosphor-logging/log.hpp>
-#include <elog-errors.hpp>
 #include <org/open_power/Witherspoon/Fault/error.hpp>
 #include <xyz/openbmc_project/Common/Device/error.hpp>
+#include <xyz/openbmc_project/State/Shutdown/ThermalEvent/error.hpp>
 #include "names_values.hpp"
 #include "ucd90160.hpp"
 #include "utility.hpp"
@@ -46,6 +47,8 @@ namespace device_error = sdbusplus::xyz::openbmc_project::
         Common::Device::Error;
 namespace power_error = sdbusplus::org::open_power::
         Witherspoon::Fault::Error;
+namespace shutdown_error = sdbusplus::xyz::openbmc_project::
+        State::Shutdown::ThermalEvent::Error;
 
 UCD90160::UCD90160(size_t instance, sdbusplus::bus::bus& bus) :
         Device(DEVICE_NAME, instance),
@@ -313,6 +316,7 @@ bool UCD90160::doGPIOAnalysis(ucd90160::extraAnalysisType type)
 {
     bool errorFound = false;
     bool shutdown = false;
+    ucd90160::ShutdownFunction shutdownFunction;
 
     const auto& analysisConfig = std::get<ucd90160::gpioAnalysisField>(
             deviceMap.find(getInstance())->second);
@@ -392,14 +396,15 @@ bool UCD90160::doGPIOAnalysis(ucd90160::extraAnalysisType type)
                         ucd90160::optionFlags::shutdownOnFault))
             {
                 shutdown = true;
+                shutdownFunction = std::get<ucd90160::shutdownFunctionField>(
+                        gpioConfig->second);
             }
         }
     }
 
     if (shutdown)
     {
-        //Will be replaced with a GPU specific error in a future commit
-        util::powerOff<power_error::Shutdown>(bus);
+        shutdownFunction(*this);
     }
 
     return errorFound;
@@ -429,6 +434,11 @@ void UCD90160::gpuOverTempError(const std::string& callout)
     report<power_error::GPUOverTemp>(
             metadata::RAW_STATUS(nv.get().c_str()),
             metadata::GPU(callout.c_str()));
+}
+
+void UCD90160::gpuOverTempShutdown()
+{
+    util::powerOff<shutdown_error::GPU>(bus);
 }
 
 }
