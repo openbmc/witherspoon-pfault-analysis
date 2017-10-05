@@ -43,8 +43,6 @@
       type: string
   inherits:
     - xyz.openbmc_project.Common.Callout.Inventory
-- name: Shutdown
-  level: ERR
 
 - name: PowerOnFailure
   level: ERR

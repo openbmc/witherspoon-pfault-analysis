@@ -141,26 +141,6 @@ namespace Fault
 {
 namespace Error
 {
-    struct Shutdown;
-} // namespace Error
-} // namespace Fault
-} // namespace Witherspoon
-} // namespace open_power
-} // namespace org
-} // namespace sdbusplus
-
-namespace sdbusplus
-{
-namespace org
-{
-namespace open_power
-{
-namespace Witherspoon
-{
-namespace Fault
-{
-namespace Error
-{
     struct PowerSupplyInputFault;
 } // namespace Error
 } // namespace Fault
@@ -983,44 +963,6 @@ template <>
 struct map_exception_type<sdbusplus::org::open_power::Witherspoon::Fault::Error::PowerSupplyTemperatureFault>
 {
     using type = org::open_power::Witherspoon::Fault::PowerSupplyTemperatureFault;
-};
-
-}
-
-namespace org
-{
-namespace open_power
-{
-namespace Witherspoon
-{
-namespace Fault
-{
-namespace _Shutdown
-{
-
-
-}  // namespace _Shutdown
-
-struct Shutdown
-{
-    static constexpr auto L = level::ERR;
-    using metadata_types = std::tuple<>;
-
-};
-
-} // namespace Fault
-} // namespace Witherspoon
-} // namespace open_power
-} // namespace org
-
-
-namespace details
-{
-
-template <>
-struct map_exception_type<sdbusplus::org::open_power::Witherspoon::Fault::Error::Shutdown>
-{
-    using type = org::open_power::Witherspoon::Fault::Shutdown;
 };
 
 }
