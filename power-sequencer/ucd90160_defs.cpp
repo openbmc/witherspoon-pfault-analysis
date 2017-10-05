@@ -72,6 +72,7 @@ const DeviceMap UCD90160::deviceMap
                         "1e78a000/1e78a400.i2c-bus/i2c-11/11-0060",
                         gpio::Value::low,
                         [](auto& ucd, const auto& callout) { ucd.gpuPGOODError(callout); },
+                        [](auto& ucd) { }, //no shutdown required
                         optionFlags::none,
                         GPIODefinitions{
                             GPIODefinition{8, "GPU0"s},
@@ -88,6 +89,7 @@ const DeviceMap UCD90160::deviceMap
                         "1e78a000/1e78a400.i2c-bus/i2c-11/11-0060",
                         gpio::Value::low,
                         [](auto& ucd, const auto& callout) { ucd.gpuOverTempError(callout); },
+                        [](auto& ucd) { ucd.gpuOverTempShutdown(); },
                         optionFlags::shutdownOnFault,
                         GPIODefinitions{
                             GPIODefinition{2, "GPU0"s},

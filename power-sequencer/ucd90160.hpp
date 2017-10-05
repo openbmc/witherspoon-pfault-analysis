@@ -81,6 +81,11 @@ class UCD90160 : public Device
         void gpuOverTempError(const std::string& callout);
 
         /**
+         * Function used to do a shutdown after a GPU overtemp
+         */
+        void gpuOverTempShutdown();
+
+        /**
          * Given the device path for a chip, find its gpiochip
          * path
          *
