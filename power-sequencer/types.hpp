@@ -45,13 +45,20 @@ using GPIODefinitions = std::vector<GPIODefinition>;
 constexpr auto gpioDevicePathField = 0;
 constexpr auto gpioPolarityField = 1;
 constexpr auto errorFunctionField = 2;
-constexpr auto optionFlagsField = 3;
-constexpr auto gpioDefinitionField = 4;
+constexpr auto shutdownFunctionField = 3;
+constexpr auto optionFlagsField = 4;
+constexpr auto gpioDefinitionField = 5;
 
 using ErrorFunction = std::function<void(UCD90160&, const std::string&)>;
+using ShutdownFunction = std::function<void(UCD90160&)>;
 
 using GPIOGroup = std::tuple<
-        std::string, gpio::Value, ErrorFunction, optionFlags, GPIODefinitions>;
+        std::string,
+        gpio::Value,
+        ErrorFunction,
+        ShutdownFunction,
+        optionFlags,
+        GPIODefinitions>;
 
 using GPIOAnalysis = std::map<extraAnalysisType, GPIOGroup>;
 
