@@ -1,6 +1,7 @@
 #pragma once
 
 #include <phosphor-logging/log.hpp>
+#include <phosphor-logging/elog.hpp>
 #include <sdbusplus/bus.hpp>
 #include <string>
 
@@ -11,6 +12,10 @@ namespace power
 namespace util
 {
 
+constexpr auto SYSTEMD_SERVICE   = "org.freedesktop.systemd1";
+constexpr auto SYSTEMD_ROOT      = "/org/freedesktop/systemd1";
+constexpr auto SYSTEMD_INTERFACE = "org.freedesktop.systemd1.Manager";
+constexpr auto POWEROFF_TARGET   = "obmc-chassis-hard-poweroff@0.target";
 constexpr auto PROPERTY_INTF = "org.freedesktop.DBus.Properties";
 
 /**
@@ -71,12 +76,26 @@ void getProperty(const std::string& interface,
 }
 
 /**
- * Powers off the system and logs an error
- * saying it was due to a power fault.
+ * Logs an error and powers off the system.
  *
+ * @tparam T - error that will be logged before the power off
  * @param[in] bus - D-Bus object
  */
-void powerOff(sdbusplus::bus::bus& bus);
+template<typename T>
+void powerOff(sdbusplus::bus::bus& bus)
+{
+    phosphor::logging::report<T>();
+
+    auto method = bus.new_method_call(SYSTEMD_SERVICE,
+            SYSTEMD_ROOT,
+            SYSTEMD_INTERFACE,
+            "StartUnit");
+
+    method.append(POWEROFF_TARGET);
+    method.append("replace");
+
+    bus.call_noreply(method);
+}
 
 }
 }
