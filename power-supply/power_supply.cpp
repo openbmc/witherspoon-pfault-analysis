@@ -158,6 +158,7 @@ void PowerSupply::inventoryChanged(sdbusplus::message::message& msg)
             readFailLogged = false;
             vinUVFault = false;
             inputFault = false;
+            powerOnFault = 0;
             outputOCFault = false;
             outputOVFault = false;
             fanFault = false;
