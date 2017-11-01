@@ -96,6 +96,27 @@ class PowerSupply : public Device
         /** @brief Used to subscribe to D-Bus property changes for Present */
         std::unique_ptr<sdbusplus::bus::match_t> presentMatch;
 
+        /** @brief The sd_event structure used by the power on and present 
+         *  timers. */
+        event::Event& event;
+
+        /**
+         * @brief Interval to setting present to true.
+         *
+         * The amount of time to wait from not present to present change before
+         * updating the internal present indicator. Allowing person servicing
+         * the power supply some time to plug in the cable.
+         */
+        std::chrono::seconds presentInterval;
+
+        /**
+         * @brief Timer used to delay setting the internal present state.
+         *
+         * The timer used to do the callback after the present property has
+         * changed.
+         */
+        Timer presentTimer;
+
         /** @brief True if the power is on. */
         bool powerOn = false;
 
@@ -104,9 +125,6 @@ class PowerSupply : public Device
          * detected.
          */
         size_t powerOnFault = 0;
-
-        /** @brief The sd_event structure used by the power on timer. */
-        event::Event& event;
 
         /**
          * @brief Interval to setting powerOn to true.
