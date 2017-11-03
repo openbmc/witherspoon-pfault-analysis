@@ -125,7 +125,7 @@ void PowerSupply::analyze()
 
             checkInputFault(statusWord);
 
-            if (powerOn && !inputFault)
+            if (powerOn && !faultFound)
             {
                 checkFanFault(statusWord);
                 checkTemperatureFault(statusWord);
@@ -252,6 +252,7 @@ void PowerSupply::checkInputFault(const uint16_t statusWord)
     if (!inputFault && ((statusWord & status_word::INPUT_FAULT_WARN) ||
         (statusWord & status_word::VIN_UV_FAULT)))
     {
+        faultFound = true;
         inputFault = true;
 
         util::NamesValues nv;
@@ -272,6 +273,7 @@ void PowerSupply::checkInputFault(const uint16_t statusWord)
             !(statusWord & status_word::VIN_UV_FAULT))
         {
             inputFault = false;
+            faultFound = false;
 
             statusInput = pmbusIntf.read(STATUS_INPUT, Type::Debug);
 
@@ -318,6 +320,8 @@ void PowerSupply::checkPGOrUnitOffFault(const uint16_t statusWord)
 
         if (powerOnFault >= FAULT_COUNT)
         {
+            faultFound = true;
+
             util::NamesValues nv;
             nv.add("STATUS_WORD", statusWord);
             captureCmd(nv, STATUS_INPUT, Type::Debug);
@@ -363,6 +367,7 @@ void PowerSupply::checkCurrentOutOverCurrentFault(const uint16_t statusWord)
                                              metadata::CALLOUT_INVENTORY_PATH(
                                                      inventoryPath.c_str()));
 
+        faultFound = true;
         outputOCFault = true;
     }
 }
@@ -391,6 +396,7 @@ void PowerSupply::checkOutputOvervoltageFault(const uint16_t statusWord)
                                              metadata::CALLOUT_INVENTORY_PATH(
                                                      inventoryPath.c_str()));
 
+        faultFound = true;
         outputOVFault = true;
     }
 }
@@ -416,6 +422,7 @@ void PowerSupply::checkFanFault(const uint16_t statusWord)
                 metadata::RAW_STATUS(nv.get().c_str()),
                 metadata::CALLOUT_INVENTORY_PATH(inventoryPath.c_str()));
 
+        faultFound = true;
         fanFault = true;
     }
 }
@@ -457,6 +464,7 @@ void PowerSupply::checkTemperatureFault(const uint16_t statusWord)
                 metadata::RAW_STATUS(nv.get().c_str()),
                 metadata::CALLOUT_INVENTORY_PATH(inventoryPath.c_str()));
 
+        faultFound = true;
         temperatureFault = true;
     }
 }
@@ -470,6 +478,7 @@ void PowerSupply::clearFaults()
     outputOVFault = false;
     fanFault = false;
     temperatureFault = false;
+    faultFound = false;
 
     return;
 }
