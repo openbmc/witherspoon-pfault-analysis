@@ -159,7 +159,7 @@ void PowerSupply::inventoryChanged(sdbusplus::message::message& msg)
             vinUVFault = false;
             inputFault = false;
             outputOCFault = false;
-            outputOVFault = false;
+            outputOVFault = 0;
             fanFault = false;
             temperatureFault = false;
         }
@@ -201,7 +201,7 @@ void PowerSupply::powerStateChanged(sdbusplus::message::message& msg)
             inputFault = false;
             powerOnFault = 0;
             outputOCFault = false;
-            outputOVFault = false;
+            outputOVFault = 0;
             fanFault = false;
             temperatureFault = false;
             powerOnTimer.start(powerOnInterval, Timer::TimerType::oneshot);
@@ -403,27 +403,39 @@ void PowerSupply::checkOutputOvervoltageFault(const uint16_t statusWord)
 {
     using namespace witherspoon::pmbus;
 
-    // Check for an output overvoltage fault.
-    if ((statusWord & status_word::VOUT_OV_FAULT) &&
-        !outputOVFault)
+    if (outputOVFault < FAULT_COUNT)
     {
-        util::NamesValues nv;
-        nv.add("STATUS_WORD", statusWord);
-        captureCmd(nv, STATUS_INPUT, Type::Debug);
-        auto status0Vout = pmbusIntf.insertPageNum(STATUS_VOUT, 0);
-        captureCmd(nv, status0Vout, Type::Debug);
-        captureCmd(nv, STATUS_IOUT, Type::Debug);
-        captureCmd(nv, STATUS_MFR, Type::Debug);
+        // Check for an output overvoltage fault.
+        if (statusWord & status_word::VOUT_OV_FAULT)
+        {
+            log<level::INFO>("VOUT_OV_FAULT bit on", 
+                             entry("STATUS_WORD=0x%04X", statusWord));
+            outputOVFault++;
+        }
+        else
+        {
+            log<level::INFO>("VOUT_OV_FAULT bit off");
+            outputOVFault = 0;
+        }
 
-        using metadata = org::open_power::Witherspoon::Fault::
-                PowerSupplyOutputOvervoltage;
-
-        report<PowerSupplyOutputOvervoltage>(metadata::RAW_STATUS(
-                                                     nv.get().c_str()),
-                                             metadata::CALLOUT_INVENTORY_PATH(
-                                                     inventoryPath.c_str()));
-
-        outputOVFault = true;
+        if (outputOVFault >= FAULT_COUNT)
+        {
+            util::NamesValues nv;
+            nv.add("STATUS_WORD", statusWord);
+            captureCmd(nv, STATUS_INPUT, Type::Debug);
+            auto status0Vout = pmbusIntf.insertPageNum(STATUS_VOUT, 0);
+            captureCmd(nv, status0Vout, Type::Debug);
+            captureCmd(nv, STATUS_IOUT, Type::Debug);
+            captureCmd(nv, STATUS_MFR, Type::Debug);
+    
+            using metadata = org::open_power::Witherspoon::Fault::
+                    PowerSupplyOutputOvervoltage;
+    
+            report<PowerSupplyOutputOvervoltage>(
+                    metadata::RAW_STATUS(nv.get().c_str()),
+                    metadata::CALLOUT_INVENTORY_PATH(inventoryPath.c_str()));
+    
+        }
     }
 }
 
