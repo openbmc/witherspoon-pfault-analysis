@@ -437,25 +437,38 @@ void PowerSupply::checkFanFault(const uint16_t statusWord)
 {
     using namespace witherspoon::pmbus;
 
-    // Check for a fan fault or warning condition
-    if ((statusWord & status_word::FAN_FAULT) &&
-        !fanFault)
+    if (fanFault < FAULT_COUNT)
     {
-        util::NamesValues nv;
-        nv.add("STATUS_WORD", statusWord);
-        captureCmd(nv, STATUS_MFR, Type::Debug);
-        captureCmd(nv, STATUS_TEMPERATURE, Type::Debug);
-        captureCmd(nv, STATUS_FANS_1_2, Type::Debug);
+        // Check for a fan fault or warning condition
+        if (statusWord & status_word::FAN_FAULT)
+        {
+            log<level::INFO>("FAN_FAULT bit on", 
+                             entry("STATUS_WORD=0x%04X", statusWord));
+            fanFault++;
+        }
+        else
+        {
+            log<level::INFO>("FAN_FAULT bit off");
+            fanFault = 0;
+        }
 
-        using metadata = org::open_power::Witherspoon::Fault::
-                PowerSupplyFanFault;
+        if (fanFault >= FAULT_COUNT)
+        {
+            util::NamesValues nv;
+            nv.add("STATUS_WORD", statusWord);
+            captureCmd(nv, STATUS_MFR, Type::Debug);
+            captureCmd(nv, STATUS_TEMPERATURE, Type::Debug);
+            captureCmd(nv, STATUS_FANS_1_2, Type::Debug);
+    
+            using metadata = org::open_power::Witherspoon::Fault::
+                    PowerSupplyFanFault;
+    
+            report<PowerSupplyFanFault>(
+                    metadata::RAW_STATUS(nv.get().c_str()),
+                    metadata::CALLOUT_INVENTORY_PATH(inventoryPath.c_str()));
 
-        report<PowerSupplyFanFault>(
-                metadata::RAW_STATUS(nv.get().c_str()),
-                metadata::CALLOUT_INVENTORY_PATH(inventoryPath.c_str()));
-
-        faultFound = true;
-        fanFault = true;
+            faultFound = true;
+        }
     }
 }
 
@@ -508,7 +521,7 @@ void PowerSupply::clearFaults()
     powerOnFault = 0;
     outputOCFault = 0;
     outputOVFault = 0;
-    fanFault = false;
+    fanFault = 0;
     temperatureFault = false;
     faultFound = false;
 
