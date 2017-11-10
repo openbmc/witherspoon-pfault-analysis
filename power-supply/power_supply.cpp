@@ -163,6 +163,8 @@ void PowerSupply::inventoryChanged(sdbusplus::message::message& msg)
         if (present)
         {
             clearFaults();
+            // The hwmon path may have changed.
+            pmbusIntf.findHwmonDir();
             presentTimer.start(presentInterval, Timer::TimerType::oneshot);
         }
         else
