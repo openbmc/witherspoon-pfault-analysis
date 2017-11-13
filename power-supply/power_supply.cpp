@@ -323,7 +323,7 @@ void PowerSupply::checkPGOrUnitOffFault(const uint16_t statusWord)
             }
         }
 
-        if (powerOnFault >= FAULT_COUNT)
+        if (!faultFound && (powerOnFault >= FAULT_COUNT))
         {
             faultFound = true;
 
@@ -353,7 +353,7 @@ void PowerSupply::checkCurrentOutOverCurrentFault(const uint16_t statusWord)
     using namespace witherspoon::pmbus;
 
     // Check for an output overcurrent fault.
-    if ((statusWord & status_word::IOUT_OC_FAULT) &&
+    if (!faultFound && (statusWord & status_word::IOUT_OC_FAULT) &&
         !outputOCFault)
     {
         util::NamesValues nv;
@@ -382,7 +382,7 @@ void PowerSupply::checkOutputOvervoltageFault(const uint16_t statusWord)
     using namespace witherspoon::pmbus;
 
     // Check for an output overvoltage fault.
-    if ((statusWord & status_word::VOUT_OV_FAULT) &&
+    if (!faultFound && (statusWord & status_word::VOUT_OV_FAULT) &&
         !outputOVFault)
     {
         util::NamesValues nv;
@@ -411,7 +411,7 @@ void PowerSupply::checkFanFault(const uint16_t statusWord)
     using namespace witherspoon::pmbus;
 
     // Check for a fan fault or warning condition
-    if ((statusWord & status_word::FAN_FAULT) &&
+    if (!faultFound && (statusWord & status_word::FAN_FAULT) &&
         !fanFault)
     {
         util::NamesValues nv;
@@ -443,7 +443,7 @@ void PowerSupply::checkTemperatureFault(const uint16_t statusWord)
     // logging the over-temperature condition.
     std::uint8_t statusTemperature = 0;
     statusTemperature = pmbusIntf.read(STATUS_TEMPERATURE, Type::Debug);
-    if (((statusWord & status_word::TEMPERATURE_FAULT_WARN) ||
+    if (!faultFound && ((statusWord & status_word::TEMPERATURE_FAULT_WARN) ||
          (statusTemperature & status_temperature::OT_FAULT)) &&
         !temperatureFault)
     {
