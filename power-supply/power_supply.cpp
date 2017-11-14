@@ -257,30 +257,18 @@ void PowerSupply::checkInputFault(const uint16_t statusWord)
 
     std::uint8_t  statusInput = 0;
 
-    if (!inputFault && ((statusWord & status_word::INPUT_FAULT_WARN) ||
-        (statusWord & status_word::VIN_UV_FAULT)))
+    if ((statusWord & status_word::INPUT_FAULT_WARN) ||
+        (statusWord & status_word::VIN_UV_FAULT))
     {
-        faultFound = true;
-        inputFault = true;
-
-        util::NamesValues nv;
-        nv.add("STATUS_WORD", statusWord);
-        captureCmd(nv, STATUS_INPUT, Type::Debug);
-
-        using metadata = org::open_power::Witherspoon::Fault::
-                PowerSupplyInputFault;
-
-        report<PowerSupplyInputFault>(
-                metadata::RAW_STATUS(nv.get().c_str()),
-                metadata::CALLOUT_INVENTORY_PATH(inventoryPath.c_str()));
+        log<level::INFO>("INPUT_FAULT_WARN and/or VIN_UV_FAULT on",
+                         entry("STATUS_WORD=0x%04X", statusWord));
+        inputFault++;
     }
     else
     {
-        if ((inputFault) &&
-            !(statusWord & status_word::INPUT_FAULT_WARN) &&
-            !(statusWord & status_word::VIN_UV_FAULT))
+        if (inputFault > 0)
         {
-            inputFault = false;
+            inputFault = 0;
             faultFound = false;
 
             statusInput = pmbusIntf.read(STATUS_INPUT, Type::Debug);
@@ -301,6 +289,22 @@ void PowerSupply::checkInputFault(const uint16_t statusWord)
             }
         }
     }
+
+    if (inputFault >= FAULT_COUNT)
+    {
+        util::NamesValues nv;
+        nv.add("STATUS_WORD", statusWord);
+        captureCmd(nv, STATUS_INPUT, Type::Debug);
+
+        using metadata = org::open_power::Witherspoon::Fault::
+                PowerSupplyInputFault;
+
+        report<PowerSupplyInputFault>(
+                metadata::RAW_STATUS(nv.get().c_str()),
+                metadata::CALLOUT_INVENTORY_PATH(inventoryPath.c_str()));
+        faultFound = true;
+    }
+
 }
 
 void PowerSupply::checkPGOrUnitOffFault(const uint16_t statusWord)
@@ -546,7 +550,7 @@ void PowerSupply::clearFaults()
 {
     readFail = 0;
     readFailLogged = false;
-    inputFault = false;
+    inputFault = 0;
     powerOnFault = 0;
     outputOCFault = 0;
     outputOVFault = 0;
