@@ -84,7 +84,10 @@ int main(int argc, char* argv[])
     // give us a 1250ms delay from state=1 to checking STATUS_WORD, however,
     // the sysfs files will only be updated by the ibm-cffps device driver once
     // a second, so round up that delay to 2 seconds.
-    std::chrono::seconds powerOnDelay(2);
+    // 2017/11/16 - The most recent ship level power supplies are taking 
+    // longer than expected to assert the POWER_GOOD in STATUS_WORD. It was 
+    // requested that this delay be increased by 2 to 3 seconds.
+    std::chrono::seconds powerOnDelay(5);
     // Timer to delay setting internal presence tracking. Allows for servicing
     // the power supply.
     std::chrono::seconds presentDelay(2);
