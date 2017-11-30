@@ -537,6 +537,12 @@ void PowerSupply::clearFaults()
     return;
 }
 
+void PowerSupply::resolveError(const std::string& callout, const std::string& message)
+{
+    // to be filled in.
+    return;
+}
+
 }
 }
 }

@@ -71,6 +71,12 @@ class PowerSupply : public Device
          */
         void clearFaults() override;
 
+        /**
+         * Mark error for specified callout and message as resolved.
+         */
+        void resolveError(const std::string& callout,
+                          const std::string& message);
+
     private:
         /**
          * The path to use for reading various PMBus bits/words.
