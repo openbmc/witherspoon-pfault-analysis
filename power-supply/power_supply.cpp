@@ -27,6 +27,12 @@ using namespace phosphor::logging;
 using namespace sdbusplus::org::open_power::Witherspoon::Fault::Error;
 using namespace sdbusplus::xyz::openbmc_project::Common::Device::Error;
 
+constexpr auto ASSOCIATION_IFACE = "org.openbmc.Association";
+constexpr auto ENDPOINTS_PROPERTY = "endpoints";
+constexpr auto LOGGING_IFACE = "xyz.openbmc_project.Logging.Entry";
+constexpr auto MESSAGE_PROPERTY = "Message";
+constexpr auto RESOLVED_PROPERTY = "Resolved";
+
 namespace witherspoon
 {
 namespace power
@@ -543,8 +549,58 @@ void PowerSupply::clearFaults()
 void PowerSupply::resolveError(const std::string& callout,
                                const std::string& message)
 {
-    // to be filled in.
-    return;
+    using EndpointList = std::vector<std::string>;
+
+    try
+    {
+        auto path = callout + "/fault";
+        // Get the service name from the mapper for the fault callout
+        auto service = util::getService(path,
+                                        ASSOCIATION_IFACE,
+                                        bus);
+
+        // Use getProperty utility function to get log entries (endpoints)
+        EndpointList logEntries;
+        util::getProperty(ASSOCIATION_IFACE, ENDPOINTS_PROPERTY, path, service,
+                          bus, logEntries);
+
+        // go through each log entry that matches this callout path
+        for (const auto& logEntry : logEntries)
+        {
+            static std::string logEntryService;
+            if (logEntryService.empty())
+            {
+                logEntryService = util::getService(logEntry, LOGGING_IFACE,
+                                                   bus);
+                if (logEntryService.empty())
+                {
+                    continue;
+                }
+            }
+
+            // Check to see if this logEntry has a message that matches.
+            std::string logMessage;
+            util::getProperty(LOGGING_IFACE, MESSAGE_PROPERTY, logEntry,
+                              logEntryService, bus, logMessage);
+
+            if (message == logMessage)
+            {
+                // Log entry matches call out and message, set Resolved to true
+                bool resolved = true;
+                util::setProperty(LOGGING_IFACE, RESOLVED_PROPERTY, logEntry,
+                                  logEntryService, bus, resolved);
+            }
+
+        }
+
+    }
+    catch (std::exception& e)
+    {
+        log<level::INFO>("Failed to resolve error",
+                         entry("CALLOUT=%s", callout.c_str()),
+                         entry("MESSAGE=%s", message.c_str()));
+    }
+
 }
 
 }
