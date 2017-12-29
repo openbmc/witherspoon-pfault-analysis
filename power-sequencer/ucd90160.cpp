@@ -17,7 +17,7 @@
 #include <memory>
 #include <phosphor-logging/elog.hpp>
 #include <phosphor-logging/log.hpp>
-#include <elog-errors.hpp>
+#include <phosphor-logging/elog-errors.hpp>
 #include <org/open_power/Witherspoon/Fault/error.hpp>
 #include <xyz/openbmc_project/Common/Device/error.hpp>
 #include "names_values.hpp"

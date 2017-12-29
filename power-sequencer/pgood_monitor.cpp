@@ -16,7 +16,7 @@
 #include <phosphor-logging/log.hpp>
 #include <org/open_power/Witherspoon/Fault/error.hpp>
 #include "config.h"
-#include "elog-errors.hpp"
+#include "phosphor-logging/elog-errors.hpp"
 #include "pgood_monitor.hpp"
 #include "utility.hpp"
 
