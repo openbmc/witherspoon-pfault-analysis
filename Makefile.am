@@ -1,5 +1,5 @@
 AM_DEFAULT_SOURCE_EXT = .cpp
-
+if !INSTALL_ERROR_YAML
 noinst_LTLIBRARIES = libpower.la
 libpower_la_LDFLAGS = -static
 libpower_la_LIBADD = \
@@ -34,3 +34,10 @@ org/open_power/Witherspoon/Fault/error.cpp: ${srcdir}/org/open_power/Witherspoon
 	$(SDBUSPLUSPLUS) -r $(srcdir) error exception-cpp org.open_power.Witherspoon.Fault > $@
 
 SUBDIRS = . power-sequencer power-supply test
+endif
+# Export error YAML to shared location
+yamldir = ${datadir}/phosphor-dbus-yaml/yaml
+nobase_yaml_DATA = \
+	org/open_power/Witherspoon/Fault.errors.yaml \
+	org/open_power/Witherspoon/Fault.metadata.yaml
+
