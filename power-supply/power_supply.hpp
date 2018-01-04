@@ -321,6 +321,17 @@ class PowerSupply : public Device
          */
         void checkTemperatureFault(const uint16_t statusWord);
 
+        /**
+         * @brief Adds SN, PN, CCIN, and FW version values to the inventory.
+         *
+         * Reads the values from the device and writes them to the
+         * associated power supply D-Bus inventory object.
+         *
+         * This needs to be done on startup, and each time the presence
+         * state changes.
+         */
+        void updateInventory();
+
 };
 
 }
