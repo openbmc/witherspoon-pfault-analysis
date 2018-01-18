@@ -8,7 +8,9 @@ witherspoon_psu_monitor_SOURCES = \
 	main.cpp \
 	argument.cpp \
 	power_supply.cpp \
-	record_manager.cpp
+	record_manager.cpp \
+	xyz/openbmc_project/Sensor/Aggregation/History/Maximum/server.cpp \
+	xyz/openbmc_project/Sensor/Aggregation/History/Average/server.cpp
 
 witherspoon_psu_monitor_CXXFLAGS = \
 	$(SDBUSPLUS_CFLAGS) \
