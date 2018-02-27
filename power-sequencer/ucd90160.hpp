@@ -291,6 +291,13 @@ class UCD90160 : public Device
         bool gpioAccessError = false;
 
         /**
+         * Keeps track of the number of consecutive UCD90160 GPIO
+         * access errors.  The code will give up even trying to
+         * access these GPIOs if too many are hit.
+         */
+        size_t ucdGPIOErrors = 0;
+
+        /**
          * The path to the GPIO device used to read
          * the GPI (PGOOD) status
          */

@@ -39,6 +39,8 @@ constexpr auto NUM_PAGES = 16;
 
 constexpr auto INVENTORY_OBJ_PATH = "/xyz/openbmc_project/inventory";
 
+constexpr auto MAX_UCD90160_GPIO_ERRORS = 20;
+
 namespace fs = std::experimental::filesystem;
 using namespace gpio;
 using namespace pmbus;
@@ -195,6 +197,15 @@ bool UCD90160::checkPGOODFaults(bool polling)
     auto& gpiConfigs = std::get<ucd90160::gpiConfigField>(
             deviceMap.find(getInstance())->second);
 
+    //If this is part of a poll, it will give up after hitting too
+    //many consecutive errors, but if called from the onFailure case
+    //it will try again anyway as there is some error somewhere so
+    //do everything we can to find it.
+    if (polling && (ucdGPIOErrors >= MAX_UCD90160_GPIO_ERRORS))
+    {
+        return false;
+    }
+
     for (const auto& gpiConfig : gpiConfigs)
     {
         auto gpiNum = std::get<ucd90160::gpiNumField>(gpiConfig);
@@ -226,13 +237,22 @@ bool UCD90160::checkPGOODFaults(bool polling)
             }
 
             gpiStatus = gpio->second->read();
+
+            if (ucdGPIOErrors)
+            {
+                ucdGPIOErrors = 0;
+            }
         }
         catch (std::exception& e)
         {
-            if (!accessError)
+            ucdGPIOErrors++;
+
+            //Something catastrophic happened, like the
+            //GPIO device never showed up.
+            if (ucdGPIOErrors == MAX_UCD90160_GPIO_ERRORS)
             {
-                log<level::ERR>(e.what());
-                accessError = true;
+                log<level::ERR>(
+                        "Giving up on trying to access the UCD90160 GPIOs");
             }
             continue;
         }
