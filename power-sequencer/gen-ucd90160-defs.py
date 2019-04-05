@@ -30,9 +30,12 @@ if __name__ == '__main__':
     templates_dir = os.path.join(
             os.path.dirname(os.path.realpath(__file__)),
             "templates")
+
     output_file = os.path.join(args.output_dir, "ucd90160_defs.cpp") # not needed?
+
     mylookup = TemplateLookup(
             directories=templates_dir.split())
     mytemplate = mylookup.get_template('ucd90160_defs.mako.cpp')
+
     with open(output_file, 'w') as output:
         output.write(mytemplate.render(ucd90160s=ucd90160_data))
