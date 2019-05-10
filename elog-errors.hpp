@@ -2,12 +2,12 @@
 // See elog-gen.py for more details
 #pragma once
 
-#include <phosphor-logging/elog.hpp>
-#include <phosphor-logging/log.hpp>
-#include <sdbusplus/exception.hpp>
 #include <string>
 #include <tuple>
 #include <type_traits>
+#include <sdbusplus/exception.hpp>
+#include <phosphor-logging/log.hpp>
+#include <phosphor-logging/elog.hpp>
 
 namespace sdbusplus
 {
@@ -21,7 +21,7 @@ namespace Fault
 {
 namespace Error
 {
-struct PowerSequencerPGOODFault;
+    struct PowerSequencerPGOODFault;
 } // namespace Error
 } // namespace Fault
 } // namespace Witherspoon
@@ -41,7 +41,7 @@ namespace Callout
 {
 namespace Error
 {
-struct GPIO;
+    struct GPIO;
 } // namespace Error
 } // namespace Callout
 } // namespace Common
@@ -61,7 +61,7 @@ namespace Fault
 {
 namespace Error
 {
-struct PowerOnFailure;
+    struct PowerOnFailure;
 } // namespace Error
 } // namespace Fault
 } // namespace Witherspoon
@@ -81,7 +81,7 @@ namespace Fault
 {
 namespace Error
 {
-struct PowerSupplyInputFault;
+    struct PowerSupplyInputFault;
 } // namespace Error
 } // namespace Fault
 } // namespace Witherspoon
@@ -101,7 +101,7 @@ namespace Callout
 {
 namespace Error
 {
-struct IIC;
+    struct IIC;
 } // namespace Error
 } // namespace Callout
 } // namespace Common
@@ -121,7 +121,7 @@ namespace Fault
 {
 namespace Error
 {
-struct GPUPowerFault;
+    struct GPUPowerFault;
 } // namespace Error
 } // namespace Fault
 } // namespace Witherspoon
@@ -141,7 +141,7 @@ namespace Fault
 {
 namespace Error
 {
-struct Shutdown;
+    struct Shutdown;
 } // namespace Error
 } // namespace Fault
 } // namespace Witherspoon
@@ -161,7 +161,7 @@ namespace Callout
 {
 namespace Error
 {
-struct Inventory;
+    struct Inventory;
 } // namespace Error
 } // namespace Callout
 } // namespace Common
@@ -181,7 +181,7 @@ namespace Callout
 {
 namespace Error
 {
-struct Device;
+    struct Device;
 } // namespace Error
 } // namespace Callout
 } // namespace Common
@@ -201,7 +201,7 @@ namespace Fault
 {
 namespace Error
 {
-struct PowerSequencerFault;
+    struct PowerSequencerFault;
 } // namespace Error
 } // namespace Fault
 } // namespace Witherspoon
@@ -221,7 +221,7 @@ namespace Fault
 {
 namespace Error
 {
-struct PowerSupplyOutputOvercurrent;
+    struct PowerSupplyOutputOvercurrent;
 } // namespace Error
 } // namespace Fault
 } // namespace Witherspoon
@@ -241,7 +241,7 @@ namespace Fault
 {
 namespace Error
 {
-struct PowerSupplyOutputOvervoltage;
+    struct PowerSupplyOutputOvervoltage;
 } // namespace Error
 } // namespace Fault
 } // namespace Witherspoon
@@ -261,7 +261,7 @@ namespace Fault
 {
 namespace Error
 {
-struct PowerSupplyFanFault;
+    struct PowerSupplyFanFault;
 } // namespace Error
 } // namespace Fault
 } // namespace Witherspoon
@@ -281,7 +281,7 @@ namespace Fault
 {
 namespace Error
 {
-struct PowerSequencerVoltageFault;
+    struct PowerSequencerVoltageFault;
 } // namespace Error
 } // namespace Fault
 } // namespace Witherspoon
@@ -301,7 +301,7 @@ namespace Callout
 {
 namespace Error
 {
-struct IPMISensor;
+    struct IPMISensor;
 } // namespace Error
 } // namespace Callout
 } // namespace Common
@@ -321,7 +321,7 @@ namespace Fault
 {
 namespace Error
 {
-struct PowerSupplyTemperatureFault;
+    struct MEMGoodFault;
 } // namespace Error
 } // namespace Fault
 } // namespace Witherspoon
@@ -341,7 +341,7 @@ namespace Fault
 {
 namespace Error
 {
-struct PowerSupplyShouldBeOn;
+    struct PowerSupplyTemperatureFault;
 } // namespace Error
 } // namespace Fault
 } // namespace Witherspoon
@@ -361,13 +361,34 @@ namespace Fault
 {
 namespace Error
 {
-struct GPUOverTemp;
+    struct PowerSupplyShouldBeOn;
 } // namespace Error
 } // namespace Fault
 } // namespace Witherspoon
 } // namespace open_power
 } // namespace org
 } // namespace sdbusplus
+
+namespace sdbusplus
+{
+namespace org
+{
+namespace open_power
+{
+namespace Witherspoon
+{
+namespace Fault
+{
+namespace Error
+{
+    struct GPUOverTemp;
+} // namespace Error
+} // namespace Fault
+} // namespace Witherspoon
+} // namespace open_power
+} // namespace org
+} // namespace sdbusplus
+
 
 namespace phosphor
 {
@@ -388,23 +409,30 @@ namespace _Device
 
 struct CALLOUT_ERRNO
 {
-    static constexpr auto str = "CALLOUT_ERRNO=%d";
+    /*
+     * We can't use -fsanitize=undefined if we declare a
+     * 'static constexpr auto str' member, so don't. Instead, open-code the
+     * mako template lookups.
+     */
     static constexpr auto str_short = "CALLOUT_ERRNO";
-    using type = std::tuple<std::decay_t<decltype(str)>, int32_t>;
-    explicit constexpr CALLOUT_ERRNO(int32_t a) : _entry(entry(str, a)){};
+    using type = std::tuple<std::decay_t<decltype("CALLOUT_ERRNO=%d")>,int32_t>;
+    explicit constexpr CALLOUT_ERRNO(int32_t a) : _entry(entry("CALLOUT_ERRNO=%d", a)) {};
     type _entry;
 };
 struct CALLOUT_DEVICE_PATH
 {
-    static constexpr auto str = "CALLOUT_DEVICE_PATH=%s";
+    /*
+     * We can't use -fsanitize=undefined if we declare a
+     * 'static constexpr auto str' member, so don't. Instead, open-code the
+     * mako template lookups.
+     */
     static constexpr auto str_short = "CALLOUT_DEVICE_PATH";
-    using type = std::tuple<std::decay_t<decltype(str)>, const char*>;
-    explicit constexpr CALLOUT_DEVICE_PATH(const char* a) :
-        _entry(entry(str, a)){};
+    using type = std::tuple<std::decay_t<decltype("CALLOUT_DEVICE_PATH=%s")>,const char*>;
+    explicit constexpr CALLOUT_DEVICE_PATH(const char* a) : _entry(entry("CALLOUT_DEVICE_PATH=%s", a)) {};
     type _entry;
 };
 
-} // namespace _Device
+}  // namespace _Device
 
 struct Device
 {
@@ -412,6 +440,7 @@ struct Device
     using CALLOUT_ERRNO = _Device::CALLOUT_ERRNO;
     using CALLOUT_DEVICE_PATH = _Device::CALLOUT_DEVICE_PATH;
     using metadata_types = std::tuple<CALLOUT_ERRNO, CALLOUT_DEVICE_PATH>;
+
 };
 
 } // namespace Callout
@@ -419,17 +448,17 @@ struct Device
 } // namespace openbmc_project
 } // namespace xyz
 
+
 namespace details
 {
 
 template <>
-struct map_exception_type<
-    sdbusplus::xyz::openbmc_project::Common::Callout::Error::Device>
+struct map_exception_type<sdbusplus::xyz::openbmc_project::Common::Callout::Error::Device>
 {
     using type = xyz::openbmc_project::Common::Callout::Device;
 };
 
-} // namespace details
+}
 
 namespace xyz
 {
@@ -444,25 +473,27 @@ namespace _GPIO
 
 struct CALLOUT_GPIO_NUM
 {
-    static constexpr auto str = "CALLOUT_GPIO_NUM=%u";
+    /*
+     * We can't use -fsanitize=undefined if we declare a
+     * 'static constexpr auto str' member, so don't. Instead, open-code the
+     * mako template lookups.
+     */
     static constexpr auto str_short = "CALLOUT_GPIO_NUM";
-    using type = std::tuple<std::decay_t<decltype(str)>, uint32_t>;
-    explicit constexpr CALLOUT_GPIO_NUM(uint32_t a) : _entry(entry(str, a)){};
+    using type = std::tuple<std::decay_t<decltype("CALLOUT_GPIO_NUM=%u")>,uint32_t>;
+    explicit constexpr CALLOUT_GPIO_NUM(uint32_t a) : _entry(entry("CALLOUT_GPIO_NUM=%u", a)) {};
     type _entry;
 };
 
-} // namespace _GPIO
+}  // namespace _GPIO
 
 struct GPIO
 {
     static constexpr auto L = level::ERR;
     using CALLOUT_GPIO_NUM = _GPIO::CALLOUT_GPIO_NUM;
-    using CALLOUT_ERRNO =
-        xyz::openbmc_project::Common::Callout::Device::CALLOUT_ERRNO;
-    using CALLOUT_DEVICE_PATH =
-        xyz::openbmc_project::Common::Callout::Device::CALLOUT_DEVICE_PATH;
-    using metadata_types =
-        std::tuple<CALLOUT_GPIO_NUM, CALLOUT_ERRNO, CALLOUT_DEVICE_PATH>;
+    using CALLOUT_ERRNO = xyz::openbmc_project::Common::Callout::Device::CALLOUT_ERRNO;
+    using CALLOUT_DEVICE_PATH = xyz::openbmc_project::Common::Callout::Device::CALLOUT_DEVICE_PATH;
+    using metadata_types = std::tuple<CALLOUT_GPIO_NUM, CALLOUT_ERRNO, CALLOUT_DEVICE_PATH>;
+
 };
 
 } // namespace Callout
@@ -470,17 +501,17 @@ struct GPIO
 } // namespace openbmc_project
 } // namespace xyz
 
+
 namespace details
 {
 
 template <>
-struct map_exception_type<
-    sdbusplus::xyz::openbmc_project::Common::Callout::Error::GPIO>
+struct map_exception_type<sdbusplus::xyz::openbmc_project::Common::Callout::Error::GPIO>
 {
     using type = xyz::openbmc_project::Common::Callout::GPIO;
 };
 
-} // namespace details
+}
 
 namespace xyz
 {
@@ -495,34 +526,40 @@ namespace _IIC
 
 struct CALLOUT_IIC_BUS
 {
-    static constexpr auto str = "CALLOUT_IIC_BUS=%s";
+    /*
+     * We can't use -fsanitize=undefined if we declare a
+     * 'static constexpr auto str' member, so don't. Instead, open-code the
+     * mako template lookups.
+     */
     static constexpr auto str_short = "CALLOUT_IIC_BUS";
-    using type = std::tuple<std::decay_t<decltype(str)>, const char*>;
-    explicit constexpr CALLOUT_IIC_BUS(const char* a) : _entry(entry(str, a)){};
+    using type = std::tuple<std::decay_t<decltype("CALLOUT_IIC_BUS=%s")>,const char*>;
+    explicit constexpr CALLOUT_IIC_BUS(const char* a) : _entry(entry("CALLOUT_IIC_BUS=%s", a)) {};
     type _entry;
 };
 struct CALLOUT_IIC_ADDR
 {
-    static constexpr auto str = "CALLOUT_IIC_ADDR=0x%hx";
+    /*
+     * We can't use -fsanitize=undefined if we declare a
+     * 'static constexpr auto str' member, so don't. Instead, open-code the
+     * mako template lookups.
+     */
     static constexpr auto str_short = "CALLOUT_IIC_ADDR";
-    using type = std::tuple<std::decay_t<decltype(str)>, uint16_t>;
-    explicit constexpr CALLOUT_IIC_ADDR(uint16_t a) : _entry(entry(str, a)){};
+    using type = std::tuple<std::decay_t<decltype("CALLOUT_IIC_ADDR=0x%hx")>,uint16_t>;
+    explicit constexpr CALLOUT_IIC_ADDR(uint16_t a) : _entry(entry("CALLOUT_IIC_ADDR=0x%hx", a)) {};
     type _entry;
 };
 
-} // namespace _IIC
+}  // namespace _IIC
 
 struct IIC
 {
     static constexpr auto L = level::ERR;
     using CALLOUT_IIC_BUS = _IIC::CALLOUT_IIC_BUS;
     using CALLOUT_IIC_ADDR = _IIC::CALLOUT_IIC_ADDR;
-    using CALLOUT_ERRNO =
-        xyz::openbmc_project::Common::Callout::Device::CALLOUT_ERRNO;
-    using CALLOUT_DEVICE_PATH =
-        xyz::openbmc_project::Common::Callout::Device::CALLOUT_DEVICE_PATH;
-    using metadata_types = std::tuple<CALLOUT_IIC_BUS, CALLOUT_IIC_ADDR,
-                                      CALLOUT_ERRNO, CALLOUT_DEVICE_PATH>;
+    using CALLOUT_ERRNO = xyz::openbmc_project::Common::Callout::Device::CALLOUT_ERRNO;
+    using CALLOUT_DEVICE_PATH = xyz::openbmc_project::Common::Callout::Device::CALLOUT_DEVICE_PATH;
+    using metadata_types = std::tuple<CALLOUT_IIC_BUS, CALLOUT_IIC_ADDR, CALLOUT_ERRNO, CALLOUT_DEVICE_PATH>;
+
 };
 
 } // namespace Callout
@@ -530,17 +567,17 @@ struct IIC
 } // namespace openbmc_project
 } // namespace xyz
 
+
 namespace details
 {
 
 template <>
-struct map_exception_type<
-    sdbusplus::xyz::openbmc_project::Common::Callout::Error::IIC>
+struct map_exception_type<sdbusplus::xyz::openbmc_project::Common::Callout::Error::IIC>
 {
     using type = xyz::openbmc_project::Common::Callout::IIC;
 };
 
-} // namespace details
+}
 
 namespace xyz
 {
@@ -555,21 +592,25 @@ namespace _Inventory
 
 struct CALLOUT_INVENTORY_PATH
 {
-    static constexpr auto str = "CALLOUT_INVENTORY_PATH=%s";
+    /*
+     * We can't use -fsanitize=undefined if we declare a
+     * 'static constexpr auto str' member, so don't. Instead, open-code the
+     * mako template lookups.
+     */
     static constexpr auto str_short = "CALLOUT_INVENTORY_PATH";
-    using type = std::tuple<std::decay_t<decltype(str)>, const char*>;
-    explicit constexpr CALLOUT_INVENTORY_PATH(const char* a) :
-        _entry(entry(str, a)){};
+    using type = std::tuple<std::decay_t<decltype("CALLOUT_INVENTORY_PATH=%s")>,const char*>;
+    explicit constexpr CALLOUT_INVENTORY_PATH(const char* a) : _entry(entry("CALLOUT_INVENTORY_PATH=%s", a)) {};
     type _entry;
 };
 
-} // namespace _Inventory
+}  // namespace _Inventory
 
 struct Inventory
 {
     static constexpr auto L = level::ERR;
     using CALLOUT_INVENTORY_PATH = _Inventory::CALLOUT_INVENTORY_PATH;
     using metadata_types = std::tuple<CALLOUT_INVENTORY_PATH>;
+
 };
 
 } // namespace Callout
@@ -577,17 +618,17 @@ struct Inventory
 } // namespace openbmc_project
 } // namespace xyz
 
+
 namespace details
 {
 
 template <>
-struct map_exception_type<
-    sdbusplus::xyz::openbmc_project::Common::Callout::Error::Inventory>
+struct map_exception_type<sdbusplus::xyz::openbmc_project::Common::Callout::Error::Inventory>
 {
     using type = xyz::openbmc_project::Common::Callout::Inventory;
 };
 
-} // namespace details
+}
 
 namespace xyz
 {
@@ -602,21 +643,25 @@ namespace _IPMISensor
 
 struct CALLOUT_IPMI_SENSOR_NUM
 {
-    static constexpr auto str = "CALLOUT_IPMI_SENSOR_NUM=%u";
+    /*
+     * We can't use -fsanitize=undefined if we declare a
+     * 'static constexpr auto str' member, so don't. Instead, open-code the
+     * mako template lookups.
+     */
     static constexpr auto str_short = "CALLOUT_IPMI_SENSOR_NUM";
-    using type = std::tuple<std::decay_t<decltype(str)>, uint32_t>;
-    explicit constexpr CALLOUT_IPMI_SENSOR_NUM(uint32_t a) :
-        _entry(entry(str, a)){};
+    using type = std::tuple<std::decay_t<decltype("CALLOUT_IPMI_SENSOR_NUM=%u")>,uint32_t>;
+    explicit constexpr CALLOUT_IPMI_SENSOR_NUM(uint32_t a) : _entry(entry("CALLOUT_IPMI_SENSOR_NUM=%u", a)) {};
     type _entry;
 };
 
-} // namespace _IPMISensor
+}  // namespace _IPMISensor
 
 struct IPMISensor
 {
     static constexpr auto L = level::ERR;
     using CALLOUT_IPMI_SENSOR_NUM = _IPMISensor::CALLOUT_IPMI_SENSOR_NUM;
     using metadata_types = std::tuple<CALLOUT_IPMI_SENSOR_NUM>;
+
 };
 
 } // namespace Callout
@@ -624,17 +669,17 @@ struct IPMISensor
 } // namespace openbmc_project
 } // namespace xyz
 
+
 namespace details
 {
 
 template <>
-struct map_exception_type<
-    sdbusplus::xyz::openbmc_project::Common::Callout::Error::IPMISensor>
+struct map_exception_type<sdbusplus::xyz::openbmc_project::Common::Callout::Error::IPMISensor>
 {
     using type = xyz::openbmc_project::Common::Callout::IPMISensor;
 };
 
-} // namespace details
+}
 
 namespace org
 {
@@ -649,22 +694,26 @@ namespace _PowerSupplyInputFault
 
 struct RAW_STATUS
 {
-    static constexpr auto str = "RAW_STATUS=%s";
+    /*
+     * We can't use -fsanitize=undefined if we declare a
+     * 'static constexpr auto str' member, so don't. Instead, open-code the
+     * mako template lookups.
+     */
     static constexpr auto str_short = "RAW_STATUS";
-    using type = std::tuple<std::decay_t<decltype(str)>, const char*>;
-    explicit constexpr RAW_STATUS(const char* a) : _entry(entry(str, a)){};
+    using type = std::tuple<std::decay_t<decltype("RAW_STATUS=%s")>,const char*>;
+    explicit constexpr RAW_STATUS(const char* a) : _entry(entry("RAW_STATUS=%s", a)) {};
     type _entry;
 };
 
-} // namespace _PowerSupplyInputFault
+}  // namespace _PowerSupplyInputFault
 
 struct PowerSupplyInputFault
 {
     static constexpr auto L = level::ERR;
     using RAW_STATUS = _PowerSupplyInputFault::RAW_STATUS;
-    using CALLOUT_INVENTORY_PATH = xyz::openbmc_project::Common::Callout::
-        Inventory::CALLOUT_INVENTORY_PATH;
+    using CALLOUT_INVENTORY_PATH = xyz::openbmc_project::Common::Callout::Inventory::CALLOUT_INVENTORY_PATH;
     using metadata_types = std::tuple<RAW_STATUS, CALLOUT_INVENTORY_PATH>;
+
 };
 
 } // namespace Fault
@@ -672,17 +721,17 @@ struct PowerSupplyInputFault
 } // namespace open_power
 } // namespace org
 
+
 namespace details
 {
 
 template <>
-struct map_exception_type<sdbusplus::org::open_power::Witherspoon::Fault::
-                              Error::PowerSupplyInputFault>
+struct map_exception_type<sdbusplus::org::open_power::Witherspoon::Fault::Error::PowerSupplyInputFault>
 {
     using type = org::open_power::Witherspoon::Fault::PowerSupplyInputFault;
 };
 
-} // namespace details
+}
 
 namespace org
 {
@@ -697,22 +746,26 @@ namespace _PowerSupplyShouldBeOn
 
 struct RAW_STATUS
 {
-    static constexpr auto str = "RAW_STATUS=%s";
+    /*
+     * We can't use -fsanitize=undefined if we declare a
+     * 'static constexpr auto str' member, so don't. Instead, open-code the
+     * mako template lookups.
+     */
     static constexpr auto str_short = "RAW_STATUS";
-    using type = std::tuple<std::decay_t<decltype(str)>, const char*>;
-    explicit constexpr RAW_STATUS(const char* a) : _entry(entry(str, a)){};
+    using type = std::tuple<std::decay_t<decltype("RAW_STATUS=%s")>,const char*>;
+    explicit constexpr RAW_STATUS(const char* a) : _entry(entry("RAW_STATUS=%s", a)) {};
     type _entry;
 };
 
-} // namespace _PowerSupplyShouldBeOn
+}  // namespace _PowerSupplyShouldBeOn
 
 struct PowerSupplyShouldBeOn
 {
     static constexpr auto L = level::ERR;
     using RAW_STATUS = _PowerSupplyShouldBeOn::RAW_STATUS;
-    using CALLOUT_INVENTORY_PATH = xyz::openbmc_project::Common::Callout::
-        Inventory::CALLOUT_INVENTORY_PATH;
+    using CALLOUT_INVENTORY_PATH = xyz::openbmc_project::Common::Callout::Inventory::CALLOUT_INVENTORY_PATH;
     using metadata_types = std::tuple<RAW_STATUS, CALLOUT_INVENTORY_PATH>;
+
 };
 
 } // namespace Fault
@@ -720,17 +773,17 @@ struct PowerSupplyShouldBeOn
 } // namespace open_power
 } // namespace org
 
+
 namespace details
 {
 
 template <>
-struct map_exception_type<sdbusplus::org::open_power::Witherspoon::Fault::
-                              Error::PowerSupplyShouldBeOn>
+struct map_exception_type<sdbusplus::org::open_power::Witherspoon::Fault::Error::PowerSupplyShouldBeOn>
 {
     using type = org::open_power::Witherspoon::Fault::PowerSupplyShouldBeOn;
 };
 
-} // namespace details
+}
 
 namespace org
 {
@@ -745,22 +798,26 @@ namespace _PowerSupplyOutputOvercurrent
 
 struct RAW_STATUS
 {
-    static constexpr auto str = "RAW_STATUS=%s";
+    /*
+     * We can't use -fsanitize=undefined if we declare a
+     * 'static constexpr auto str' member, so don't. Instead, open-code the
+     * mako template lookups.
+     */
     static constexpr auto str_short = "RAW_STATUS";
-    using type = std::tuple<std::decay_t<decltype(str)>, const char*>;
-    explicit constexpr RAW_STATUS(const char* a) : _entry(entry(str, a)){};
+    using type = std::tuple<std::decay_t<decltype("RAW_STATUS=%s")>,const char*>;
+    explicit constexpr RAW_STATUS(const char* a) : _entry(entry("RAW_STATUS=%s", a)) {};
     type _entry;
 };
 
-} // namespace _PowerSupplyOutputOvercurrent
+}  // namespace _PowerSupplyOutputOvercurrent
 
 struct PowerSupplyOutputOvercurrent
 {
     static constexpr auto L = level::ERR;
     using RAW_STATUS = _PowerSupplyOutputOvercurrent::RAW_STATUS;
-    using CALLOUT_INVENTORY_PATH = xyz::openbmc_project::Common::Callout::
-        Inventory::CALLOUT_INVENTORY_PATH;
+    using CALLOUT_INVENTORY_PATH = xyz::openbmc_project::Common::Callout::Inventory::CALLOUT_INVENTORY_PATH;
     using metadata_types = std::tuple<RAW_STATUS, CALLOUT_INVENTORY_PATH>;
+
 };
 
 } // namespace Fault
@@ -768,18 +825,17 @@ struct PowerSupplyOutputOvercurrent
 } // namespace open_power
 } // namespace org
 
+
 namespace details
 {
 
 template <>
-struct map_exception_type<sdbusplus::org::open_power::Witherspoon::Fault::
-                              Error::PowerSupplyOutputOvercurrent>
+struct map_exception_type<sdbusplus::org::open_power::Witherspoon::Fault::Error::PowerSupplyOutputOvercurrent>
 {
-    using type =
-        org::open_power::Witherspoon::Fault::PowerSupplyOutputOvercurrent;
+    using type = org::open_power::Witherspoon::Fault::PowerSupplyOutputOvercurrent;
 };
 
-} // namespace details
+}
 
 namespace org
 {
@@ -794,22 +850,26 @@ namespace _PowerSupplyOutputOvervoltage
 
 struct RAW_STATUS
 {
-    static constexpr auto str = "RAW_STATUS=%s";
+    /*
+     * We can't use -fsanitize=undefined if we declare a
+     * 'static constexpr auto str' member, so don't. Instead, open-code the
+     * mako template lookups.
+     */
     static constexpr auto str_short = "RAW_STATUS";
-    using type = std::tuple<std::decay_t<decltype(str)>, const char*>;
-    explicit constexpr RAW_STATUS(const char* a) : _entry(entry(str, a)){};
+    using type = std::tuple<std::decay_t<decltype("RAW_STATUS=%s")>,const char*>;
+    explicit constexpr RAW_STATUS(const char* a) : _entry(entry("RAW_STATUS=%s", a)) {};
     type _entry;
 };
 
-} // namespace _PowerSupplyOutputOvervoltage
+}  // namespace _PowerSupplyOutputOvervoltage
 
 struct PowerSupplyOutputOvervoltage
 {
     static constexpr auto L = level::ERR;
     using RAW_STATUS = _PowerSupplyOutputOvervoltage::RAW_STATUS;
-    using CALLOUT_INVENTORY_PATH = xyz::openbmc_project::Common::Callout::
-        Inventory::CALLOUT_INVENTORY_PATH;
+    using CALLOUT_INVENTORY_PATH = xyz::openbmc_project::Common::Callout::Inventory::CALLOUT_INVENTORY_PATH;
     using metadata_types = std::tuple<RAW_STATUS, CALLOUT_INVENTORY_PATH>;
+
 };
 
 } // namespace Fault
@@ -817,18 +877,17 @@ struct PowerSupplyOutputOvervoltage
 } // namespace open_power
 } // namespace org
 
+
 namespace details
 {
 
 template <>
-struct map_exception_type<sdbusplus::org::open_power::Witherspoon::Fault::
-                              Error::PowerSupplyOutputOvervoltage>
+struct map_exception_type<sdbusplus::org::open_power::Witherspoon::Fault::Error::PowerSupplyOutputOvervoltage>
 {
-    using type =
-        org::open_power::Witherspoon::Fault::PowerSupplyOutputOvervoltage;
+    using type = org::open_power::Witherspoon::Fault::PowerSupplyOutputOvervoltage;
 };
 
-} // namespace details
+}
 
 namespace org
 {
@@ -843,22 +902,26 @@ namespace _PowerSupplyFanFault
 
 struct RAW_STATUS
 {
-    static constexpr auto str = "RAW_STATUS=%s";
+    /*
+     * We can't use -fsanitize=undefined if we declare a
+     * 'static constexpr auto str' member, so don't. Instead, open-code the
+     * mako template lookups.
+     */
     static constexpr auto str_short = "RAW_STATUS";
-    using type = std::tuple<std::decay_t<decltype(str)>, const char*>;
-    explicit constexpr RAW_STATUS(const char* a) : _entry(entry(str, a)){};
+    using type = std::tuple<std::decay_t<decltype("RAW_STATUS=%s")>,const char*>;
+    explicit constexpr RAW_STATUS(const char* a) : _entry(entry("RAW_STATUS=%s", a)) {};
     type _entry;
 };
 
-} // namespace _PowerSupplyFanFault
+}  // namespace _PowerSupplyFanFault
 
 struct PowerSupplyFanFault
 {
     static constexpr auto L = level::ERR;
     using RAW_STATUS = _PowerSupplyFanFault::RAW_STATUS;
-    using CALLOUT_INVENTORY_PATH = xyz::openbmc_project::Common::Callout::
-        Inventory::CALLOUT_INVENTORY_PATH;
+    using CALLOUT_INVENTORY_PATH = xyz::openbmc_project::Common::Callout::Inventory::CALLOUT_INVENTORY_PATH;
     using metadata_types = std::tuple<RAW_STATUS, CALLOUT_INVENTORY_PATH>;
+
 };
 
 } // namespace Fault
@@ -866,17 +929,17 @@ struct PowerSupplyFanFault
 } // namespace open_power
 } // namespace org
 
+
 namespace details
 {
 
 template <>
-struct map_exception_type<
-    sdbusplus::org::open_power::Witherspoon::Fault::Error::PowerSupplyFanFault>
+struct map_exception_type<sdbusplus::org::open_power::Witherspoon::Fault::Error::PowerSupplyFanFault>
 {
     using type = org::open_power::Witherspoon::Fault::PowerSupplyFanFault;
 };
 
-} // namespace details
+}
 
 namespace org
 {
@@ -891,22 +954,26 @@ namespace _PowerSupplyTemperatureFault
 
 struct RAW_STATUS
 {
-    static constexpr auto str = "RAW_STATUS=%s";
+    /*
+     * We can't use -fsanitize=undefined if we declare a
+     * 'static constexpr auto str' member, so don't. Instead, open-code the
+     * mako template lookups.
+     */
     static constexpr auto str_short = "RAW_STATUS";
-    using type = std::tuple<std::decay_t<decltype(str)>, const char*>;
-    explicit constexpr RAW_STATUS(const char* a) : _entry(entry(str, a)){};
+    using type = std::tuple<std::decay_t<decltype("RAW_STATUS=%s")>,const char*>;
+    explicit constexpr RAW_STATUS(const char* a) : _entry(entry("RAW_STATUS=%s", a)) {};
     type _entry;
 };
 
-} // namespace _PowerSupplyTemperatureFault
+}  // namespace _PowerSupplyTemperatureFault
 
 struct PowerSupplyTemperatureFault
 {
     static constexpr auto L = level::ERR;
     using RAW_STATUS = _PowerSupplyTemperatureFault::RAW_STATUS;
-    using CALLOUT_INVENTORY_PATH = xyz::openbmc_project::Common::Callout::
-        Inventory::CALLOUT_INVENTORY_PATH;
+    using CALLOUT_INVENTORY_PATH = xyz::openbmc_project::Common::Callout::Inventory::CALLOUT_INVENTORY_PATH;
     using metadata_types = std::tuple<RAW_STATUS, CALLOUT_INVENTORY_PATH>;
+
 };
 
 } // namespace Fault
@@ -914,18 +981,17 @@ struct PowerSupplyTemperatureFault
 } // namespace open_power
 } // namespace org
 
+
 namespace details
 {
 
 template <>
-struct map_exception_type<sdbusplus::org::open_power::Witherspoon::Fault::
-                              Error::PowerSupplyTemperatureFault>
+struct map_exception_type<sdbusplus::org::open_power::Witherspoon::Fault::Error::PowerSupplyTemperatureFault>
 {
-    using type =
-        org::open_power::Witherspoon::Fault::PowerSupplyTemperatureFault;
+    using type = org::open_power::Witherspoon::Fault::PowerSupplyTemperatureFault;
 };
 
-} // namespace details
+}
 
 namespace org
 {
@@ -938,12 +1004,14 @@ namespace Fault
 namespace _Shutdown
 {
 
-} // namespace _Shutdown
+
+}  // namespace _Shutdown
 
 struct Shutdown
 {
     static constexpr auto L = level::ERR;
     using metadata_types = std::tuple<>;
+
 };
 
 } // namespace Fault
@@ -951,17 +1019,17 @@ struct Shutdown
 } // namespace open_power
 } // namespace org
 
+
 namespace details
 {
 
 template <>
-struct map_exception_type<
-    sdbusplus::org::open_power::Witherspoon::Fault::Error::Shutdown>
+struct map_exception_type<sdbusplus::org::open_power::Witherspoon::Fault::Error::Shutdown>
 {
     using type = org::open_power::Witherspoon::Fault::Shutdown;
 };
 
-} // namespace details
+}
 
 namespace org
 {
@@ -974,12 +1042,14 @@ namespace Fault
 namespace _PowerOnFailure
 {
 
-} // namespace _PowerOnFailure
+
+}  // namespace _PowerOnFailure
 
 struct PowerOnFailure
 {
     static constexpr auto L = level::ERR;
     using metadata_types = std::tuple<>;
+
 };
 
 } // namespace Fault
@@ -987,17 +1057,17 @@ struct PowerOnFailure
 } // namespace open_power
 } // namespace org
 
+
 namespace details
 {
 
 template <>
-struct map_exception_type<
-    sdbusplus::org::open_power::Witherspoon::Fault::Error::PowerOnFailure>
+struct map_exception_type<sdbusplus::org::open_power::Witherspoon::Fault::Error::PowerOnFailure>
 {
     using type = org::open_power::Witherspoon::Fault::PowerOnFailure;
 };
 
-} // namespace details
+}
 
 namespace org
 {
@@ -1012,30 +1082,42 @@ namespace _PowerSequencerVoltageFault
 
 struct RAIL
 {
-    static constexpr auto str = "RAIL=%d";
+    /*
+     * We can't use -fsanitize=undefined if we declare a
+     * 'static constexpr auto str' member, so don't. Instead, open-code the
+     * mako template lookups.
+     */
     static constexpr auto str_short = "RAIL";
-    using type = std::tuple<std::decay_t<decltype(str)>, uint16_t>;
-    explicit constexpr RAIL(uint16_t a) : _entry(entry(str, a)){};
+    using type = std::tuple<std::decay_t<decltype("RAIL=%d")>,uint16_t>;
+    explicit constexpr RAIL(uint16_t a) : _entry(entry("RAIL=%d", a)) {};
     type _entry;
 };
 struct RAIL_NAME
 {
-    static constexpr auto str = "RAIL_NAME=%s";
+    /*
+     * We can't use -fsanitize=undefined if we declare a
+     * 'static constexpr auto str' member, so don't. Instead, open-code the
+     * mako template lookups.
+     */
     static constexpr auto str_short = "RAIL_NAME";
-    using type = std::tuple<std::decay_t<decltype(str)>, const char*>;
-    explicit constexpr RAIL_NAME(const char* a) : _entry(entry(str, a)){};
+    using type = std::tuple<std::decay_t<decltype("RAIL_NAME=%s")>,const char*>;
+    explicit constexpr RAIL_NAME(const char* a) : _entry(entry("RAIL_NAME=%s", a)) {};
     type _entry;
 };
 struct RAW_STATUS
 {
-    static constexpr auto str = "RAW_STATUS=%s";
+    /*
+     * We can't use -fsanitize=undefined if we declare a
+     * 'static constexpr auto str' member, so don't. Instead, open-code the
+     * mako template lookups.
+     */
     static constexpr auto str_short = "RAW_STATUS";
-    using type = std::tuple<std::decay_t<decltype(str)>, const char*>;
-    explicit constexpr RAW_STATUS(const char* a) : _entry(entry(str, a)){};
+    using type = std::tuple<std::decay_t<decltype("RAW_STATUS=%s")>,const char*>;
+    explicit constexpr RAW_STATUS(const char* a) : _entry(entry("RAW_STATUS=%s", a)) {};
     type _entry;
 };
 
-} // namespace _PowerSequencerVoltageFault
+}  // namespace _PowerSequencerVoltageFault
 
 struct PowerSequencerVoltageFault
 {
@@ -1044,6 +1126,7 @@ struct PowerSequencerVoltageFault
     using RAIL_NAME = _PowerSequencerVoltageFault::RAIL_NAME;
     using RAW_STATUS = _PowerSequencerVoltageFault::RAW_STATUS;
     using metadata_types = std::tuple<RAIL, RAIL_NAME, RAW_STATUS>;
+
 };
 
 } // namespace Fault
@@ -1051,18 +1134,17 @@ struct PowerSequencerVoltageFault
 } // namespace open_power
 } // namespace org
 
+
 namespace details
 {
 
 template <>
-struct map_exception_type<sdbusplus::org::open_power::Witherspoon::Fault::
-                              Error::PowerSequencerVoltageFault>
+struct map_exception_type<sdbusplus::org::open_power::Witherspoon::Fault::Error::PowerSequencerVoltageFault>
 {
-    using type =
-        org::open_power::Witherspoon::Fault::PowerSequencerVoltageFault;
+    using type = org::open_power::Witherspoon::Fault::PowerSequencerVoltageFault;
 };
 
-} // namespace details
+}
 
 namespace org
 {
@@ -1077,30 +1159,42 @@ namespace _PowerSequencerPGOODFault
 
 struct INPUT_NUM
 {
-    static constexpr auto str = "INPUT_NUM=%d";
+    /*
+     * We can't use -fsanitize=undefined if we declare a
+     * 'static constexpr auto str' member, so don't. Instead, open-code the
+     * mako template lookups.
+     */
     static constexpr auto str_short = "INPUT_NUM";
-    using type = std::tuple<std::decay_t<decltype(str)>, uint16_t>;
-    explicit constexpr INPUT_NUM(uint16_t a) : _entry(entry(str, a)){};
+    using type = std::tuple<std::decay_t<decltype("INPUT_NUM=%d")>,uint16_t>;
+    explicit constexpr INPUT_NUM(uint16_t a) : _entry(entry("INPUT_NUM=%d", a)) {};
     type _entry;
 };
 struct INPUT_NAME
 {
-    static constexpr auto str = "INPUT_NAME=%s";
+    /*
+     * We can't use -fsanitize=undefined if we declare a
+     * 'static constexpr auto str' member, so don't. Instead, open-code the
+     * mako template lookups.
+     */
     static constexpr auto str_short = "INPUT_NAME";
-    using type = std::tuple<std::decay_t<decltype(str)>, const char*>;
-    explicit constexpr INPUT_NAME(const char* a) : _entry(entry(str, a)){};
+    using type = std::tuple<std::decay_t<decltype("INPUT_NAME=%s")>,const char*>;
+    explicit constexpr INPUT_NAME(const char* a) : _entry(entry("INPUT_NAME=%s", a)) {};
     type _entry;
 };
 struct RAW_STATUS
 {
-    static constexpr auto str = "RAW_STATUS=%s";
+    /*
+     * We can't use -fsanitize=undefined if we declare a
+     * 'static constexpr auto str' member, so don't. Instead, open-code the
+     * mako template lookups.
+     */
     static constexpr auto str_short = "RAW_STATUS";
-    using type = std::tuple<std::decay_t<decltype(str)>, const char*>;
-    explicit constexpr RAW_STATUS(const char* a) : _entry(entry(str, a)){};
+    using type = std::tuple<std::decay_t<decltype("RAW_STATUS=%s")>,const char*>;
+    explicit constexpr RAW_STATUS(const char* a) : _entry(entry("RAW_STATUS=%s", a)) {};
     type _entry;
 };
 
-} // namespace _PowerSequencerPGOODFault
+}  // namespace _PowerSequencerPGOODFault
 
 struct PowerSequencerPGOODFault
 {
@@ -1109,6 +1203,7 @@ struct PowerSequencerPGOODFault
     using INPUT_NAME = _PowerSequencerPGOODFault::INPUT_NAME;
     using RAW_STATUS = _PowerSequencerPGOODFault::RAW_STATUS;
     using metadata_types = std::tuple<INPUT_NUM, INPUT_NAME, RAW_STATUS>;
+
 };
 
 } // namespace Fault
@@ -1116,17 +1211,17 @@ struct PowerSequencerPGOODFault
 } // namespace open_power
 } // namespace org
 
+
 namespace details
 {
 
 template <>
-struct map_exception_type<sdbusplus::org::open_power::Witherspoon::Fault::
-                              Error::PowerSequencerPGOODFault>
+struct map_exception_type<sdbusplus::org::open_power::Witherspoon::Fault::Error::PowerSequencerPGOODFault>
 {
     using type = org::open_power::Witherspoon::Fault::PowerSequencerPGOODFault;
 };
 
-} // namespace details
+}
 
 namespace org
 {
@@ -1141,20 +1236,25 @@ namespace _PowerSequencerFault
 
 struct RAW_STATUS
 {
-    static constexpr auto str = "RAW_STATUS=%s";
+    /*
+     * We can't use -fsanitize=undefined if we declare a
+     * 'static constexpr auto str' member, so don't. Instead, open-code the
+     * mako template lookups.
+     */
     static constexpr auto str_short = "RAW_STATUS";
-    using type = std::tuple<std::decay_t<decltype(str)>, const char*>;
-    explicit constexpr RAW_STATUS(const char* a) : _entry(entry(str, a)){};
+    using type = std::tuple<std::decay_t<decltype("RAW_STATUS=%s")>,const char*>;
+    explicit constexpr RAW_STATUS(const char* a) : _entry(entry("RAW_STATUS=%s", a)) {};
     type _entry;
 };
 
-} // namespace _PowerSequencerFault
+}  // namespace _PowerSequencerFault
 
 struct PowerSequencerFault
 {
     static constexpr auto L = level::ERR;
     using RAW_STATUS = _PowerSequencerFault::RAW_STATUS;
     using metadata_types = std::tuple<RAW_STATUS>;
+
 };
 
 } // namespace Fault
@@ -1162,17 +1262,17 @@ struct PowerSequencerFault
 } // namespace open_power
 } // namespace org
 
+
 namespace details
 {
 
 template <>
-struct map_exception_type<
-    sdbusplus::org::open_power::Witherspoon::Fault::Error::PowerSequencerFault>
+struct map_exception_type<sdbusplus::org::open_power::Witherspoon::Fault::Error::PowerSequencerFault>
 {
     using type = org::open_power::Witherspoon::Fault::PowerSequencerFault;
 };
 
-} // namespace details
+}
 
 namespace org
 {
@@ -1187,22 +1287,26 @@ namespace _GPUPowerFault
 
 struct RAW_STATUS
 {
-    static constexpr auto str = "RAW_STATUS=%s";
+    /*
+     * We can't use -fsanitize=undefined if we declare a
+     * 'static constexpr auto str' member, so don't. Instead, open-code the
+     * mako template lookups.
+     */
     static constexpr auto str_short = "RAW_STATUS";
-    using type = std::tuple<std::decay_t<decltype(str)>, const char*>;
-    explicit constexpr RAW_STATUS(const char* a) : _entry(entry(str, a)){};
+    using type = std::tuple<std::decay_t<decltype("RAW_STATUS=%s")>,const char*>;
+    explicit constexpr RAW_STATUS(const char* a) : _entry(entry("RAW_STATUS=%s", a)) {};
     type _entry;
 };
 
-} // namespace _GPUPowerFault
+}  // namespace _GPUPowerFault
 
 struct GPUPowerFault
 {
     static constexpr auto L = level::ERR;
     using RAW_STATUS = _GPUPowerFault::RAW_STATUS;
-    using CALLOUT_INVENTORY_PATH = xyz::openbmc_project::Common::Callout::
-        Inventory::CALLOUT_INVENTORY_PATH;
+    using CALLOUT_INVENTORY_PATH = xyz::openbmc_project::Common::Callout::Inventory::CALLOUT_INVENTORY_PATH;
     using metadata_types = std::tuple<RAW_STATUS, CALLOUT_INVENTORY_PATH>;
+
 };
 
 } // namespace Fault
@@ -1210,17 +1314,17 @@ struct GPUPowerFault
 } // namespace open_power
 } // namespace org
 
+
 namespace details
 {
 
 template <>
-struct map_exception_type<
-    sdbusplus::org::open_power::Witherspoon::Fault::Error::GPUPowerFault>
+struct map_exception_type<sdbusplus::org::open_power::Witherspoon::Fault::Error::GPUPowerFault>
 {
     using type = org::open_power::Witherspoon::Fault::GPUPowerFault;
 };
 
-} // namespace details
+}
 
 namespace org
 {
@@ -1235,22 +1339,26 @@ namespace _GPUOverTemp
 
 struct RAW_STATUS
 {
-    static constexpr auto str = "RAW_STATUS=%s";
+    /*
+     * We can't use -fsanitize=undefined if we declare a
+     * 'static constexpr auto str' member, so don't. Instead, open-code the
+     * mako template lookups.
+     */
     static constexpr auto str_short = "RAW_STATUS";
-    using type = std::tuple<std::decay_t<decltype(str)>, const char*>;
-    explicit constexpr RAW_STATUS(const char* a) : _entry(entry(str, a)){};
+    using type = std::tuple<std::decay_t<decltype("RAW_STATUS=%s")>,const char*>;
+    explicit constexpr RAW_STATUS(const char* a) : _entry(entry("RAW_STATUS=%s", a)) {};
     type _entry;
 };
 
-} // namespace _GPUOverTemp
+}  // namespace _GPUOverTemp
 
 struct GPUOverTemp
 {
     static constexpr auto L = level::ERR;
     using RAW_STATUS = _GPUOverTemp::RAW_STATUS;
-    using CALLOUT_INVENTORY_PATH = xyz::openbmc_project::Common::Callout::
-        Inventory::CALLOUT_INVENTORY_PATH;
+    using CALLOUT_INVENTORY_PATH = xyz::openbmc_project::Common::Callout::Inventory::CALLOUT_INVENTORY_PATH;
     using metadata_types = std::tuple<RAW_STATUS, CALLOUT_INVENTORY_PATH>;
+
 };
 
 } // namespace Fault
@@ -1258,17 +1366,70 @@ struct GPUOverTemp
 } // namespace open_power
 } // namespace org
 
+
 namespace details
 {
 
 template <>
-struct map_exception_type<
-    sdbusplus::org::open_power::Witherspoon::Fault::Error::GPUOverTemp>
+struct map_exception_type<sdbusplus::org::open_power::Witherspoon::Fault::Error::GPUOverTemp>
 {
     using type = org::open_power::Witherspoon::Fault::GPUOverTemp;
 };
 
-} // namespace details
+}
+
+namespace org
+{
+namespace open_power
+{
+namespace Witherspoon
+{
+namespace Fault
+{
+namespace _MEMGoodFault
+{
+
+struct RAW_STATUS
+{
+    /*
+     * We can't use -fsanitize=undefined if we declare a
+     * 'static constexpr auto str' member, so don't. Instead, open-code the
+     * mako template lookups.
+     */
+    static constexpr auto str_short = "RAW_STATUS";
+    using type = std::tuple<std::decay_t<decltype("RAW_STATUS=%s")>,const char*>;
+    explicit constexpr RAW_STATUS(const char* a) : _entry(entry("RAW_STATUS=%s", a)) {};
+    type _entry;
+};
+
+}  // namespace _MEMGoodFault
+
+struct MEMGoodFault
+{
+    static constexpr auto L = level::ERR;
+    using RAW_STATUS = _MEMGoodFault::RAW_STATUS;
+    using CALLOUT_INVENTORY_PATH = xyz::openbmc_project::Common::Callout::Inventory::CALLOUT_INVENTORY_PATH;
+    using metadata_types = std::tuple<RAW_STATUS, CALLOUT_INVENTORY_PATH>;
+
+};
+
+} // namespace Fault
+} // namespace Witherspoon
+} // namespace open_power
+} // namespace org
+
+
+namespace details
+{
+
+template <>
+struct map_exception_type<sdbusplus::org::open_power::Witherspoon::Fault::Error::MEMGoodFault>
+{
+    using type = org::open_power::Witherspoon::Fault::MEMGoodFault;
+};
+
+}
+
 
 } // namespace logging
 
