@@ -1,0 +1,9 @@
+Ok-To-Test+1: Jenkins <openbmc-ci-admin@ozlabs.org>
+Verified+1: Jenkins <openbmc-ci-admin@ozlabs.org>
+Code-Review+1: Matthew Barth <msbarth@linux.ibm.com>
+Code-Review+2: Matt Spinler <spinler@us.ibm.com>
+Submitted-by: Matt Spinler <spinler@us.ibm.com>
+Submitted-at: Tue, 04 Jun 2019 13:24:25 +0000
+Reviewed-on: https://gerrit.openbmc-project.xyz/c/openbmc/witherspoon-pfault-analysis/+/20513
+Project: openbmc/witherspoon-pfault-analysis
+Branch: refs/heads/master
