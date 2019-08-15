@@ -1,0 +1,25 @@
+- PowerSupplyFru:
+  index: 0
+  # Where the access should be done one of the following types
+  # Base             <base device directory>
+  # Hwmon            <hwmon directory>
+  # Debug            <pmbus debug directory>
+  # DeviceDebug      <device debug directory>
+  # HwmonDeviceDebug <hwmon device debug directory>
+  accessType: Hwmon
+  FruConfigs:
+    - assetName: PartNumber
+      fileName: part_number
+      interfaces: xyz.openbmc_project.Inventory.Decorator.Asset
+    - assetName: SerialNumber
+      fileName: serial_number
+      interfaces: xyz.openbmc_project.Inventory.Decorator.Asset
+    - assetName: Manufacturer
+      fileName: manufactrer
+      interfaces: xyz.openbmc_project.Inventory.Decorator.Asset
+    - assetName: Model
+      fileName: ccin
+      interfaces: xyz.openbmc_project.Inventory.Decorator.Asset
+    - assetName: Version
+      fileName: fw_version
+      interfaces: xyz.openbmc_project.Software.Version
