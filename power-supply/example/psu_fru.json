@@ -1,0 +1,39 @@
+{
+  // Where the access should be done one of the following types, because
+  // the path of store psu information may be different.
+  // You need to choose according to your own machine.
+  // 0. Base < base device directory. eg: /sys/bus/i2c/devices/3-0069/ >
+  // 1. Hwmon < hwmon directory. eg: /sys/bus/i2c/devices/3-0069/hwmon/hwmonX/ >
+  // 2. DeviceDebug < device debug directory >
+  // 3. Debug < pmbus debug directory. eg: /sys/kernel/debug/pmbus/hwmonX/ >
+  // 4. HwmonDeviceDebug < hwmon device debug directory.
+  //                    eg: /sys/kernel/debug/pmbus/hwmonX/cffps1/ >
+  "accessType": 1,
+  "fruConfigs": [
+    {
+      "assetName": "PartNumber",
+      "fileName": "part_number",
+      "interfaces": "xyz.openbmc_project.Inventory.Decorator.Asset"
+    },
+    {
+      "assetName": "SerialNumber",
+      "fileName": "serial_number",
+      "interfaces": "xyz.openbmc_project.Inventory.Decorator.Asset"
+    },
+    {
+      "assetName": "Manufacturer",
+      "fileName": "manufactrer",
+      "interfaces": "xyz.openbmc_project.Inventory.Decorator.Asset"
+    },
+    {
+      "assetName": "Model",
+      "fileName": "ccin",
+      "interfaces": "xyz.openbmc_project.Inventory.Decorator.Asset"
+    },
+    {
+      "assetName": "Version",
+      "fileName": "fw_version",
+      "interfaces": "xyz.openbmc_project.Software.Version"
+    }
+  ]
+}
