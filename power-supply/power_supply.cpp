@@ -13,6 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+#include "config.h"
+
 #include "power_supply.hpp"
 
 #include "elog-errors.hpp"
@@ -21,6 +23,7 @@
 #include "pmbus.hpp"
 #include "utility.hpp"
 
+#include <fstream>
 #include <functional>
 #include <org/open_power/Witherspoon/Fault/error.hpp>
 #include <phosphor-logging/elog.hpp>
@@ -52,19 +55,11 @@ constexpr auto ENDPOINTS_PROP = "endpoints";
 constexpr auto MESSAGE_PROP = "Message";
 constexpr auto RESOLVED_PROP = "Resolved";
 constexpr auto PRESENT_PROP = "Present";
-constexpr auto SN_PROP = "SerialNumber";
-constexpr auto PN_PROP = "PartNumber";
-constexpr auto MODEL_PROP = "Model";
-constexpr auto VERSION_PROP = "Version";
 constexpr auto VERSION_PURPOSE_PROP = "Purpose";
 
 constexpr auto INVENTORY_OBJ_PATH = "/xyz/openbmc_project/inventory";
 constexpr auto POWER_OBJ_PATH = "/org/openbmc/control/power0";
 
-constexpr auto SERIAL_NUMBER = "serial_number";
-constexpr auto PART_NUMBER = "part_number";
-constexpr auto FW_VERSION = "fw_version";
-constexpr auto CCIN = "ccin";
 constexpr auto INPUT_HISTORY = "input_history";
 
 PowerSupply::PowerSupply(const std::string& name, size_t inst,
@@ -86,7 +81,8 @@ PowerSupply::PowerSupply(const std::string& name, size_t inst,
                      updateInventory();
                  })),
     powerOnInterval(t),
-    powerOnTimer(e, std::bind([this]() { this->powerOn = true; }))
+    powerOnTimer(e, std::bind([this]() { this->powerOn = true; })),
+    jsonFile(PSU_FRU_FILE_PATH), accessType(witherspoon::pmbus::Type::Base)
 {
     using namespace sdbusplus::bus;
     using namespace witherspoon::pmbus;
@@ -122,6 +118,49 @@ PowerSupply::PowerSupply(const std::string& name, size_t inst,
         [this](auto& msg) { this->powerStateChanged(msg); });
     // Get initial power state.
     updatePowerState();
+}
+
+void PowerSupply::load()
+{
+    try
+    {
+        std::ifstream file{jsonFile};
+        fruJson = nlohmann::json::parse(file, nullptr, true);
+        getAccessType(fruJson.at("accessType"));
+    }
+    catch (const std::exception& e)
+    {
+        log<level::ERR>("ReadFailure when parse the json file",
+                        entry("FILENAME=%s", jsonFile.c_str()));
+
+        commit<ReadFailure>();
+    }
+}
+
+void PowerSupply::getAccessType(const std::string& type)
+{
+    using namespace witherspoon::pmbus;
+
+    if (type == "Base")
+    {
+        accessType = Type::Base;
+    }
+    else if (type == "Hwmon")
+    {
+        accessType = Type::Hwmon;
+    }
+    else if (type == "DeviceDebug")
+    {
+        accessType = Type::DeviceDebug;
+    }
+    else if (type == "Debug")
+    {
+        accessType = Type::Debug;
+    }
+    else if (type == "HwmonDeviceDebug")
+    {
+        accessType = Type::HwmonDeviceDebug;
+    }
 }
 
 void PowerSupply::captureCmd(util::NamesValues& nv, const std::string& cmd,
@@ -644,54 +683,11 @@ void PowerSupply::resolveError(const std::string& callout,
 
 void PowerSupply::updateInventory()
 {
+    // Load a JSON file from `/usr/share/witherspoon-pfault-analysis/` path
+    load();
+
     using namespace witherspoon::pmbus;
     using namespace sdbusplus::message;
-
-    // If any of these accesses fail, the fields will just be
-    // blank in the inventory.  Leave logging ReadFailure errors
-    // to analyze() as it runs continuously and will most
-    // likely hit and threshold them first anyway.  The
-    // readString() function will do the tracing of the failing
-    // path so this code doesn't need to.
-    std::string pn;
-    std::string sn;
-    std::string ccin;
-    std::string version;
-
-    if (present)
-    {
-        try
-        {
-            sn = pmbusIntf.readString(SERIAL_NUMBER, Type::HwmonDeviceDebug);
-        }
-        catch (ReadFailure& e)
-        {
-        }
-
-        try
-        {
-            pn = pmbusIntf.readString(PART_NUMBER, Type::HwmonDeviceDebug);
-        }
-        catch (ReadFailure& e)
-        {
-        }
-
-        try
-        {
-            ccin = pmbusIntf.readString(CCIN, Type::HwmonDeviceDebug);
-        }
-        catch (ReadFailure& e)
-        {
-        }
-
-        try
-        {
-            version = pmbusIntf.readString(FW_VERSION, Type::HwmonDeviceDebug);
-        }
-        catch (ReadFailure& e)
-        {
-        }
-    }
 
     // Build the object map and send it to the inventory
     using Properties = std::map<std::string, variant<std::string>>;
@@ -702,12 +698,44 @@ void PowerSupply::updateInventory()
     Interfaces interfaces;
     Object object;
 
-    assetProps.emplace(SN_PROP, sn);
-    assetProps.emplace(PN_PROP, pn);
-    assetProps.emplace(MODEL_PROP, ccin);
-    interfaces.emplace(ASSET_IFACE, std::move(assetProps));
+    // If any of these accesses fail, the fields will just be
+    // blank in the inventory.  Leave logging ReadFailure errors
+    // to analyze() as it runs continuously and will most
+    // likely hit and threshold them first anyway.  The
+    // readString() function will do the tracing of the failing
+    // path so this code doesn't need to.
+    for (const auto& fru : fruJson.at("fruConfigs"))
+    {
+        if (fru.at("interfaces") == ASSET_IFACE)
+        {
+            try
+            {
+                assetProps.emplace(fru.at("assetName"),
+                                   present ? pmbusIntf.readString(
+                                                 fru.at("fileName"), accessType)
+                                           : "");
+            }
+            catch (ReadFailure& e)
+            {
+            }
+        }
+        else if (fru.at("interfaces") == VERSION_IFACE)
+        {
+            try
+            {
+                versionProps.emplace(
+                    fru.at("assetName"),
+                    present
+                        ? pmbusIntf.readString(fru.at("fileName"), accessType)
+                        : "");
+            }
+            catch (const std::exception& e)
+            {
+            }
+        }
+    }
 
-    versionProps.emplace(VERSION_PROP, version);
+    interfaces.emplace(ASSET_IFACE, std::move(assetProps));
     interfaces.emplace(VERSION_IFACE, std::move(versionProps));
 
     // For Notify(), just send the relative path of the inventory
