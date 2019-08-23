@@ -6,6 +6,7 @@
 #include "pmbus.hpp"
 #include "record_manager.hpp"
 
+#include <nlohmann/json.hpp>
 #include <sdbusplus/bus/match.hpp>
 #include <sdeventplus/clock.hpp>
 #include <sdeventplus/event.hpp>
@@ -17,7 +18,6 @@ namespace power
 {
 namespace psu
 {
-
 namespace sdbusRule = sdbusplus::bus::match::rules;
 
 constexpr auto FAULT_COUNT = 3;
@@ -263,6 +263,31 @@ class PowerSupply : public Device
     size_t syncGPIONumber = 0;
 
     /**
+     * @brief The path to the power supply fru JSON File.
+     */
+    const std::string jsonFile;
+
+    /**
+     *  @brief The type to the power supply access.
+     */
+    witherspoon::pmbus::Type accessType;
+
+    /**
+     * @brief The json to the parse power supply fru JSON File.
+     */
+    nlohmann::json fruJson;
+
+    /**
+     *  @brief Loads the power supply fru json file.
+     */
+    void load();
+
+    /**
+     *  @brief get the power supply access type from the json file.
+     */
+    void getAccessType(const std::string& type);
+
+    /**
      * @brief Callback for inventory property changes
      *
      * Process change of Present property for power supply.
@@ -376,7 +401,8 @@ class PowerSupply : public Device
      * Properties added:
      * - Serial Number
      * - Part Number
-     * - CCIN (Customer Card Identification Number) - added as the Model
+     * - Manufacturer
+     * - Model
      * - Firmware version
      */
     void updateInventory();
