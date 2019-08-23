@@ -91,6 +91,11 @@ AC_SUBST([GEN_UCD90160_DEFS],
                   -i $UCD90160_DEF_YAML_FILE \
                   -o $UCD90160_DEF_OUTPUT_DIR"])
 
+AC_ARG_VAR(PSU_FRU_FILE_PATH, [Path of power supply fru JSON file.])
+AS_IF([test "x$PSU_FRU_FILE_PATH" == "x"], \
+    [PSU_FRU_FILE_PATH="/usr/share/witherspoon-pfault-analysis/psu_fru.json"])
+AC_DEFINE_UNQUOTED([PSU_FRU_FILE_PATH], ["$PSU_FRU_FILE_PATH"], \
+    [Path of power supply fru JSON file])
 
 AC_ARG_VAR(INPUT_HISTORY_BUSNAME_ROOT, [The D-Bus busname root for the PS input history.])
 AS_IF([test "x$INPUT_HISTORY_BUSNAME_ROOT" == "x"],
