@@ -19,6 +19,11 @@ AX_APPEND_COMPILE_FLAGS([-Wall -Werror], [CXXFLAGS])
 
 # Download gpio.h from github if necessary.
 AC_CHECK_HEADER(linux/gpio.h,[HAVE_LINUX_GPIO_H=""],[HAVE_LINUX_GPIO_H="-I linux/gpio.h"])
+AC_CHECK_HEADER(
+    [nlohmann/json.hpp],
+    [],
+    [AC_MSG_ERROR([Could not find nlohmann/json.hpp])]
+)
 AS_IF([test "$HAVE_LINUX_GPIO_H" != ""],
     AC_MSG_WARN([Could not find linux/gpio.h: Attempting to download locally for building from https://raw.githubusercontent.com/torvalds/linux/master/include/uapi/linux/gpio.h])
     AC_SUBST([BT_BMC_DL],[`mkdir -p linux;wget https://raw.githubusercontent.com/torvalds/linux/master/include/uapi/linux/gpio.h -O linux/gpio.h`])
@@ -106,6 +111,13 @@ AC_DEFINE_UNQUOTED([INPUT_HISTORY_SENSOR_ROOT],
                    ["$INPUT_HISTORY_SENSOR_ROOT"],
                    [The D-Bus power sensors namespace root])
 
+AC_ARG_VAR(PSU_UTILS_CONFIG_FILE,
+           [The json config file for psu utils])
+AS_IF([test "x$PSU_UTILS_CONFIG_FILE" == "x"],
+      [PSU_UTILS_CONFIG_FILE="/etc/default/obmc/psu/psu.json"])
+AC_DEFINE_UNQUOTED([PSU_UTILS_CONFIG_FILE], ["$PSU_UTILS_CONFIG_FILE"],
+                   [The json config file for psu utils])
+
 # Create configured output
-AC_CONFIG_FILES([Makefile power-sequencer/Makefile power-supply/Makefile test/Makefile power-supply/test/Makefile])
+AC_CONFIG_FILES([Makefile power-sequencer/Makefile power-supply/Makefile power-utils/Makefile test/Makefile power-supply/test/Makefile])
 AC_OUTPUT
