@@ -18,6 +18,7 @@ executable(
     error_hpp,
     'main.cpp',
     'pgood_monitor.cpp',
+    'mihawk-cpld.cpp',
     'runtime_monitor.cpp',
     'ucd90160.cpp',
     ucd90160_defs_cpp,
@@ -30,4 +31,5 @@ executable(
     include_directories: '..',
     install: true,
     link_with: libpower,
+    link_args : '-li2c',
 )
