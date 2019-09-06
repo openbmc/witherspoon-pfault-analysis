@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 #include "argument.hpp"
+#include "mihawk-cpld.hpp"
 #include "pgood_monitor.hpp"
 #include "runtime_monitor.hpp"
 #include "ucd90160.hpp"
@@ -31,7 +32,9 @@ int main(int argc, char** argv)
     ArgumentParser args{argc, argv};
     auto action = args["action"];
 
-    if ((action != "pgood-monitor") && (action != "runtime-monitor"))
+    if ((action != "pgood-monitor") &&
+        (action != "mihawk-cpld-pgood-monitor") &&
+        (action != "runtime-monitor"))
     {
         std::cerr << "Invalid action\n";
         args.usage(argv);
@@ -51,14 +54,22 @@ int main(int argc, char** argv)
     auto bus = sdbusplus::bus::new_default();
     bus.attach_event(event.get(), SD_EVENT_PRIORITY_NORMAL);
 
-    auto device = std::make_unique<UCD90160>(0, bus);
-
     std::unique_ptr<DeviceMonitor> monitor;
 
     if (action == "pgood-monitor")
     {
         // If PGOOD doesn't turn on within a certain
         // time, analyze the device for errors
+        auto device = std::make_unique<UCD90160>(0, bus);
+        monitor = std::make_unique<PGOODMonitor>(std::move(device), bus, event,
+                                                 interval);
+    }
+    else if (action == "mihawk-cpld-pgood-monitor")
+    {
+        // Add new action for Mihawk:
+        // If PGOOD doesn't turn on within a certain
+        // time, analyze CPLD for errors
+        auto device = std::make_unique<MihawkCPLD>(0, bus);
         monitor = std::make_unique<PGOODMonitor>(std::move(device), bus, event,
                                                  interval);
     }
@@ -66,6 +77,7 @@ int main(int argc, char** argv)
     {
         // Continuously monitor this device both by polling
         // and on 'power lost' signals.
+        auto device = std::make_unique<UCD90160>(0, bus);
         monitor = std::make_unique<RuntimeMonitor>(std::move(device), bus,
                                                    event, interval);
     }
