@@ -23,10 +23,10 @@
 
 - name: PowerOnFailure
   description: System power failed to turn on
-
+ 
 - name: PowerSequencerVoltageFault
   description: The power sequencer chip detected a voltage fault
-
+   
 - name: PowerSequencerPGOODFault
   description: The power sequencer chip detected a PGOOD fault
 
