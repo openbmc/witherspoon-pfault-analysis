@@ -89,6 +89,279 @@ struct PowerOnFailure;
 } // namespace org
 } // namespace sdbusplus
 
+//2019-09-05-add for Mihawk.
+namespace sdbusplus
+{
+namespace org
+{
+namespace open_power
+{
+namespace Witherspoon
+{
+namespace Fault
+{
+namespace Error
+{
+struct PowerOnError;
+} // namespace Error
+} // namespace Fault
+} // namespace Witherspoon
+} // namespace open_power
+} // namespace org
+} // namespace sdbusplus
+
+//2019-09-05-add for Mihawk.
+namespace sdbusplus
+{
+namespace org
+{
+namespace open_power
+{
+namespace Witherspoon
+{
+namespace Fault
+{
+namespace Error
+{
+struct PSUPresentError ;
+} // namespace Error
+} // namespace Fault
+} // namespace Witherspoon
+} // namespace open_power
+} // namespace org
+} // namespace sdbusplus
+
+//2019-09-05-add for Mihawk.
+namespace sdbusplus
+{
+namespace org
+{
+namespace open_power
+{
+namespace Witherspoon
+{
+namespace Fault
+{
+namespace Error
+{
+struct PowerOnErrorPSU0PGOODFail;
+} // namespace Error
+} // namespace Fault
+} // namespace Witherspoon
+} // namespace open_power
+} // namespace org
+} // namespace sdbusplus
+
+//2019-09-05-add for Mihawk.
+namespace sdbusplus
+{
+namespace org
+{
+namespace open_power
+{
+namespace Witherspoon
+{
+namespace Fault
+{
+namespace Error
+{
+struct PowerOnErrorPSU1PGOODFail;
+} // namespace Error
+} // namespace Fault
+} // namespace Witherspoon
+} // namespace open_power
+} // namespace org
+} // namespace sdbusplus
+
+//2019-09-05-add for Mihawk.
+namespace sdbusplus
+{
+namespace org
+{
+namespace open_power
+{
+namespace Witherspoon
+{
+namespace Fault
+{
+namespace Error
+{
+struct PowerOnError240VaFaultAFail;
+} // namespace Error
+} // namespace Fault
+} // namespace Witherspoon
+} // namespace open_power
+} // namespace org
+} // namespace sdbusplus
+
+//2019-09-05-add for Mihawk.
+namespace sdbusplus
+{
+namespace org
+{
+namespace open_power
+{
+namespace Witherspoon
+{
+namespace Fault
+{
+namespace Error
+{
+struct PowerOnError240VaFaultBFail;
+} // namespace Error
+} // namespace Fault
+} // namespace Witherspoon
+} // namespace open_power
+} // namespace org
+} // namespace sdbusplus
+
+//2019-09-05-add for Mihawk.
+namespace sdbusplus
+{
+namespace org
+{
+namespace open_power
+{
+namespace Witherspoon
+{
+namespace Fault
+{
+namespace Error
+{
+struct PowerOnError240VaFaultCFail;
+} // namespace Error
+} // namespace Fault
+} // namespace Witherspoon
+} // namespace open_power
+} // namespace org
+} // namespace sdbusplus
+
+//2019-09-05-add for Mihawk.
+namespace sdbusplus
+{
+namespace org
+{
+namespace open_power
+{
+namespace Witherspoon
+{
+namespace Fault
+{
+namespace Error
+{
+struct PowerOnError240VaFaultDFail;
+} // namespace Error
+} // namespace Fault
+} // namespace Witherspoon
+} // namespace open_power
+} // namespace org
+} // namespace sdbusplus
+
+//2019-09-05-add for Mihawk.
+namespace sdbusplus
+{
+namespace org
+{
+namespace open_power
+{
+namespace Witherspoon
+{
+namespace Fault
+{
+namespace Error
+{
+struct PowerOnError240VaFaultEFail;
+} // namespace Error
+} // namespace Fault
+} // namespace Witherspoon
+} // namespace open_power
+} // namespace org
+} // namespace sdbusplus
+
+//2019-09-05-add for Mihawk.
+namespace sdbusplus
+{
+namespace org
+{
+namespace open_power
+{
+namespace Witherspoon
+{
+namespace Fault
+{
+namespace Error
+{
+struct PowerOnError240VaFaultFFail;
+} // namespace Error
+} // namespace Fault
+} // namespace Witherspoon
+} // namespace open_power
+} // namespace org
+} // namespace sdbusplus
+
+//2019-09-05-add for Mihawk.
+namespace sdbusplus
+{
+namespace org
+{
+namespace open_power
+{
+namespace Witherspoon
+{
+namespace Fault
+{
+namespace Error
+{
+struct PowerOnError240VaFaultGFail;
+} // namespace Error
+} // namespace Fault
+} // namespace Witherspoon
+} // namespace open_power
+} // namespace org
+} // namespace sdbusplus
+
+//2019-09-05-add for Mihawk.
+namespace sdbusplus
+{
+namespace org
+{
+namespace open_power
+{
+namespace Witherspoon
+{
+namespace Fault
+{
+namespace Error
+{
+struct PowerOnError240VaFaultHFail;
+} // namespace Error
+} // namespace Fault
+} // namespace Witherspoon
+} // namespace open_power
+} // namespace org
+} // namespace sdbusplus
+
+//2019-09-05-add for Mihawk.
+namespace sdbusplus
+{
+namespace org
+{
+namespace open_power
+{
+namespace Witherspoon
+{
+namespace Fault
+{
+namespace Error
+{
+struct PowerOnError240VaFaultJFail;
+} // namespace Error
+} // namespace Fault
+} // namespace Witherspoon
+} // namespace open_power
+} // namespace org
+} // namespace sdbusplus
+
 namespace sdbusplus
 {
 namespace org
@@ -1083,6 +1356,331 @@ struct PowerOnFailure
 } // namespace open_power
 } // namespace org
 
+//2019-09-05-add for Mihawk.
+namespace org
+{
+namespace open_power
+{
+namespace Witherspoon
+{
+namespace Fault
+{
+namespace _PowerOnError
+{
+
+} // namespace _PowerOnError
+
+struct PowerOnError
+{
+    static constexpr auto L = level::ERR;
+    using metadata_types = std::tuple<>;
+};
+
+} // namespace Fault
+} // namespace Witherspoon
+} // namespace open_power
+} // namespace org
+
+//2019-09-05-add for Mihawk.
+namespace org
+{
+namespace open_power
+{
+namespace Witherspoon
+{
+namespace Fault
+{
+namespace _PSUPresentError 
+{
+
+} // namespace _PSUPresentError 
+
+struct PSUPresentError 
+{
+    static constexpr auto L = level::ERR;
+    using metadata_types = std::tuple<>;
+};
+
+} // namespace Fault
+} // namespace Witherspoon
+} // namespace open_power
+} // namespace org
+
+//2019-09-05-add for Mihawk .
+namespace org
+{
+namespace open_power
+{
+namespace Witherspoon
+{
+namespace Fault
+{
+namespace _PowerOnErrorPSU0PGOODFail
+{
+
+} // namespace _PowerOnErrorPSU0PGOODFail
+
+struct PowerOnErrorPSU0PGOODFail
+{
+    static constexpr auto L = level::ERR;
+    using metadata_types = std::tuple<>;
+};
+
+} // namespace Fault
+} // namespace Witherspoon
+} // namespace open_power
+} // namespace org
+
+//2019-09-05-add for Mihawk .
+namespace org
+{
+namespace open_power
+{
+namespace Witherspoon
+{
+namespace Fault
+{
+namespace _PowerOnErrorPSU1PGOODFail
+{
+
+} // namespace _PowerOnErrorPSU1PGOODFail
+
+struct PowerOnErrorPSU1PGOODFail
+{
+    static constexpr auto L = level::ERR;
+    using metadata_types = std::tuple<>;
+};
+
+} // namespace Fault
+} // namespace Witherspoon
+} // namespace open_power
+} // namespace org
+
+//2019-09-05-add for Mihawk .
+namespace org
+{
+namespace open_power
+{
+namespace Witherspoon
+{
+namespace Fault
+{
+namespace _PowerOnError240VaFaultAFail 
+{
+
+} // namespace _PowerOnError240VaFaultAFail 
+
+struct PowerOnError240VaFaultAFail 
+{
+    static constexpr auto L = level::ERR;
+    using metadata_types = std::tuple<>;
+};
+
+} // namespace Fault
+} // namespace Witherspoon
+} // namespace open_power
+} // namespace org
+
+//2019-09-05-add for Mihawk .
+namespace org
+{
+namespace open_power
+{
+namespace Witherspoon
+{
+namespace Fault
+{
+namespace _PowerOnError240VaFaultBFail 
+{
+
+} // namespace _PowerOnError240VaFaultBFail 
+
+struct PowerOnError240VaFaultBFail 
+{
+    static constexpr auto L = level::ERR;
+    using metadata_types = std::tuple<>;
+};
+
+} // namespace Fault
+} // namespace Witherspoon
+} // namespace open_power
+} // namespace org
+
+//2019-09-05-add for Mihawk .
+namespace org
+{
+namespace open_power
+{
+namespace Witherspoon
+{
+namespace Fault
+{
+namespace _PowerOnError240VaFaultCFail 
+{
+
+} // namespace _PowerOnError240VaFaultCFail 
+
+struct PowerOnError240VaFaultCFail 
+{
+    static constexpr auto L = level::ERR;
+    using metadata_types = std::tuple<>;
+};
+
+} // namespace Fault
+} // namespace Witherspoon
+} // namespace open_power
+} // namespace org
+
+//2019-09-05-add for Mihawk .
+namespace org
+{
+namespace open_power
+{
+namespace Witherspoon
+{
+namespace Fault
+{
+namespace _PowerOnError240VaFaultDFail 
+{
+
+} // namespace _PowerOnError240VaFaultDFail 
+
+struct PowerOnError240VaFaultDFail 
+{
+    static constexpr auto L = level::ERR;
+    using metadata_types = std::tuple<>;
+};
+
+} // namespace Fault
+} // namespace Witherspoon
+} // namespace open_power
+} // namespace org
+
+//2019-09-05-add for Mihawk .
+namespace org
+{
+namespace open_power
+{
+namespace Witherspoon
+{
+namespace Fault
+{
+namespace _PowerOnError240VaFaultEFail 
+{
+
+} // namespace _PowerOnError240VaFaultEFail 
+
+struct PowerOnError240VaFaultEFail 
+{
+    static constexpr auto L = level::ERR;
+    using metadata_types = std::tuple<>;
+};
+
+} // namespace Fault
+} // namespace Witherspoon
+} // namespace open_power
+} // namespace org
+
+//2019-09-05-add for Mihawk .
+namespace org
+{
+namespace open_power
+{
+namespace Witherspoon
+{
+namespace Fault
+{
+namespace _PowerOnError240VaFaultFFail 
+{
+
+} // namespace _PowerOnError240VaFaultFFail 
+
+struct PowerOnError240VaFaultFFail 
+{
+    static constexpr auto L = level::ERR;
+    using metadata_types = std::tuple<>;
+};
+
+} // namespace Fault
+} // namespace Witherspoon
+} // namespace open_power
+} // namespace org
+
+//2019-09-05-add for Mihawk .
+namespace org
+{
+namespace open_power
+{
+namespace Witherspoon
+{
+namespace Fault
+{
+namespace _PowerOnError240VaFaultGFail 
+{
+
+} // namespace _PowerOnError240VaFaultGFail 
+
+struct PowerOnError240VaFaultGFail 
+{
+    static constexpr auto L = level::ERR;
+    using metadata_types = std::tuple<>;
+};
+
+} // namespace Fault
+} // namespace Witherspoon
+} // namespace open_power
+} // namespace org
+
+//2019-09-05-add for Mihawk .
+namespace org
+{
+namespace open_power
+{
+namespace Witherspoon
+{
+namespace Fault
+{
+namespace _PowerOnError240VaFaultHFail 
+{
+
+} // namespace _PowerOnError240VaFaultHFail 
+
+struct PowerOnError240VaFaultHFail 
+{
+    static constexpr auto L = level::ERR;
+    using metadata_types = std::tuple<>;
+};
+
+} // namespace Fault
+} // namespace Witherspoon
+} // namespace open_power
+} // namespace org
+
+//2019-09-05-add for Mihawk .
+namespace org
+{
+namespace open_power
+{
+namespace Witherspoon
+{
+namespace Fault
+{
+namespace _PowerOnError240VaFaultJFail 
+{
+
+} // namespace _PowerOnError240VaFaultJFail 
+
+struct PowerOnError240VaFaultJFail 
+{
+    static constexpr auto L = level::ERR;
+    using metadata_types = std::tuple<>;
+};
+
+} // namespace Fault
+} // namespace Witherspoon
+} // namespace open_power
+} // namespace org
+
 namespace details
 {
 
@@ -1091,6 +1689,175 @@ struct map_exception_type<
     sdbusplus::org::open_power::Witherspoon::Fault::Error::PowerOnFailure>
 {
     using type = org::open_power::Witherspoon::Fault::PowerOnFailure;
+};
+
+} // namespace details
+
+//2019-09-05-add for Mihawk.
+namespace details
+{
+
+template <>
+struct map_exception_type<
+    sdbusplus::org::open_power::Witherspoon::Fault::Error::PowerOnError>
+{
+    using type = org::open_power::Witherspoon::Fault::PowerOnError;
+};
+
+} // namespace details
+
+//2019-09-05-add for Mihawk.
+namespace details
+{
+
+template <>
+struct map_exception_type<
+    sdbusplus::org::open_power::Witherspoon::Fault::Error::PSUPresentError>
+{
+    using type = org::open_power::Witherspoon::Fault::PSUPresentError;
+};
+
+} // namespace details
+
+//2019-09-05-add for Mihawk 
+namespace details
+{
+
+template <>
+struct map_exception_type<
+    sdbusplus::org::open_power::Witherspoon::Fault::Error::PowerOnErrorPSU0PGOODFail>
+{
+    using type = org::open_power::Witherspoon::Fault::PowerOnErrorPSU0PGOODFail;
+};
+
+} // namespace details
+
+//2019-09-05-add for Mihawk 
+namespace details
+{
+
+template <>
+struct map_exception_type<
+    sdbusplus::org::open_power::Witherspoon::Fault::Error::PowerOnErrorPSU1PGOODFail>
+{
+    using type = org::open_power::Witherspoon::Fault::PowerOnErrorPSU1PGOODFail;
+};
+
+} // namespace details
+
+//2019-09-05-add for Mihawk 
+namespace details
+{
+
+template <>
+struct map_exception_type<
+    sdbusplus::org::open_power::Witherspoon::Fault::Error::PowerOnError240VaFaultAFail >
+{
+    using type = org::open_power::Witherspoon::Fault::PowerOnError240VaFaultAFail ;
+};
+
+} // namespace details
+
+//2019-09-05-add for Mihawk 
+namespace details
+{
+
+template <>
+struct map_exception_type<
+    sdbusplus::org::open_power::Witherspoon::Fault::Error::PowerOnError240VaFaultBFail >
+{
+    using type = org::open_power::Witherspoon::Fault::PowerOnError240VaFaultBFail ;
+};
+
+} // namespace details
+
+//2019-09-05-add for Mihawk 
+namespace details
+{
+
+template <>
+struct map_exception_type<
+    sdbusplus::org::open_power::Witherspoon::Fault::Error::PowerOnError240VaFaultCFail >
+{
+    using type = org::open_power::Witherspoon::Fault::PowerOnError240VaFaultCFail ;
+};
+
+} // namespace details
+
+//2019-09-05-add for Mihawk 
+namespace details
+{
+
+template <>
+struct map_exception_type<
+    sdbusplus::org::open_power::Witherspoon::Fault::Error::PowerOnError240VaFaultDFail >
+{
+    using type = org::open_power::Witherspoon::Fault::PowerOnError240VaFaultDFail ;
+};
+
+} // namespace details
+
+//2019-09-05-add for Mihawk 
+namespace details
+{
+
+template <>
+struct map_exception_type<
+    sdbusplus::org::open_power::Witherspoon::Fault::Error::PowerOnError240VaFaultEFail >
+{
+    using type = org::open_power::Witherspoon::Fault::PowerOnError240VaFaultEFail ;
+};
+
+} // namespace details
+
+//2019-09-05-add for Mihawk 
+namespace details
+{
+
+template <>
+struct map_exception_type<
+    sdbusplus::org::open_power::Witherspoon::Fault::Error::PowerOnError240VaFaultFFail >
+{
+    using type = org::open_power::Witherspoon::Fault::PowerOnError240VaFaultFFail ;
+};
+
+} // namespace details
+
+//2019-09-05-add for Mihawk 
+namespace details
+{
+
+template <>
+struct map_exception_type<
+    sdbusplus::org::open_power::Witherspoon::Fault::Error::PowerOnError240VaFaultGFail >
+{
+    using type = org::open_power::Witherspoon::Fault::PowerOnError240VaFaultGFail ;
+};
+
+} // namespace details
+
+//2019-09-05-add for Mihawk 
+namespace details
+{
+
+template <>
+struct map_exception_type<
+    sdbusplus::org::open_power::Witherspoon::Fault::Error::PowerOnError240VaFaultHFail >
+{
+    using type = org::open_power::Witherspoon::Fault::PowerOnError240VaFaultHFail ;
+};
+
+} // namespace details
+
+//2019-09-05-add for Mihawk 
+namespace details
+{
+
+template <>
+struct map_exception_type<
+    sdbusplus::org::open_power::Witherspoon::Fault::Error::PowerOnError240VaFaultJFail >
+{
+    using type = org::open_power::Witherspoon::Fault::PowerOnError240VaFaultJFail ;
 };
 
 } // namespace details

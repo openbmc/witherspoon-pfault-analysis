@@ -23,7 +23,46 @@
 
 - name: PowerOnFailure
   description: System power failed to turn on
-
+  
+- name: PowerOnError 
+  description: Power failed to turn on
+  
+- name: PSUPresentError 
+  description: PSU failed to detect
+  
+- name: PowerOnErrorPSU0PGOODFail 
+  description: Power on error reason is PSU0_PGOOD fail
+  
+- name: PowerOnErrorPSU1PGOODFail 
+  description: Power on error reason is PSU1_PGOOD fail
+  
+- name: PowerOnError240VaFaultAFail 
+  description: Power on error reason is 240Va_Fault_A fail
+  
+- name: PowerOnError240VaFaultBFail 
+  description: Power on error reason is 240Va_Fault_B fail
+  
+- name: PowerOnError240VaFaultCFail 
+  description: Power on error reason is 240Va_Fault_C fail
+  
+- name: PowerOnError240VaFaultDFail 
+  description: Power on error reason is 240Va_Fault_D fail
+  
+- name: PowerOnError240VaFaultEFail 
+  description: Power on error reason is 240Va_Fault_E fail
+  
+- name: PowerOnError240VaFaultFFail 
+  description: Power on error reason is 240Va_Fault_F fail
+  
+- name: PowerOnError240VaFaultGFail 
+  description: Power on error reason is 240Va_Fault_G fail
+  
+- name: PowerOnError240VaFaultHFail 
+  description: Power on error reason is 240Va_Fault_H fail
+  
+- name: PowerOnError240VaFaultJFail 
+  description: Power on error reason is 240Va_Fault_J fail
+  
 - name: PowerSequencerVoltageFault
   description: The power sequencer chip detected a voltage fault
 
