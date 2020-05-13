@@ -190,7 +190,7 @@ void PowerSupply::analyze()
 void PowerSupply::inventoryChanged(sdbusplus::message::message& msg)
 {
     std::string msgSensor;
-    std::map<std::string, sdbusplus::message::variant<uint32_t, bool>> msgData;
+    std::map<std::string, std::variant<uint32_t, bool>> msgData;
     msg.read(msgSensor, msgData);
 
     // Check if it was the Present property that changed.
@@ -227,7 +227,7 @@ void PowerSupply::powerStateChanged(sdbusplus::message::message& msg)
 {
     int32_t state = 0;
     std::string msgSensor;
-    std::map<std::string, sdbusplus::message::variant<int32_t>> msgData;
+    std::map<std::string, std::variant<int32_t>> msgData;
     msg.read(msgSensor, msgData);
 
     // Check if it was the Present property that changed.
