@@ -21,12 +21,13 @@
 #include "pmbus.hpp"
 #include "utility.hpp"
 
-#include <functional>
 #include <org/open_power/Witherspoon/Fault/error.hpp>
 #include <phosphor-logging/elog.hpp>
 #include <phosphor-logging/log.hpp>
 #include <xyz/openbmc_project/Common/Device/error.hpp>
 #include <xyz/openbmc_project/Software/Version/server.hpp>
+
+#include <functional>
 
 namespace witherspoon
 {
@@ -664,32 +665,28 @@ void PowerSupply::updateInventory()
             sn = pmbusIntf.readString(SERIAL_NUMBER, Type::HwmonDeviceDebug);
         }
         catch (ReadFailure& e)
-        {
-        }
+        {}
 
         try
         {
             pn = pmbusIntf.readString(PART_NUMBER, Type::HwmonDeviceDebug);
         }
         catch (ReadFailure& e)
-        {
-        }
+        {}
 
         try
         {
             ccin = pmbusIntf.readString(CCIN, Type::HwmonDeviceDebug);
         }
         catch (ReadFailure& e)
-        {
-        }
+        {}
 
         try
         {
             version = pmbusIntf.readString(FW_VERSION, Type::HwmonDeviceDebug);
         }
         catch (ReadFailure& e)
-        {
-        }
+        {}
     }
 
     // Build the object map and send it to the inventory
