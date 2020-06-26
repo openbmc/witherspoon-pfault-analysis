@@ -3,6 +3,7 @@
 #include <phosphor-logging/elog.hpp>
 #include <phosphor-logging/log.hpp>
 #include <sdbusplus/bus.hpp>
+
 #include <string>
 
 namespace witherspoon

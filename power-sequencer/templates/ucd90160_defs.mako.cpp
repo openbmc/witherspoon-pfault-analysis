@@ -10,7 +10,8 @@ namespace power
 using namespace ucd90160;
 using namespace std::string_literals;
 
-const DeviceMap UCD90160::deviceMap{
+const DeviceMap UCD90160::deviceMap
+{
 %for ucd_data in ucd90160s:
     {${ucd_data['index']},
      DeviceDefinition{
@@ -38,7 +39,7 @@ const DeviceMap UCD90160::deviceMap{
                   "${gpio_analysis['path']}",
                   gpio::Value::${gpio_analysis['gpio_value']},
                   [](auto& ucd, const auto& callout) {
-                      ucd.${gpio_analysis['error_function']}(callout);
+        ucd.${gpio_analysis['error_function']}(callout);
                   },
                   optionFlags::${gpio_analysis['option_flags']},
                   GPIODefinitions{
