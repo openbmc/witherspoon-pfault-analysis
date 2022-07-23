@@ -30,7 +30,7 @@ constexpr auto PROPERTY_INTF = "org.freedesktop.DBus.Properties";
  * @return The service name
  */
 std::string getService(const std::string& path, const std::string& interface,
-                       sdbusplus::bus::bus& bus);
+                       sdbusplus::bus_t& bus);
 
 /**
  * @brief Read a D-Bus property
@@ -45,7 +45,7 @@ std::string getService(const std::string& path, const std::string& interface,
 template <typename T>
 void getProperty(const std::string& interface, const std::string& propertyName,
                  const std::string& path, const std::string& service,
-                 sdbusplus::bus::bus& bus, T& value)
+                 sdbusplus::bus_t& bus, T& value)
 {
     std::variant<T> property;
 
@@ -73,7 +73,7 @@ void getProperty(const std::string& interface, const std::string& propertyName,
 template <typename T>
 void setProperty(const std::string& interface, const std::string& propertyName,
                  const std::string& path, const std::string& service,
-                 sdbusplus::bus::bus& bus, T& value)
+                 sdbusplus::bus_t& bus, T& value)
 {
     std::variant<T> propertyValue(value);
 
@@ -92,7 +92,7 @@ void setProperty(const std::string& interface, const std::string& propertyName,
  * @param[in] bus - D-Bus object
  */
 template <typename T>
-void powerOff(sdbusplus::bus::bus& bus)
+void powerOff(sdbusplus::bus_t& bus)
 {
     phosphor::logging::report<T>();
 

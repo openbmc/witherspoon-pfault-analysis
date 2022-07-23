@@ -70,7 +70,7 @@ constexpr auto INPUT_HISTORY = "input_history";
 
 PowerSupply::PowerSupply(const std::string& name, size_t inst,
                          const std::string& objpath, const std::string& invpath,
-                         sdbusplus::bus::bus& bus, const sdeventplus::Event& e,
+                         sdbusplus::bus_t& bus, const sdeventplus::Event& e,
                          std::chrono::seconds& t, std::chrono::seconds& p) :
     Device(name, inst),
     monitorPath(objpath), pmbusIntf(objpath),
@@ -188,7 +188,7 @@ void PowerSupply::analyze()
     return;
 }
 
-void PowerSupply::inventoryChanged(sdbusplus::message::message& msg)
+void PowerSupply::inventoryChanged(sdbusplus::message_t& msg)
 {
     std::string msgSensor;
     std::map<std::string, std::variant<uint32_t, bool>> msgData;
@@ -224,7 +224,7 @@ void PowerSupply::updatePresence()
                       bus, this->present);
 }
 
-void PowerSupply::powerStateChanged(sdbusplus::message::message& msg)
+void PowerSupply::powerStateChanged(sdbusplus::message_t& msg)
 {
     int32_t state = 0;
     std::string msgSensor;

@@ -29,7 +29,7 @@ constexpr auto MAPPER_INTERFACE = "xyz.openbmc_project.ObjectMapper";
 using namespace phosphor::logging;
 
 std::string getService(const std::string& path, const std::string& interface,
-                       sdbusplus::bus::bus& bus)
+                       sdbusplus::bus_t& bus)
 {
     auto method = bus.new_method_call(MAPPER_BUSNAME, MAPPER_PATH,
                                       MAPPER_INTERFACE, "GetObject");
