@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b778e204_9fcd5056",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2022-07-27T22:01:47Z",
+      "side": 1,
+      "message": "Looks like there isn\u0027t an OWNERS file here.",
+      "revId": "1426a10b08e858795e5186f084493b7bcbc71553",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
