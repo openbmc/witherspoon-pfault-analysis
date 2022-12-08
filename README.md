@@ -1,6 +1,7 @@
 Code for detecting and analyzing power faults on Witherspoon.
 
 ## To Build
+
 ```
 To build this package, do the following steps:
 
