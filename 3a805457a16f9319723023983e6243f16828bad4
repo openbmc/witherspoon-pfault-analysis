@@ -1,0 +1,7 @@
+Verified+1: OpenBMC CI <openbmcbump-ci@yahoo.com>
+Code-Review+2: Matt Spinler <spinler@us.ibm.com>
+Submitted-by: Patrick Williams <patrick@stwcx.xyz>
+Submitted-at: Thu, 08 Dec 2022 16:16:34 +0000
+Reviewed-on: https://gerrit.openbmc.org/c/openbmc/witherspoon-pfault-analysis/+/59337
+Project: openbmc/witherspoon-pfault-analysis
+Branch: refs/heads/master
