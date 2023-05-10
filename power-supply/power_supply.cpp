@@ -610,8 +610,8 @@ void PowerSupply::resolveError(const std::string& callout,
             return;
         }
 
-        auto logEntryService =
-            util::getService(logEntries[0], LOGGING_IFACE, bus);
+        auto logEntryService = util::getService(logEntries[0], LOGGING_IFACE,
+                                                bus);
         if (logEntryService.empty())
         {
             return;
@@ -714,8 +714,8 @@ void PowerSupply::updateInventory()
 
     try
     {
-        auto service =
-            util::getService(INVENTORY_OBJ_PATH, INVENTORY_MGR_IFACE, bus);
+        auto service = util::getService(INVENTORY_OBJ_PATH, INVENTORY_MGR_IFACE,
+                                        bus);
 
         if (service.empty())
         {
@@ -803,9 +803,9 @@ void PowerSupply::updateHistory()
     }
 
     // Read just the most recent average/max record
-    auto data =
-        pmbusIntf.readBinary(INPUT_HISTORY, pmbus::Type::HwmonDeviceDebug,
-                             history::RecordManager::RAW_RECORD_SIZE);
+    auto data = pmbusIntf.readBinary(INPUT_HISTORY,
+                                     pmbus::Type::HwmonDeviceDebug,
+                                     history::RecordManager::RAW_RECORD_SIZE);
 
     // Update D-Bus only if something changed (a new record ID, or cleared out)
     auto changed = recordManager->add(data);

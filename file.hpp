@@ -27,8 +27,7 @@ class FileDescriptor
      *
      * @param[in] fd - File descriptor
      */
-    FileDescriptor(int fd) : fd(fd)
-    {}
+    FileDescriptor(int fd) : fd(fd) {}
 
     ~FileDescriptor()
     {

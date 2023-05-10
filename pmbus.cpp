@@ -243,8 +243,8 @@ std::vector<uint8_t> PMBus::readBinary(const std::string& name, Type type,
     {
         std::vector<uint8_t> data(length, 0);
 
-        auto bytes =
-            fread(data.data(), sizeof(decltype(data[0])), length, file.get());
+        auto bytes = fread(data.data(), sizeof(decltype(data[0])), length,
+                           file.get());
 
         if (bytes != length)
         {

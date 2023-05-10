@@ -28,8 +28,7 @@ using Record = std::tuple<size_t, int64_t, int64_t, int64_t>;
 class InvalidRecordException : public std::runtime_error
 {
   public:
-    InvalidRecordException() : std::runtime_error("Invalid history record")
-    {}
+    InvalidRecordException() : std::runtime_error("Invalid history record") {}
 };
 
 /**
@@ -70,8 +69,7 @@ class RecordManager
      * @param[in] maxRec - the maximum number of history
      *                     records to keep at a time
      */
-    RecordManager(size_t maxRec) : RecordManager(maxRec, LAST_SEQUENCE_ID)
-    {}
+    RecordManager(size_t maxRec) : RecordManager(maxRec, LAST_SEQUENCE_ID) {}
 
     /**
      * @brief Constructor
