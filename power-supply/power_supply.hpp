@@ -78,7 +78,7 @@ class PowerSupply : public Device
      * Mark error for specified callout and message as resolved.
      *
      * @param[in] callout - The callout to be resolved (inventory path)
-     * @parma[in] message - The message for the fault to be resolved
+     * @param[in] message - The message for the fault to be resolved
      */
     void resolveError(const std::string& callout, const std::string& message);
 
@@ -360,7 +360,7 @@ class PowerSupply : public Device
      * FAULT OR WARNING" bit is turned on. If it is on, log an error,
      * call out the power supply indicating the fault/warning condition.
      *
-     * @parma[in] statusWord - 2 byte STATUS_WORD value read from sysfs
+     * @param[in] statusWord - 2 byte STATUS_WORD value read from sysfs
      */
     void checkTemperatureFault(const uint16_t statusWord);
 
