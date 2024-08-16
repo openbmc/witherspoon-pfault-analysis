@@ -165,7 +165,7 @@ struct RAIL
      */
     static constexpr auto str_short = "RAIL";
     using type = std::tuple<std::decay_t<decltype("RAIL=%d")>, uint16_t>;
-    explicit constexpr RAIL(uint16_t a) : _entry(entry("RAIL=%d", a)){};
+    explicit constexpr RAIL(uint16_t a) : _entry(entry("RAIL=%d", a)) {};
     type _entry;
 };
 struct RAIL_NAME
@@ -179,7 +179,7 @@ struct RAIL_NAME
     using type =
         std::tuple<std::decay_t<decltype("RAIL_NAME=%s")>, const char*>;
     explicit constexpr RAIL_NAME(const char* a) :
-        _entry(entry("RAIL_NAME=%s", a)){};
+        _entry(entry("RAIL_NAME=%s", a)) {};
     type _entry;
 };
 struct RAW_STATUS
@@ -193,7 +193,7 @@ struct RAW_STATUS
     using type =
         std::tuple<std::decay_t<decltype("RAW_STATUS=%s")>, const char*>;
     explicit constexpr RAW_STATUS(const char* a) :
-        _entry(entry("RAW_STATUS=%s", a)){};
+        _entry(entry("RAW_STATUS=%s", a)) {};
     type _entry;
 };
 } // namespace _PowerSequencerVoltageFault
@@ -243,7 +243,7 @@ struct INPUT_NUM
     static constexpr auto str_short = "INPUT_NUM";
     using type = std::tuple<std::decay_t<decltype("INPUT_NUM=%d")>, uint16_t>;
     explicit constexpr INPUT_NUM(uint16_t a) :
-        _entry(entry("INPUT_NUM=%d", a)){};
+        _entry(entry("INPUT_NUM=%d", a)) {};
     type _entry;
 };
 struct INPUT_NAME
@@ -257,7 +257,7 @@ struct INPUT_NAME
     using type =
         std::tuple<std::decay_t<decltype("INPUT_NAME=%s")>, const char*>;
     explicit constexpr INPUT_NAME(const char* a) :
-        _entry(entry("INPUT_NAME=%s", a)){};
+        _entry(entry("INPUT_NAME=%s", a)) {};
     type _entry;
 };
 struct RAW_STATUS
@@ -271,7 +271,7 @@ struct RAW_STATUS
     using type =
         std::tuple<std::decay_t<decltype("RAW_STATUS=%s")>, const char*>;
     explicit constexpr RAW_STATUS(const char* a) :
-        _entry(entry("RAW_STATUS=%s", a)){};
+        _entry(entry("RAW_STATUS=%s", a)) {};
     type _entry;
 };
 } // namespace _PowerSequencerPGOODFault
@@ -322,7 +322,7 @@ struct RAW_STATUS
     using type =
         std::tuple<std::decay_t<decltype("RAW_STATUS=%s")>, const char*>;
     explicit constexpr RAW_STATUS(const char* a) :
-        _entry(entry("RAW_STATUS=%s", a)){};
+        _entry(entry("RAW_STATUS=%s", a)) {};
     type _entry;
 };
 } // namespace _PowerSequencerFault
@@ -371,7 +371,7 @@ struct CALLOUT_ERRNO
     using type =
         std::tuple<std::decay_t<decltype("CALLOUT_ERRNO=%d")>, int32_t>;
     explicit constexpr CALLOUT_ERRNO(int32_t a) :
-        _entry(entry("CALLOUT_ERRNO=%d", a)){};
+        _entry(entry("CALLOUT_ERRNO=%d", a)) {};
     type _entry;
 };
 struct CALLOUT_DEVICE_PATH
@@ -385,7 +385,7 @@ struct CALLOUT_DEVICE_PATH
     using type = std::tuple<std::decay_t<decltype("CALLOUT_DEVICE_PATH=%s")>,
                             const char*>;
     explicit constexpr CALLOUT_DEVICE_PATH(const char* a) :
-        _entry(entry("CALLOUT_DEVICE_PATH=%s", a)){};
+        _entry(entry("CALLOUT_DEVICE_PATH=%s", a)) {};
     type _entry;
 };
 } // namespace _Device
@@ -434,7 +434,7 @@ struct CALLOUT_GPIO_NUM
     using type =
         std::tuple<std::decay_t<decltype("CALLOUT_GPIO_NUM=%u")>, uint32_t>;
     explicit constexpr CALLOUT_GPIO_NUM(uint32_t a) :
-        _entry(entry("CALLOUT_GPIO_NUM=%u", a)){};
+        _entry(entry("CALLOUT_GPIO_NUM=%u", a)) {};
     type _entry;
 };
 } // namespace _GPIO
@@ -486,7 +486,7 @@ struct CALLOUT_IIC_BUS
     using type =
         std::tuple<std::decay_t<decltype("CALLOUT_IIC_BUS=%s")>, const char*>;
     explicit constexpr CALLOUT_IIC_BUS(const char* a) :
-        _entry(entry("CALLOUT_IIC_BUS=%s", a)){};
+        _entry(entry("CALLOUT_IIC_BUS=%s", a)) {};
     type _entry;
 };
 struct CALLOUT_IIC_ADDR
@@ -500,7 +500,7 @@ struct CALLOUT_IIC_ADDR
     using type =
         std::tuple<std::decay_t<decltype("CALLOUT_IIC_ADDR=0x%hx")>, uint16_t>;
     explicit constexpr CALLOUT_IIC_ADDR(uint16_t a) :
-        _entry(entry("CALLOUT_IIC_ADDR=0x%hx", a)){};
+        _entry(entry("CALLOUT_IIC_ADDR=0x%hx", a)) {};
     type _entry;
 };
 } // namespace _IIC
@@ -553,7 +553,7 @@ struct CALLOUT_INVENTORY_PATH
     using type = std::tuple<std::decay_t<decltype("CALLOUT_INVENTORY_PATH=%s")>,
                             const char*>;
     explicit constexpr CALLOUT_INVENTORY_PATH(const char* a) :
-        _entry(entry("CALLOUT_INVENTORY_PATH=%s", a)){};
+        _entry(entry("CALLOUT_INVENTORY_PATH=%s", a)) {};
     type _entry;
 };
 } // namespace _Inventory
@@ -603,7 +603,7 @@ struct CALLOUT_IPMI_SENSOR_NUM
         std::tuple<std::decay_t<decltype("CALLOUT_IPMI_SENSOR_NUM=%u")>,
                    uint32_t>;
     explicit constexpr CALLOUT_IPMI_SENSOR_NUM(uint32_t a) :
-        _entry(entry("CALLOUT_IPMI_SENSOR_NUM=%u", a)){};
+        _entry(entry("CALLOUT_IPMI_SENSOR_NUM=%u", a)) {};
     type _entry;
 };
 } // namespace _IPMISensor
@@ -652,7 +652,7 @@ struct RAW_STATUS
     using type =
         std::tuple<std::decay_t<decltype("RAW_STATUS=%s")>, const char*>;
     explicit constexpr RAW_STATUS(const char* a) :
-        _entry(entry("RAW_STATUS=%s", a)){};
+        _entry(entry("RAW_STATUS=%s", a)) {};
     type _entry;
 };
 } // namespace _PowerSupplyInputFault
@@ -703,7 +703,7 @@ struct RAW_STATUS
     using type =
         std::tuple<std::decay_t<decltype("RAW_STATUS=%s")>, const char*>;
     explicit constexpr RAW_STATUS(const char* a) :
-        _entry(entry("RAW_STATUS=%s", a)){};
+        _entry(entry("RAW_STATUS=%s", a)) {};
     type _entry;
 };
 } // namespace _PowerSupplyShouldBeOn
@@ -754,7 +754,7 @@ struct RAW_STATUS
     using type =
         std::tuple<std::decay_t<decltype("RAW_STATUS=%s")>, const char*>;
     explicit constexpr RAW_STATUS(const char* a) :
-        _entry(entry("RAW_STATUS=%s", a)){};
+        _entry(entry("RAW_STATUS=%s", a)) {};
     type _entry;
 };
 } // namespace _PowerSupplyOutputOvercurrent
@@ -805,7 +805,7 @@ struct RAW_STATUS
     using type =
         std::tuple<std::decay_t<decltype("RAW_STATUS=%s")>, const char*>;
     explicit constexpr RAW_STATUS(const char* a) :
-        _entry(entry("RAW_STATUS=%s", a)){};
+        _entry(entry("RAW_STATUS=%s", a)) {};
     type _entry;
 };
 } // namespace _PowerSupplyOutputOvervoltage
@@ -856,7 +856,7 @@ struct RAW_STATUS
     using type =
         std::tuple<std::decay_t<decltype("RAW_STATUS=%s")>, const char*>;
     explicit constexpr RAW_STATUS(const char* a) :
-        _entry(entry("RAW_STATUS=%s", a)){};
+        _entry(entry("RAW_STATUS=%s", a)) {};
     type _entry;
 };
 } // namespace _PowerSupplyFanFault
@@ -907,7 +907,7 @@ struct RAW_STATUS
     using type =
         std::tuple<std::decay_t<decltype("RAW_STATUS=%s")>, const char*>;
     explicit constexpr RAW_STATUS(const char* a) :
-        _entry(entry("RAW_STATUS=%s", a)){};
+        _entry(entry("RAW_STATUS=%s", a)) {};
     type _entry;
 };
 } // namespace _PowerSupplyTemperatureFault
@@ -958,7 +958,7 @@ struct RAW_STATUS
     using type =
         std::tuple<std::decay_t<decltype("RAW_STATUS=%s")>, const char*>;
     explicit constexpr RAW_STATUS(const char* a) :
-        _entry(entry("RAW_STATUS=%s", a)){};
+        _entry(entry("RAW_STATUS=%s", a)) {};
     type _entry;
 };
 } // namespace _GPUPowerFault
@@ -1009,7 +1009,7 @@ struct RAW_STATUS
     using type =
         std::tuple<std::decay_t<decltype("RAW_STATUS=%s")>, const char*>;
     explicit constexpr RAW_STATUS(const char* a) :
-        _entry(entry("RAW_STATUS=%s", a)){};
+        _entry(entry("RAW_STATUS=%s", a)) {};
     type _entry;
 };
 } // namespace _GPUOverTemp
@@ -1060,7 +1060,7 @@ struct RAW_STATUS
     using type =
         std::tuple<std::decay_t<decltype("RAW_STATUS=%s")>, const char*>;
     explicit constexpr RAW_STATUS(const char* a) :
-        _entry(entry("RAW_STATUS=%s", a)){};
+        _entry(entry("RAW_STATUS=%s", a)) {};
     type _entry;
 };
 } // namespace _MemoryPowerFault

@@ -72,20 +72,19 @@ PowerSupply::PowerSupply(const std::string& name, size_t inst,
                          const std::string& objpath, const std::string& invpath,
                          sdbusplus::bus_t& bus, const sdeventplus::Event& e,
                          std::chrono::seconds& t, std::chrono::seconds& p) :
-    Device(name, inst),
-    monitorPath(objpath), pmbusIntf(objpath),
+    Device(name, inst), monitorPath(objpath), pmbusIntf(objpath),
     inventoryPath(INVENTORY_OBJ_PATH + invpath), bus(bus), presentInterval(p),
     presentTimer(e, std::bind([this]() {
-    // The hwmon path may have changed.
-    pmbusIntf.findHwmonDir();
-    this->present = true;
+                     // The hwmon path may have changed.
+                     pmbusIntf.findHwmonDir();
+                     this->present = true;
 
-    // Sync the INPUT_HISTORY data for all PSs
-    syncHistory();
+                     // Sync the INPUT_HISTORY data for all PSs
+                     syncHistory();
 
-    // Update the inventory for the new device
-    updateInventory();
-})),
+                     // Update the inventory for the new device
+                     updateInventory();
+                 })),
     powerOnInterval(t),
     powerOnTimer(e, std::bind([this]() { this->powerOn = true; }))
 {
@@ -610,8 +609,8 @@ void PowerSupply::resolveError(const std::string& callout,
             return;
         }
 
-        auto logEntryService = util::getService(logEntries[0], LOGGING_IFACE,
-                                                bus);
+        auto logEntryService =
+            util::getService(logEntries[0], LOGGING_IFACE, bus);
         if (logEntryService.empty())
         {
             return;
@@ -714,8 +713,8 @@ void PowerSupply::updateInventory()
 
     try
     {
-        auto service = util::getService(INVENTORY_OBJ_PATH, INVENTORY_MGR_IFACE,
-                                        bus);
+        auto service =
+            util::getService(INVENTORY_OBJ_PATH, INVENTORY_MGR_IFACE, bus);
 
         if (service.empty())
         {
@@ -775,10 +774,9 @@ void PowerSupply::syncHistory()
     }
 }
 
-void PowerSupply::enableHistory(const std::string& objectPath,
-                                size_t numRecords,
-                                const std::string& syncGPIOPath,
-                                size_t syncGPIONum)
+void PowerSupply::enableHistory(
+    const std::string& objectPath, size_t numRecords,
+    const std::string& syncGPIOPath, size_t syncGPIONum)
 {
     historyObjectPath = objectPath;
     syncGPIODevPath = syncGPIOPath;
@@ -803,9 +801,9 @@ void PowerSupply::updateHistory()
     }
 
     // Read just the most recent average/max record
-    auto data = pmbusIntf.readBinary(INPUT_HISTORY,
-                                     pmbus::Type::HwmonDeviceDebug,
-                                     history::RecordManager::RAW_RECORD_SIZE);
+    auto data =
+        pmbusIntf.readBinary(INPUT_HISTORY, pmbus::Type::HwmonDeviceDebug,
+                             history::RecordManager::RAW_RECORD_SIZE);
 
     // Update D-Bus only if something changed (a new record ID, or cleared out)
     auto changed = recordManager->add(data);
