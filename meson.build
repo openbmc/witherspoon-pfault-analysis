@@ -1,11 +1,7 @@
 project(
     'witherspoon-pfault-analysis',
     'cpp',
-    default_options: [
-        'warning_level=3',
-        'werror=true',
-        'cpp_std=c++23'
-    ],
+    default_options: ['warning_level=3', 'werror=true', 'cpp_std=c++23'],
     license: 'Apache-2.0',
     version: '1.0',
     meson_version: '>=1.1.1',
@@ -24,11 +20,14 @@ sdeventplus = dependency('sdeventplus')
 
 conf = configuration_data()
 conf.set_quoted(
-    'INPUT_HISTORY_BUSNAME_ROOT', get_option('input-history-busname-root'))
+    'INPUT_HISTORY_BUSNAME_ROOT',
+    get_option('input-history-busname-root'),
+)
 conf.set_quoted(
-    'INPUT_HISTORY_SENSOR_ROOT', get_option('input-history-sensor-root'))
-conf.set10(
-    'UCD90160_DEVICE_ACCESS', get_option('ucd90160-access'))
+    'INPUT_HISTORY_SENSOR_ROOT',
+    get_option('input-history-sensor-root'),
+)
+conf.set10('UCD90160_DEVICE_ACCESS', get_option('ucd90160-access'))
 
 configure_file(output: 'config.h', configuration: conf)
 

@@ -5,16 +5,10 @@ psu_monitor = executable(
     'main.cpp',
     'power_supply.cpp',
     'record_manager.cpp',
-    dependencies: [
-        phosphor_dbus_interfaces,
-        phosphor_logging,
-        sdbusplus,
-    ],
+    dependencies: [phosphor_dbus_interfaces, phosphor_logging, sdbusplus],
     include_directories: '..',
     install: true,
-    link_with: [
-        libpower,
-    ]
+    link_with: [libpower],
 )
 
 record_manager = psu_monitor.extract_objects('record_manager.cpp')

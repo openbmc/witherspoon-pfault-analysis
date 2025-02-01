@@ -11,9 +11,7 @@ test(
         ],
         implicit_include_directories: false,
         include_directories: '../..',
-        link_with: [
-            libpower,
-        ],
+        link_with: [libpower],
         objects: record_manager,
-    )
+    ),
 )
