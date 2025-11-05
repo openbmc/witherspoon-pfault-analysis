@@ -39,8 +39,8 @@ std::string getService(const std::string& path, const std::string& interface,
 
     auto reply = bus.call(method);
 
-    std::map<std::string, std::vector<std::string>> response;
-    reply.read(response);
+    auto response =
+        reply.unpack<std::map<std::string, std::vector<std::string>>>();
 
     if (response.empty())
     {
